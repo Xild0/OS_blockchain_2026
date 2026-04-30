@@ -18,9 +18,11 @@ typedef struct block
 	char transactions[MAX_TRANSACTION];					// array for transaction string
 }block;
 
-void int_to_hex(uint64_t value, char *out);
+void int_to_hex(uint64_t value, char *out);				// converte uint64_t in stringa hex
 
-uint64_t hex_to_int(const char *value);
+uint64_t hex_to_int(const char *value);					// converte stringa hex a uint64_t
 
 
-#endif BLOCKCHAIN_H
+
+
+#endif
