@@ -19,16 +19,12 @@ La struttura dei file è stata organizzata per separare chiaramente gli header d
     - `./blockchain.sh --hash <block_hex>` calcola l'hash SHA256 di un blocco fornito in stringa esadecimale
     - `./blockchain.sh --merkle <tx1::tx2::...>` calcola la Merkle root di una lista di transazioni separate da "::"
     
----
-    
 ### Headers (`code/include/`)
 - `/include/`: cartella per i file header
 - `blockchain.h`: definisce la struttura del blocco della blockchain e dichiara tutte le funzioni relative alle gestione dei blocchi (conversione int_hax e viceversa, hashing SHA256, calcolo della Merkle tree e le operazioni sul file CSV. 
 - `errors.h`: definisce tutti gli errori usati nei file C. Gli stessi valori numerici vengono riportati come variabili bash nel file `blockchain.h`
 - `ipc.h`: dichiara l'Inter-Process Communication interface usata per lo scambio di messaggi tra processi
 - `log.h`: dichiara l'interfaccia di registrazione. Ogni processo registra tutti gli eventi rilevanti in un file dedicato denominato `nome_processo-PID.log`
-
----
 
 ### Sources (`code/source/`)
 
