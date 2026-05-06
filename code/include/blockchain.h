@@ -5,11 +5,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 
 #define MAX_TRANSACTION 5000							// arbitrary number max transaction divided by "::"
 #define HASH_LENGTH 64 									// 64 hex char equal to 256 bit
+#define MAX_TX_LEN 1024     							 // Lunghezza massima della stringa delle transazioni
+#define LINE_MAX_LEN 2048   							 // Lunghezza massima di una riga nel CSV 
+                             
 
-typedef struct block
+#define BC_OK                  0
+#define BC_ERR_FILE_OPEN      -1
+#define BC_ERR_FILE_WRITE     -2
+#define BC_ERR_FILE_READ      -3
+#define BC_ERR_INVALID_FORMAT -4
+#define BC_ERR_FULL           -5
+#define BC_ERR_NULL_ARG       -6
+#define BC_ERR_INVALID_BLOCK  -7
+
+#define CSV_HEADER "index, timestamp, prev_hash, merkel_root, nonce, transactions\n"
+
+
+typedef struct Block
 {
 	uint64_t index;										// index = prev_index + 1
 	uint64_t timestamp;				
@@ -17,13 +35,25 @@ typedef struct block
 	char merkle_root[HASH_LENGTH + 1];					// merkle_root = hash valor of every transaction 
 	uint64_t nonce;										// just a number for miners
 	uint32_t transactions_len;							// length of the string
-	char transactions[];								// flexible array, MUST BE LAST FIELD OF STRUCT
-}block;
+	char transactions[MAX_TX_LEN];								// flexible array, MUST BE LAST FIELD OF STRUCT
+}Block;
+
+typedef struct Blockchain{
+	Block blocks[MAX_TRANSACTION];
+	int length;
+}Blockchain;
 
 void int_to_hex(uint64_t value, char *out);				// converte uint64_t in stringa hex
 
 uint64_t hex_to_int(const char *value);					// converte stringa hex a uint64_t
 
+static int read_line(int fd, char *buf, int maxlen);   //legge una riga dal fd, restituisce lunghezza o -1 a EndOfLine 
+
+static int line_to_block(char *line, Block *b);        // converte una riga csv in un blocco, restituisce BC_OK o codice errore
+
+int blockchain_load(Blockchain *bc, const char *filename);   // Carica la blockchain dal file CSV specificato. Restituisce BC_OK in caso di successo, codice di errore altrimenti. 
+int blockchain_save(const Blockchain *bc, const char *filename); // Salva l'intera blockchain sul file CSV, sovrascrivendo il contenuto esistente. Restituisce BC_OK in caso di successo, codice di errore altrimenti.
+int blockchain_append(const Block *b, const char *filename); //Aggiunge un singolo blocco in fondo al file CSV. Crea il file con header se non esiste. Restituisce BC_OK in caso di successo, codice di errore altrimenti. */
 
 
 #endif
