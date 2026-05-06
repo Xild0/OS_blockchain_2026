@@ -26,5 +26,4 @@ uint64_t hex_to_int(const char *value);					// converte stringa hex a uint64_t
 
 
 
-
 #endif
