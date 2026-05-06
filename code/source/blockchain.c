@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "blockchain.h"
+#include "../include/blockchain.h"
 
 
 void int_to_hex(uint64_t value, char *hex){
