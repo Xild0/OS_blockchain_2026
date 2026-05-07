@@ -47,6 +47,8 @@ void int_to_hex(uint64_t value, char *out);				// converte uint64_t in stringa h
 
 uint64_t hex_to_int(const char *value);					// converte stringa hex a uint64_t
 
+void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root);
+
 static int read_line(int fd, char *buf, int maxlen);   //legge una riga dal fd, restituisce lunghezza o -1 a EndOfLine 
 
 static int line_to_block(char *line, Block *b);        // converte una riga csv in un blocco, restituisce BC_OK o codice errore

@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "../include/blockchain.h"
-
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include "../include/blockchain.h"
+#include "../include/sha256.h"
+
 
 
 void int_to_hex(uint64_t value, char *hex){
@@ -15,6 +16,113 @@ void int_to_hex(uint64_t value, char *hex){
 
 uint64_t hex_to_int(const char *hex){
 	return (uint64_t)strtoull(hex, NULL, 16);
+}
+
+void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
+
+    uint8_t count = 0;                                                          // conta quante stringhe ci sono nell'array
+    uint8_t tx_count = 0;                                                       // contatore per selezionare il puntatore alle stringhe
+    char *ptr = transactions;                                                   // puntatore utile per scorrere la stringa concatenate
+    char *start = ptr;                                                          // punta all'inizio della stringa concatenata
+    
+    while(*ptr != '\0'){                                                        // scorro per tutta la stringa concatenata
+        if(ptr[0] == ':' && ptr[1] == ':'){                                     // quando trovo '::' incremento il contatore di stringhe
+            count++;
+        }
+        ptr++;
+    }
+    printf("Contatore stringhe: %i\n", count);                                  // stampo il contatore di stringhe
+
+    if(count == 0){
+        sha256_hex("", 0, merkle_root);
+        return;
+    }
+
+    char *array_transactions[count];                                            // creo un array di puntatori a stringhe
+    ptr = transactions;                                                         // resetto il puntatore per scorrere
+
+    while(*ptr != '\0'){
+        if(ptr[0] == ':' && ptr[1] == ':'){                                     // quando trovo '::'
+            uint64_t diff = ptr - start;                                        // calcolo la differenza dei puntatori
+            array_transactions[tx_count] = malloc(diff + 1);                    // creo nello heap una stringa della dimensione corretta
+            strncpy(array_transactions[tx_count], start, diff);                 // copio la parte della stringa dentro la stringa puntata dall'array
+            array_transactions[tx_count][diff] = '\0';                          // aggiungo il carattere di terminazione
+            tx_count++;                                                         
+            ptr += 2;                                                           // incremento e resetto i counter/puntatori, ptr lo alzo di due per i due punti ('::') da saltare
+            start = ptr; 
+        }
+        else{
+            ptr++;
+        }
+    }
+
+    /*
+    for (int i = 0; i < count; ++i){                                            // stampo le stringhe separatamente
+        printf("Stringa %i: %s\n", i+1, array_transactions[i]);
+    }
+    */
+
+    char **array_transactions_sha256 = malloc(count * sizeof(char*));                               // creo un array di puntatori lungo count che puntano a stringhe lunghe 65 caratteri    
+
+    for (int i = 0; i < count; ++i)
+    {
+        array_transactions_sha256[i] = malloc(65);               
+        sha256_hex(array_transactions[i], strlen(array_transactions[i]), array_transactions_sha256[i]);        // eseguo hashing sha256
+        array_transactions_sha256[i][64] = '\0';                                                               // aggiungo terminatore di stringa
+        //printf("Stampa hash %i: %s\n\n", i+1, array_transactions_sha256[i]);
+    }
+
+    for (int i = 0; i < count; ++i)
+    {
+        free(array_transactions[i]);
+    }
+ 
+    /*
+    printf("%s\n", *array_transactions_sha256[1]);
+    printf("489cdba1288d6741c7b929eacbc97b43a60039d6a21fc08a9d641716ba851778\n");
+    printf("%s\n", *array_transactions_sha256[2]);
+    printf("753e2988a3bf4fab50896d6dd8090bad50bf0eba46dbef380f1e7b20764b4689\n");
+    */
+
+
+    //char tmp[130];
+    uint8_t anti_counter = count;
+
+    while(count > 1){
+
+        uint8_t new_count = 0;
+        char **stringhe_concatenate = malloc(count * sizeof(char*));
+        for (int i = 0; i < count; i+=2)
+        {
+            stringhe_concatenate[new_count] = malloc(130);
+            strcpy(stringhe_concatenate[new_count], array_transactions_sha256[i]);
+            //printf("Prima meta' stringa concatenata: %s\n", stringhe_concatenate[new_count]);
+            strcat(stringhe_concatenate[new_count], array_transactions_sha256[i+1]);
+            //printf("Seconda meta' stringa concatenata: %s\n\n", stringhe_concatenate[new_count]);
+            sha256_hex(stringhe_concatenate[new_count], strlen(stringhe_concatenate[new_count]), array_transactions_sha256[new_count]);
+            ++new_count;
+        }
+
+        /*
+        printf("\n\n");
+        printf("Stringa concatenata totale: %s\n", stringhe_concatenate[0]);
+        printf("Stringa concatenata hash: %s\n\n", array_transactions_sha256[0]);
+        */
+
+        if((count%2) != 0){
+            strcpy(stringhe_concatenate[new_count], array_transactions_sha256[count-1]);
+            //printf("Prima meta' stringa concatenata: %s\n", stringhe_concatenate[new_count]);
+            strcat(stringhe_concatenate[new_count], "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\0");
+            //printf("Seconda meta' stringa concatenata: %s\n\n", stringhe_concatenate[new_count]);
+            sha256_hex(stringhe_concatenate[new_count], strlen(stringhe_concatenate[new_count]), array_transactions_sha256[new_count]);
+            ++new_count;
+            count -= 1;
+        }else{
+            count -= 2;
+        }
+    }
+    //printf("merkle_root: %s", array_transactions_sha256[0]);
+    strcpy(merkle_root, array_transactions_sha256[0]);
 }
 
 // legge una riga dal fd, restituisce lunghezza o -1 a EndOfLine 
