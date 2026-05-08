@@ -11,8 +11,12 @@
 
 #define MAX_TRANSACTION 5000							// arbitrary number max transaction divided by "::"
 #define HASH_LENGTH 64 									// 64 hex char equal to 256 bit
-#define MAX_TX_LEN 1024     							 // Lunghezza massima della stringa delle transazioni
+#define MAX_TX_LEN 4096     							 // Lunghezza massima della stringa delle transazioni
 #define LINE_MAX_LEN 2048   							 // Lunghezza massima di una riga nel CSV 
+#define SHA256_HEX_LEN 64
+#define SHA256_BUFFER_LEN 65
+#define CONC_LEN 128
+#define CONC_BUFER_LEN 130
                              
 
 #define BC_OK                  0
