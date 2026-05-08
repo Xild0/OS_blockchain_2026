@@ -88,7 +88,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
 
 
     if (count == 1){
-        char tmp[CONC_BUFER_LEN];
+        char tmp[CONC_BUFFER_LEN];
         char tmp_sha256[SHA256_BUFFER_LEN];
         strcpy(tmp, array_transactions_sha256[0]);
         strcat(tmp, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\0");
@@ -109,7 +109,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
 
         for (int i = 0; i < count-1; i+=2)
         {
-            stringhe_concatenate[new_count] = malloc(CONC_BUFER_LEN);
+            stringhe_concatenate[new_count] = malloc(CONC_BUFFER_LEN);
             stringhe_concatenate_sha256[new_count] = malloc(SHA256_BUFFER_LEN);
             strcpy(stringhe_concatenate[new_count], array_transactions_sha256[i]);
             //printf("Prima meta' stringa concatenata: %s\n", stringhe_concatenate[new_count]);
@@ -122,7 +122,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
         }
 
         if((count%2) != 0){
-            stringhe_concatenate[new_count] = malloc(CONC_BUFER_LEN);
+            stringhe_concatenate[new_count] = malloc(CONC_BUFFER_LEN);
             stringhe_concatenate_sha256[new_count] = malloc(SHA256_BUFFER_LEN);
             strcpy(stringhe_concatenate[new_count], array_transactions_sha256[count-1]);
             //printf("Prima meta' stringa concatenata: %s\n", stringhe_concatenate[new_count]);
@@ -256,7 +256,7 @@ int blockchain_load(Blockchain *bc, const char *filename) { //arg: puntatore str
 
     bc->length = 0; //init contatore blocchi
     while (read_line(fd, line, sizeof(line)) >= 0) { //fichè il file non finisce
-        if (bc->length >= MAX_TRANSACTION) { //finchè num blocchi < max
+        if (bc->length >= MAX_BLOCKS) { //finchè num blocchi < max
             close(fd);
             return BC_ERR_FULL;
         }

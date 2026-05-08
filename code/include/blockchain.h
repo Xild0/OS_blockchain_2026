@@ -9,16 +9,15 @@
 #include <unistd.h>
 #include <string.h>
 
-#define MAX_TRANSACTION 5000							// arbitrary number max transaction divided by "::"
+
+#define MAX_BLOCKS 5000									// arbitrary number max transaction divided by "::"
 #define HASH_LENGTH 64 									// 64 hex char equal to 256 bit
 #define MAX_TX_LEN 4096     							 // Lunghezza massima della stringa delle transazioni
 #define LINE_MAX_LEN 2048   							 // Lunghezza massima di una riga nel CSV 
 #define SHA256_HEX_LEN 64
 #define SHA256_BUFFER_LEN 65
 #define CONC_LEN 128
-#define CONC_BUFER_LEN 130
-                             
-
+#define CONC_BUFFER_LEN 130
 #define BC_OK                  0
 #define BC_ERR_FILE_OPEN      -1
 #define BC_ERR_FILE_WRITE     -2
@@ -27,8 +26,7 @@
 #define BC_ERR_FULL           -5
 #define BC_ERR_NULL_ARG       -6
 #define BC_ERR_INVALID_BLOCK  -7
-
-#define CSV_HEADER "index, timestamp, prev_hash, merkel_root, nonce, transactions\n"
+#define CSV_HEADER "index, timestamp, prev_hash, merkle_root, nonce, transactions\n"
 
 
 typedef struct Block
@@ -39,11 +37,11 @@ typedef struct Block
 	char merkle_root[HASH_LENGTH + 1];					// merkle_root = hash valor of every transaction 
 	uint64_t nonce;										// just a number for miners
 	uint32_t transactions_len;							// length of the string
-	char transactions[MAX_TX_LEN];								// flexible array, MUST BE LAST FIELD OF STRUCT
+	char transactions[MAX_TX_LEN];						// fixed array
 }Block;
 
 typedef struct Blockchain{
-	Block blocks[MAX_TRANSACTION];
+	Block blocks[MAX_BLOCKS];
 	int length;
 }Blockchain;
 
