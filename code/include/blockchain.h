@@ -8,6 +8,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <semaphore.h>
+#include <sys/mman.h> 
 
 
 #define MAX_BLOCKS 5000									// arbitrary number max transaction divided by "::"
@@ -45,15 +47,26 @@ typedef struct Blockchain{
 	int length;
 }Blockchain;
 
+typedef struct SharedMemory{
+	Blockchain blockchain;
+	Block mined_last;
+	Block confirmed;
+	int ready_block;
+	pid_t miner_pids[16];
+	int num_miners;
+	pid_t node_pids[16];
+	int num_nodes;
+}SharedMemory;
+
 void int_to_hex(uint64_t value, char *out);				// converte uint64_t in stringa hex
 
 uint64_t hex_to_int(const char *value);					// converte stringa hex a uint64_t
 
 void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root);
 
-static int read_line(int fd, char *buf, int maxlen);   //legge una riga dal fd, restituisce lunghezza o -1 a EndOfLine 
+//int read_line(int fd, char *buf, int maxlen);   //legge una riga dal fd, restituisce lunghezza o -1 a EndOfLine 
 
-static int line_to_block(char *line, Block *b);        // converte una riga csv in un blocco, restituisce BC_OK o codice errore
+//int line_to_block(char *line, Block *b);        // converte una riga csv in un blocco, restituisce BC_OK o codice errore
 
 int blockchain_load(Blockchain *bc, const char *filename);   // Carica la blockchain dal file CSV specificato. Restituisce BC_OK in caso di successo, codice di errore altrimenti. 
 int blockchain_save(const Blockchain *bc, const char *filename); // Salva l'intera blockchain sul file CSV, sovrascrivendo il contenuto esistente. Restituisce BC_OK in caso di successo, codice di errore altrimenti.

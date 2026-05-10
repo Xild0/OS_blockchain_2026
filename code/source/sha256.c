@@ -1,4 +1,4 @@
-#include "sha256.h"
+#include "../include/sha256.h"
 
 // Rotate right
 static inline uint32_t rotr(uint32_t x, int n){
