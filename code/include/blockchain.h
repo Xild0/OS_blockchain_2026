@@ -31,6 +31,13 @@
 #define CSV_HEADER "index, timestamp, prev_hash, merkle_root, nonce, transactions\n"
 
 
+#define MSGQUEUE_PATH "/tmp/blockchain_queue"
+#define MSGQUEUE_PROJ_ID 'B'
+#define MSG_TYPE_TRANSACTION 1
+
+#define MAX_MINERS 16
+#define MAX_NODES 16
+
 typedef struct Block
 {
 	uint64_t index;										// index = prev_index + 1
@@ -52,11 +59,16 @@ typedef struct SharedMemory{
 	Block mined_last;
 	Block confirmed;
 	int ready_block;
-	pid_t miner_pids[16];
+	pid_t miner_pids[MAX_MINERS];
 	int num_miners;
-	pid_t node_pids[16];
+	pid_t node_pids[MAX_NODES];
 	int num_nodes;
 }SharedMemory;
+
+typedef struct TxMessage{
+    long mtype;
+    char content[MAX_TX_LEN];
+}TxMessage;
 
 void int_to_hex(uint64_t value, char *out);				// converte uint64_t in stringa hex
 

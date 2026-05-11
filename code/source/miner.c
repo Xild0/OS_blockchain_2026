@@ -1,0 +1,351 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <time.h>
+#include "../include/blockchain.h"
+#include "../include/sha256.h"
+#include "../include/miner.h"
+
+static sig_atomic_t got_stop = 0;
+
+static int miner_id = -1;
+static int num_nodes = 0;
+static int difficulty = 1;
+static FILE *logfile = NULL;
+
+static char tx_pool[MAX_TX_LEN] = "";
+static int tx_count = 0;
+
+static char prev_hash[HASH_LENGTH + 1];
+static uint64_t next_index = 0;
+static uint64_t current_nonce = 0;
+
+static int waiting_confirmation = 0;
+
+static void handler_sigterm(int sig){
+    (void)sig;
+    got_stop = 1;
+}
+
+static void miner_log(const char *msg){
+    if(logfile == NULL){
+        return;
+    }
+
+    fprintf(logfile, "MINER ID: [%d], timestamp: [%ld], message: %s\n",
+            miner_id, (long)time(NULL), msg);
+    fflush(logfile);
+}
+
+static void compute_block_hash(const Block *b, char *hash_out){
+    char buffer[8192];
+    char idx_hex[17];
+    char ts_hex[17];
+    char nonce_hex[17];
+
+    int_to_hex(b->index, idx_hex);
+    int_to_hex(b->timestamp, ts_hex);
+    int_to_hex(b->nonce, nonce_hex);
+
+    sprintf(buffer, "%s%s%s%s%s%s",
+            idx_hex,
+            ts_hex,
+            b->prev_hash,
+            b->merkle_root,
+            nonce_hex,
+            b->transactions);
+
+    sha256_hex(buffer, strlen(buffer), hash_out);
+    hash_out[SHA256_HEX_LEN] = '\0';
+}
+
+static void add_transaction_to_pool(const char *tx){
+    int new_len;
+
+    if(tx_count == 0){
+        new_len = strlen(tx);
+    }
+    else{
+        new_len = strlen(tx_pool) + 2 + strlen(tx);
+    }
+
+    if(new_len >= MAX_TX_LEN){
+        miner_log("WARNING: transaction pool full");
+        return;
+    }
+
+    if(tx_count > 0){
+        strcat(tx_pool, "::");
+    }
+
+    strcat(tx_pool, tx);
+    tx_count++;
+}
+
+static int is_transaction_in_block(const char *tx, const char *block_txs){
+    char copy[MAX_TX_LEN];
+    char *start;
+    char *sep;
+
+    strcpy(copy, block_txs);
+
+    start = copy;
+
+    while((sep = strstr(start, "::")) != NULL){
+        *sep = '\0';
+
+        if(strcmp(start, tx) == 0){
+            return 1;
+        }
+
+        start = sep + 2;
+    }
+
+    if(strcmp(start, tx) == 0){
+        return 1;
+    }
+
+    return 0;
+}
+
+static void remove_mined_transactions(const Block *confirmed){
+    char new_pool[MAX_TX_LEN] = "";
+    char copy[MAX_TX_LEN];
+    char *start;
+    char *sep;
+    int new_count = 0;
+
+    strcpy(copy, tx_pool);
+    start = copy;
+
+    while((sep = strstr(start, "::")) != NULL){
+        *sep = '\0';
+
+        if(!is_transaction_in_block(start, confirmed->transactions)){
+            if(new_count > 0){
+                strcat(new_pool, "::");
+            }
+
+            strcat(new_pool, start);
+            new_count++;
+        }
+
+        start = sep + 2;
+    }
+
+    if(strlen(start) > 0 && !is_transaction_in_block(start, confirmed->transactions)){
+        if(new_count > 0){
+            strcat(new_pool, "::");
+        }
+
+        strcat(new_pool, start);
+        new_count++;
+    }
+
+    strcpy(tx_pool, new_pool);
+    tx_count = new_count;
+}
+
+static void drain_message_queue(int msqid){
+    TxMessage msg;
+
+    while(msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT) != -1){
+        add_transaction_to_pool(msg.content);
+        miner_log(msg.content);
+    }
+}
+
+static void handle_confirmed_block(const Block *b){
+    char new_prev_hash[SHA256_BUFFER_LEN];
+
+    miner_log("Confirmed block received from node");
+
+    compute_block_hash(b, new_prev_hash);
+
+    strcpy(prev_hash, new_prev_hash);
+    next_index = b->index + 1;
+
+    remove_mined_transactions(b);
+
+    current_nonce = 0;
+    waiting_confirmation = 0;
+}
+
+static void broadcast_block(const Block *b){
+    int i;
+
+    for(i = 0; i < num_nodes; i++){
+        char fifo_path[64];
+        int fd;
+
+        sprintf(fifo_path, "node_%d_block.fifo", i);
+
+        fd = open(fifo_path, O_WRONLY | O_NONBLOCK);
+        if(fd < 0){
+            miner_log("WARNING: cannot open node fifo");
+            continue;
+        }
+
+        if(write(fd, b, sizeof(Block)) < 0){
+            miner_log("WARNING: write to node fifo failed");
+        }
+
+        close(fd);
+    }
+
+    miner_log("Block sent to nodes");
+}
+
+static void build_and_broadcast_block(void){
+    Block new_block;
+
+    new_block.index = next_index;
+    new_block.timestamp = (uint64_t)time(NULL);
+
+    strcpy(new_block.prev_hash, prev_hash);
+
+    strcpy(new_block.transactions, tx_pool);
+    new_block.transactions_len = (uint32_t)strlen(new_block.transactions);
+
+    calcola_merkle_root(new_block.transactions, new_block.merkle_root);
+    new_block.merkle_root[HASH_LENGTH] = '\0';
+
+    new_block.nonce = current_nonce;
+
+    miner_log("Mining successful");
+
+    broadcast_block(&new_block);
+
+    tx_pool[0] = '\0';
+    tx_count = 0;
+    waiting_confirmation = 1;
+}
+
+int miner_main(int id, int n_nodes, int diff){
+    char logname[64];
+    key_t key;
+    int msqid;
+    char my_fifo[64];
+    int fifo_rd;
+    int fifo_wr;
+
+    miner_id = id;
+    num_nodes = n_nodes;
+
+    if(diff <= 0){
+        difficulty = 1;
+    }
+    else{
+        difficulty = diff;
+    }
+
+    sprintf(logname, "miner_%d_%d.log", miner_id, (int)getpid());
+
+    logfile = fopen(logname, "w");
+    if(logfile == NULL){
+        perror("fopen");
+        return 1;
+    }
+
+    memset(prev_hash, '0', HASH_LENGTH);
+    prev_hash[HASH_LENGTH] = '\0';
+
+    next_index = 0;
+    current_nonce = 0;
+
+    srand(time(NULL) ^ getpid());
+
+    signal(SIGTERM, handler_sigterm);
+
+    key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
+    if(key == -1){
+        miner_log("ERROR: ftok failed");
+        fclose(logfile);
+        return 1;
+    }
+
+    msqid = msgget(key, 0666);
+    if(msqid == -1){
+        miner_log("ERROR: msgget failed");
+        fclose(logfile);
+        return 1;
+    }
+
+    sprintf(my_fifo, "miner_%d_block.fifo", miner_id);
+    mkfifo(my_fifo, 0666);
+
+    fifo_rd = open(my_fifo, O_RDONLY | O_NONBLOCK);
+    fifo_wr = open(my_fifo, O_WRONLY | O_NONBLOCK);
+
+    if(fifo_rd < 0 || fifo_wr < 0){
+        miner_log("ERROR: cannot open miner fifo");
+
+        if(fifo_rd >= 0){
+            close(fifo_rd);
+        }
+
+        if(fifo_wr >= 0){
+            close(fifo_wr);
+        }
+
+        fclose(logfile);
+        return 1;
+    }
+
+    miner_log("Miner avviato");
+
+    while(!got_stop){
+        Block confirmed;
+        ssize_t n;
+        int sleep_seconds;
+
+        drain_message_queue(msqid);
+
+        n = read(fifo_rd, &confirmed, sizeof(Block));
+        if(n == sizeof(Block)){
+            handle_confirmed_block(&confirmed);
+        }
+
+        sleep_seconds = 1 + (rand() % 5);
+        sleep(sleep_seconds);
+
+        if(got_stop){
+            break;
+        }
+
+        drain_message_queue(msqid);
+
+        n = read(fifo_rd, &confirmed, sizeof(Block));
+        if(n == sizeof(Block)){
+            handle_confirmed_block(&confirmed);
+        }
+
+        current_nonce++;
+
+        if(waiting_confirmation == 0){
+            if((rand() % difficulty) == 0){
+                if(tx_count > 0){
+                    build_and_broadcast_block();
+                }
+                else{
+                    miner_log("Lottery won but no transactions to mine");
+                }
+            }
+        }
+    }
+
+    miner_log("Miner in chiusura");
+
+    close(fifo_rd);
+    close(fifo_wr);
+    unlink(my_fifo);
+
+    fclose(logfile);
+    return 0;
+}
