@@ -12,39 +12,58 @@
 #include "../include/sha256.h"
 #include "../include/miner.h"
 
+// Flag used to stop the miner correctly
 static sig_atomic_t got_stop = 0;
 
+// Miner information
 static int miner_id = -1;
 static int num_nodes = 0;
 static int difficulty = 1;
+
+// Logfile pointer
 static FILE *logfile = NULL;
 
+// Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
+
+// Number of transactions inside the pool
 static int tx_count = 0;
 
+// Current blockchain state known by the miner
 static char prev_hash[HASH_LENGTH + 1];
 static uint64_t next_index = 0;
 static uint64_t current_nonce = 0;
 
+// Used to avoid mining again before confirmation
 static int waiting_confirmation = 0;
 
+// SIGTERM handler
 static void handler_sigterm(int sig){
     (void)sig;
     got_stop = 1;
 }
 
+// Writes messages inside the logfile
 static void miner_log(const char *msg){
+
     if(logfile == NULL){
         return;
     }
 
-    fprintf(logfile, "MINER ID: [%d], timestamp: [%ld], message: %s\n",
-            miner_id, (long)time(NULL), msg);
+    fprintf(logfile,
+            "MINER ID: [%d], timestamp: [%ld], message: %s\n",
+            miner_id,
+            (long)time(NULL),
+            msg);
+
     fflush(logfile);
 }
 
+// Computes the hash of an entire block. The fields are concatenated in hexadecimal form
 static void compute_block_hash(const Block *b, char *hash_out){
+
     char buffer[8192];
+
     char idx_hex[17];
     char ts_hex[17];
     char nonce_hex[17];
@@ -53,7 +72,8 @@ static void compute_block_hash(const Block *b, char *hash_out){
     int_to_hex(b->timestamp, ts_hex);
     int_to_hex(b->nonce, nonce_hex);
 
-    sprintf(buffer, "%s%s%s%s%s%s",
+    sprintf(buffer,
+            "%s%s%s%s%s%s",
             idx_hex,
             ts_hex,
             b->prev_hash,
@@ -62,12 +82,16 @@ static void compute_block_hash(const Block *b, char *hash_out){
             b->transactions);
 
     sha256_hex(buffer, strlen(buffer), hash_out);
+
     hash_out[SHA256_HEX_LEN] = '\0';
 }
 
+// Adds a transaction inside the local pool
 static void add_transaction_to_pool(const char *tx){
+
     int new_len;
 
+    // Compute future length to avoid overflow
     if(tx_count == 0){
         new_len = strlen(tx);
     }
@@ -80,16 +104,22 @@ static void add_transaction_to_pool(const char *tx){
         return;
     }
 
+    // Add separator if needed
     if(tx_count > 0){
         strcat(tx_pool, "::");
     }
 
     strcat(tx_pool, tx);
+
     tx_count++;
 }
 
-static int is_transaction_in_block(const char *tx, const char *block_txs){
+// Checks if a transaction is already inside a block
+static int is_transaction_in_block(const char *tx,
+                                   const char *block_txs){
+
     char copy[MAX_TX_LEN];
+
     char *start;
     char *sep;
 
@@ -97,7 +127,9 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
 
     start = copy;
 
+    // Split transactions using "::"
     while((sep = strstr(start, "::")) != NULL){
+
         *sep = '\0';
 
         if(strcmp(start, tx) == 0){
@@ -107,6 +139,7 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
         start = sep + 2;
     }
 
+    // Check the last transaction
     if(strcmp(start, tx) == 0){
         return 1;
     }
@@ -114,79 +147,120 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
     return 0;
 }
 
+// Removes already mined transactions from the pool
 static void remove_mined_transactions(const Block *confirmed){
+
     char new_pool[MAX_TX_LEN] = "";
+
     char copy[MAX_TX_LEN];
+
     char *start;
     char *sep;
+
     int new_count = 0;
 
     strcpy(copy, tx_pool);
+
     start = copy;
 
     while((sep = strstr(start, "::")) != NULL){
+
         *sep = '\0';
 
-        if(!is_transaction_in_block(start, confirmed->transactions)){
+        // Keep only transactions not already confirmed
+        if(!is_transaction_in_block(start,
+                                    confirmed->transactions)){
+
             if(new_count > 0){
                 strcat(new_pool, "::");
             }
 
             strcat(new_pool, start);
+
             new_count++;
         }
 
         start = sep + 2;
     }
 
-    if(strlen(start) > 0 && !is_transaction_in_block(start, confirmed->transactions)){
+    // Check the last transaction
+    if(strlen(start) > 0 &&
+       !is_transaction_in_block(start,
+                                confirmed->transactions)){
+
         if(new_count > 0){
             strcat(new_pool, "::");
         }
 
         strcat(new_pool, start);
+
         new_count++;
     }
 
+    // Replace old pool
     strcpy(tx_pool, new_pool);
+
     tx_count = new_count;
 }
 
+// Reads all pending transactions from the message queue
 static void drain_message_queue(int msqid){
+
     TxMessage msg;
 
-    while(msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT) != -1){
+    while(msgrcv(msqid,
+                 &msg,
+                 sizeof(msg.content),
+                 MSG_TYPE_TRANSACTION,
+                 IPC_NOWAIT) != -1){
+
         add_transaction_to_pool(msg.content);
+
         miner_log(msg.content);
     }
 }
 
+// Handles a confirmed block received from a node
 static void handle_confirmed_block(const Block *b){
+
     char new_prev_hash[SHA256_BUFFER_LEN];
 
     miner_log("Confirmed block received from node");
 
+    // Update local blockchain state
     compute_block_hash(b, new_prev_hash);
 
     strcpy(prev_hash, new_prev_hash);
+
     next_index = b->index + 1;
 
+    // Remove already mined transactions
     remove_mined_transactions(b);
 
+    // Reset nonce and confirmation state
     current_nonce = 0;
+
     waiting_confirmation = 0;
 }
 
+// Sends the mined block to all nodes
 static void broadcast_block(const Block *b){
+
     int i;
 
     for(i = 0; i < num_nodes; i++){
+
         char fifo_path[64];
+
         int fd;
 
-        sprintf(fifo_path, "node_%d_block.fifo", i);
+        sprintf(fifo_path,
+                "node_%d_block.fifo",
+                i);
 
-        fd = open(fifo_path, O_WRONLY | O_NONBLOCK);
+        fd = open(fifo_path,
+                  O_WRONLY | O_NONBLOCK);
+
         if(fd < 0){
             miner_log("WARNING: cannot open node fifo");
             continue;
@@ -202,18 +276,26 @@ static void broadcast_block(const Block *b){
     miner_log("Block sent to nodes");
 }
 
+// Builds a new block and broadcasts it
 static void build_and_broadcast_block(void){
+
     Block new_block;
 
     new_block.index = next_index;
+
     new_block.timestamp = (uint64_t)time(NULL);
 
     strcpy(new_block.prev_hash, prev_hash);
 
     strcpy(new_block.transactions, tx_pool);
-    new_block.transactions_len = (uint32_t)strlen(new_block.transactions);
 
-    calcola_merkle_root(new_block.transactions, new_block.merkle_root);
+    new_block.transactions_len =
+            (uint32_t)strlen(new_block.transactions);
+
+    // Compute Merkle root
+    calcola_merkle_root(new_block.transactions,
+                        new_block.merkle_root);
+
     new_block.merkle_root[HASH_LENGTH] = '\0';
 
     new_block.nonce = current_nonce;
@@ -222,22 +304,36 @@ static void build_and_broadcast_block(void){
 
     broadcast_block(&new_block);
 
+    // Clear local pool
     tx_pool[0] = '\0';
+
     tx_count = 0;
+
+    // Wait for confirmation before mining again
     waiting_confirmation = 1;
 }
 
-int miner_main(int id, int n_nodes, int diff){
+// Main function of the miner process
+int miner_main(int id,
+               int n_nodes,
+               int diff){
+
     char logname[64];
+
     key_t key;
+
     int msqid;
+
     char my_fifo[64];
+
     int fifo_rd;
     int fifo_wr;
 
     miner_id = id;
+
     num_nodes = n_nodes;
 
+    // Protect against invalid difficulty
     if(diff <= 0){
         difficulty = 1;
     }
@@ -245,45 +341,69 @@ int miner_main(int id, int n_nodes, int diff){
         difficulty = diff;
     }
 
-    sprintf(logname, "miner_%d_%d.log", miner_id, (int)getpid());
+    // Create logfile name
+    sprintf(logname,
+            "miner_%d_%d.log",
+            miner_id,
+            (int)getpid());
 
     logfile = fopen(logname, "w");
+
     if(logfile == NULL){
         perror("fopen");
         return 1;
     }
 
+    // Initial blockchain state
     memset(prev_hash, '0', HASH_LENGTH);
+
     prev_hash[HASH_LENGTH] = '\0';
 
     next_index = 0;
+
     current_nonce = 0;
 
+    // Different random seed for each miner
     srand(time(NULL) ^ getpid());
 
+    // Register SIGTERM handler
     signal(SIGTERM, handler_sigterm);
 
-    key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
+    // Generate System V IPC key
+    key = ftok(MSGQUEUE_PATH,
+               MSGQUEUE_PROJ_ID);
+
     if(key == -1){
         miner_log("ERROR: ftok failed");
         fclose(logfile);
         return 1;
     }
 
+    // Connect to the existing message queue
     msqid = msgget(key, 0666);
+
     if(msqid == -1){
         miner_log("ERROR: msgget failed");
         fclose(logfile);
         return 1;
     }
 
-    sprintf(my_fifo, "miner_%d_block.fifo", miner_id);
+    // FIFO used to receive confirmed blocks from nodes
+    sprintf(my_fifo,
+            "miner_%d_block.fifo",
+            miner_id);
+
     mkfifo(my_fifo, 0666);
 
-    fifo_rd = open(my_fifo, O_RDONLY | O_NONBLOCK);
-    fifo_wr = open(my_fifo, O_WRONLY | O_NONBLOCK);
+    // Double open trick: avoids EOF when nobody is writing
+    fifo_rd = open(my_fifo,
+                   O_RDONLY | O_NONBLOCK);
+
+    fifo_wr = open(my_fifo,
+                   O_WRONLY | O_NONBLOCK);
 
     if(fifo_rd < 0 || fifo_wr < 0){
+
         miner_log("ERROR: cannot open miner fifo");
 
         if(fifo_rd >= 0){
@@ -295,57 +415,84 @@ int miner_main(int id, int n_nodes, int diff){
         }
 
         fclose(logfile);
+
         return 1;
     }
 
-    miner_log("Miner avviato");
+    miner_log("Miner started");
 
+    // Main loop
     while(!got_stop){
+
         Block confirmed;
+
         ssize_t n;
+
         int sleep_seconds;
 
+        // Read all pending transactions
         drain_message_queue(msqid);
 
-        n = read(fifo_rd, &confirmed, sizeof(Block));
+        // Check if a confirmed block arrived
+        n = read(fifo_rd,
+                 &confirmed,
+                 sizeof(Block));
+
         if(n == sizeof(Block)){
             handle_confirmed_block(&confirmed);
         }
 
+        // Simulate mining work
         sleep_seconds = 1 + (rand() % 5);
+
         sleep(sleep_seconds);
 
         if(got_stop){
             break;
         }
 
+        // Read new transactions again after sleeping
         drain_message_queue(msqid);
 
-        n = read(fifo_rd, &confirmed, sizeof(Block));
+        // Check confirmations again
+        n = read(fifo_rd,
+                 &confirmed,
+                 sizeof(Block));
+
         if(n == sizeof(Block)){
             handle_confirmed_block(&confirmed);
         }
 
         current_nonce++;
 
+        // Mine only if waiting_confirmation is false
         if(waiting_confirmation == 0){
+
+            // Probability = 1 / difficulty
             if((rand() % difficulty) == 0){
+
+                // Do not mine empty blocks
                 if(tx_count > 0){
+
                     build_and_broadcast_block();
                 }
                 else{
+
                     miner_log("Lottery won but no transactions to mine");
                 }
             }
         }
     }
 
-    miner_log("Miner in chiusura");
+    miner_log("Miner shutting down");
 
     close(fifo_rd);
+
     close(fifo_wr);
+
     unlink(my_fifo);
 
     fclose(logfile);
+
     return 0;
 }
