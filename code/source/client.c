@@ -161,5 +161,12 @@ int client_main(int id, int transaction_frequency){
 
     fclose(logfile);
 
+<<<<<<< HEAD
     return 0;
 }
+=======
+/*
+int main(){
+    return client_main(0, 1);
+}*/
+>>>>>>> 6f194f2 (main added)
