@@ -141,7 +141,7 @@ static void submit_transaction(const char *tx){
     int l = MAX_TX_LEN-1;
     msg.mtype = MSG_TYPE_TRANSACTION;
     strncpy(msg.content, tx, l);
-    //msg.content[l] = '\0';
+    msg.content[l] = '\0';
     if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT)==-1){
         perror("Failed transaction submission\n");
     }else{

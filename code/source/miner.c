@@ -8,6 +8,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <time.h>
+#include <errno.h>
 #include "../include/blockchain.h"
 #include "../include/sha256.h"
 #include "../include/miner.h"
@@ -23,9 +24,6 @@ static sig_atomic_t got_confirmed = 0;
 // Miner information
 static int num_nodes = 0;
 static int difficulty = 1;
-
-// Logfile pointer
-static FILE *logfile = NULL;
 
 // Shared memory pointer (read-only for miner)
 static SharedMemory *shm = NULL;
@@ -201,19 +199,25 @@ static void remove_mined_transactions(const Block *confirmed){
 
 // Reads all pending transactions from the message queue
 static void drain_message_queue(int msqid){
-
     TxMessage msg;
+    ssize_t res;
+    while(1){
+        res = msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT);
+        if(res == -1){
+            // se non ci sono messaggi usciamo dal ciclo
+            if(errno == ENOMSG) break;
 
-    while(msgrcv(msqid,
-                 &msg,
-                 sizeof(msg.content),
-                 MSG_TYPE_TRANSACTION,
-                 IPC_NOWAIT) != -1){
+            // se è stato interroto da un segnale, ignora e riprova
+            if(errno == EINTR) continue;
 
+            // per altri errori, log e break
+            log_write("Errore fatale msgrcv");
+            break;
+        }
         add_transaction_to_pool(msg.content);
-
         log_write("%s", msg.content);
-    }
+    } 
+
 }
 
 // Handles a confirmed block received from a node
@@ -502,7 +506,7 @@ int miner_main(int id,
 
     munmap(shm, sizeof(SharedMemory));
     close(shm_fd);
-    fclose(logfile);
+    log_close();
 
     /*
     close(fifo_rd);

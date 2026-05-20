@@ -1,0 +1,713 @@
+[1779283612] miner ID [1]:miner avviato correttamente
+[1779283612] miner ID [1]:Miner started
+[1779283617] miner ID [1]:Alice pays Giacomo 49 coins
+[1779283617] miner ID [1]:Alice pays Bob 80 coins
+[1779283617] miner ID [1]:Francesco pays Giovanna 34 coins
+[1779283617] miner ID [1]:Francesco pays Ilaria 42 coins
+[1779283617] miner ID [1]:Mining successful
+[1779283617] miner ID [1]:Block sent to nodes
+[1779283617] miner ID [1]:Giacomo pays Bob 19 coins
+[1779283617] miner ID [1]:Francesco pays Giovanna 65 coins
+[1779283617] miner ID [1]:Confirmed block received from node
+[1779283620] miner ID [1]:Giacomo pays Alice 89 coins
+[1779283620] miner ID [1]:Giovanna pays Ilaria 65 coins
+[1779283620] miner ID [1]:Francesco pays Alice 65 coins
+[1779283620] miner ID [1]:Bob pays Ilaria 93 coins
+[1779283620] miner ID [1]:Giovanna pays Ilaria 50 coins
+[1779283620] miner ID [1]:Giacomo pays Bob 2 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Giovanna pays Alice 88 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Bob pays Alice 21 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Bob pays Giacomo 57 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Alice pays Giovanna 38 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Francesco pays Bob 54 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Bob pays Giovanna 90 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Giovanna pays Alice 36 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Bob pays Francesco 89 coins
+[1779283620] miner ID [1]:WARNING: transaction pool full
+[1779283620] miner ID [1]:Ilaria pays Giacomo 74 coins
+[1779283620] miner ID [1]:Confirmed block received from node
+[1779283624] miner ID [1]:WARNING: transaction pool full
+[1779283624] miner ID [1]:Francesco pays Bob 73 coins
+[1779283624] miner ID [1]:WARNING: transaction pool full
+[1779283624] miner ID [1]:Giacomo pays Giovanna 65 coins
+[1779283624] miner ID [1]:WARNING: transaction pool full
+[1779283624] miner ID [1]:Giovanna pays Bob 8 coins
+[1779283628] miner ID [1]:WARNING: transaction pool full
+[1779283628] miner ID [1]:Bob pays Ilaria 64 coins
+[1779283628] miner ID [1]:WARNING: transaction pool full
+[1779283628] miner ID [1]:Giovanna pays Bob 21 coins
+[1779283628] miner ID [1]:WARNING: transaction pool full
+[1779283628] miner ID [1]:Francesco pays Ilaria 55 coins
+[1779283628] miner ID [1]:WARNING: transaction pool full
+[1779283628] miner ID [1]:Ilaria pays Giovanna 19 coins
+[1779283628] miner ID [1]:WARNING: transaction pool full
+[1779283628] miner ID [1]:Francesco pays Giovanna 73 coins
+[1779283628] miner ID [1]:Mining successful
+[1779283628] miner ID [1]:Block sent to nodes
+[1779283628] miner ID [1]:Confirmed block received from node
+[1779283628] miner ID [1]:Lottery won but no transactions to mine
+[1779283628] miner ID [1]:Confirmed block received from node
+[1779283630] miner ID [1]:Confirmed block received from node
+[1779283630] miner ID [1]:Lottery won but no transactions to mine
+[1779283630] miner ID [1]:Confirmed block received from node
+[1779283630] miner ID [1]:Lottery won but no transactions to mine
+[1779283633] miner ID [1]:Confirmed block received from node
+[1779283634] miner ID [1]:Confirmed block received from node
+[1779283636] miner ID [1]:Giovanna pays Bob 71 coins
+[1779283636] miner ID [1]:Francesco pays Ilaria 38 coins
+[1779283636] miner ID [1]:Bob pays Francesco 30 coins
+[1779283636] miner ID [1]:Francesco pays Ilaria 89 coins
+[1779283636] miner ID [1]:Giacomo pays Francesco 84 coins
+[1779283636] miner ID [1]:Bob pays Ilaria 8 coins
+[1779283636] miner ID [1]:Francesco pays Alice 12 coins
+[1779283636] miner ID [1]:Ilaria pays Francesco 85 coins
+[1779283636] miner ID [1]:WARNING: transaction pool full
+[1779283636] miner ID [1]:Ilaria pays Alice 87 coins
+[1779283636] miner ID [1]:WARNING: transaction pool full
+[1779283636] miner ID [1]:Giovanna pays Francesco 18 coins
+[1779283640] miner ID [1]:Confirmed block received from node
+[1779283640] miner ID [1]:Mining successful
+[1779283640] miner ID [1]:Block sent to nodes
+[1779283640] miner ID [1]:Confirmed block received from node
+[1779283641] miner ID [1]:Ilaria pays Giacomo 92 coins
+[1779283641] miner ID [1]:Giacomo pays Bob 87 coins
+[1779283641] miner ID [1]:Giacomo pays Alice 86 coins
+[1779283641] miner ID [1]:Giovanna pays Bob 52 coins
+[1779283641] miner ID [1]:Ilaria pays Giovanna 31 coins
+[1779283641] miner ID [1]:Mining successful
+[1779283641] miner ID [1]:Block sent to nodes
+[1779283641] miner ID [1]:Confirmed block received from node
+[1779283641] miner ID [1]:Lottery won but no transactions to mine
+[1779283644] miner ID [1]:Giovanna pays Ilaria 93 coins
+[1779283644] miner ID [1]:Giovanna pays Alice 29 coins
+[1779283644] miner ID [1]:Ilaria pays Bob 95 coins
+[1779283644] miner ID [1]:Bob pays Ilaria 20 coins
+[1779283644] miner ID [1]:Alice pays Giovanna 92 coins
+[1779283644] miner ID [1]:Francesco pays Ilaria 49 coins
+[1779283644] miner ID [1]:Giovanna pays Bob 11 coins
+[1779283644] miner ID [1]:Alice pays Giovanna 34 coins
+[1779283644] miner ID [1]:WARNING: transaction pool full
+[1779283644] miner ID [1]:Bob pays Giacomo 14 coins
+[1779283644] miner ID [1]:WARNING: transaction pool full
+[1779283644] miner ID [1]:Giovanna pays Francesco 57 coins
+[1779283648] miner ID [1]:WARNING: transaction pool full
+[1779283648] miner ID [1]:Giacomo pays Alice 92 coins
+[1779283648] miner ID [1]:WARNING: transaction pool full
+[1779283648] miner ID [1]:Alice pays Bob 25 coins
+[1779283648] miner ID [1]:WARNING: transaction pool full
+[1779283648] miner ID [1]:Bob pays Ilaria 1 coins
+[1779283648] miner ID [1]:WARNING: transaction pool full
+[1779283648] miner ID [1]:Giovanna pays Giacomo 71 coins
+[1779283648] miner ID [1]:WARNING: transaction pool full
+[1779283648] miner ID [1]:Bob pays Giacomo 54 coins
+[1779283649] miner ID [1]:Confirmed block received from node
+[1779283649] miner ID [1]:Confirmed block received from node
+[1779283650] miner ID [1]:Confirmed block received from node
+[1779283651] miner ID [1]:Confirmed block received from node
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Francesco pays Alice 90 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giacomo pays Giovanna 13 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giovanna pays Ilaria 35 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Giovanna 82 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Alice 60 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Alice pays Ilaria 94 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Bob 21 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Bob pays Francesco 8 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giacomo pays Francesco 47 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giacomo pays Alice 37 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Bob 64 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Bob 31 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giacomo pays Francesco 39 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Alice pays Ilaria 49 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Francesco pays Giovanna 35 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giacomo pays Francesco 78 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giovanna pays Bob 58 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giovanna pays Francesco 6 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Giovanna pays Francesco 40 coins
+[1779283655] miner ID [1]:WARNING: transaction pool full
+[1779283655] miner ID [1]:Ilaria pays Giovanna 94 coins
+[1779283659] miner ID [1]:WARNING: transaction pool full
+[1779283659] miner ID [1]:Ilaria pays Giovanna 64 coins
+[1779283659] miner ID [1]:WARNING: transaction pool full
+[1779283659] miner ID [1]:Giacomo pays Bob 8 coins
+[1779283659] miner ID [1]:WARNING: transaction pool full
+[1779283659] miner ID [1]:Francesco pays Ilaria 43 coins
+[1779283660] miner ID [1]:Confirmed block received from node
+[1779283662] miner ID [1]:Confirmed block received from node
+[1779283662] miner ID [1]:Confirmed block received from node
+[1779283665] miner ID [1]:WARNING: transaction pool full
+[1779283665] miner ID [1]:Giacomo pays Ilaria 97 coins
+[1779283665] miner ID [1]:WARNING: transaction pool full
+[1779283665] miner ID [1]:Ilaria pays Giovanna 84 coins
+[1779283665] miner ID [1]:WARNING: transaction pool full
+[1779283665] miner ID [1]:Giacomo pays Francesco 59 coins
+[1779283665] miner ID [1]:WARNING: transaction pool full
+[1779283665] miner ID [1]:Giovanna pays Francesco 19 coins
+[1779283665] miner ID [1]:WARNING: transaction pool full
+[1779283665] miner ID [1]:Alice pays Bob 42 coins
+[1779283665] miner ID [1]:Mining successful
+[1779283665] miner ID [1]:Block sent to nodes
+[1779283665] miner ID [1]:Confirmed block received from node
+[1779283666] miner ID [1]:Giacomo pays Bob 93 coins
+[1779283666] miner ID [1]:Ilaria pays Giacomo 24 coins
+[1779283666] miner ID [1]:Francesco pays Bob 54 coins
+[1779283666] miner ID [1]:Bob pays Ilaria 27 coins
+[1779283666] miner ID [1]:Francesco pays Bob 25 coins
+[1779283670] miner ID [1]:Confirmed block received from node
+[1779283670] miner ID [1]:Mining successful
+[1779283670] miner ID [1]:Block sent to nodes
+[1779283670] miner ID [1]:Confirmed block received from node
+[1779283670] miner ID [1]:Confirmed block received from node
+[1779283674] miner ID [1]:Confirmed block received from node
+[1779283674] miner ID [1]:Lottery won but no transactions to mine
+[1779283679] miner ID [1]:Lottery won but no transactions to mine
+[1779283680] miner ID [1]:Confirmed block received from node
+[1779283680] miner ID [1]:Confirmed block received from node
+[1779283683] miner ID [1]:Giovanna pays Ilaria 80 coins
+[1779283683] miner ID [1]:Giovanna pays Bob 19 coins
+[1779283683] miner ID [1]:Francesco pays Giacomo 7 coins
+[1779283683] miner ID [1]:Bob pays Francesco 77 coins
+[1779283683] miner ID [1]:Alice pays Bob 4 coins
+[1779283683] miner ID [1]:Francesco pays Ilaria 98 coins
+[1779283686] miner ID [1]:Bob pays Francesco 5 coins
+[1779283686] miner ID [1]:Ilaria pays Alice 83 coins
+[1779283686] miner ID [1]:WARNING: transaction pool full
+[1779283686] miner ID [1]:Ilaria pays Bob 90 coins
+[1779283686] miner ID [1]:WARNING: transaction pool full
+[1779283686] miner ID [1]:Bob pays Ilaria 33 coins
+[1779283693] miner ID [1]:Confirmed block received from node
+[1779283696] miner ID [1]:WARNING: transaction pool full
+[1779283696] miner ID [1]:Giovanna pays Giacomo 33 coins
+[1779283696] miner ID [1]:Alice pays Bob 22 coins
+[1779283696] miner ID [1]:WARNING: transaction pool full
+[1779283696] miner ID [1]:Giacomo pays Giovanna 23 coins
+[1779283698] miner ID [1]:Confirmed block received from node
+[1779283698] miner ID [1]:Confirmed block received from node
+[1779283699] miner ID [1]:Confirmed block received from node
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giovanna pays Francesco 57 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Bob pays Alice 80 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Bob pays Giacomo 37 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Ilaria pays Giacomo 75 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giovanna pays Giacomo 56 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giovanna pays Bob 85 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Francesco pays Ilaria 7 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giacomo pays Francesco 28 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giacomo pays Giovanna 57 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Alice pays Giacomo 68 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giacomo pays Ilaria 43 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Giacomo pays Alice 44 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Francesco pays Alice 54 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Francesco pays Giovanna 85 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Francesco pays Bob 4 coins
+[1779283703] miner ID [1]:WARNING: transaction pool full
+[1779283703] miner ID [1]:Ilaria pays Bob 77 coins
+[1779283703] miner ID [1]:Confirmed block received from node
+[1779283705] miner ID [1]:WARNING: transaction pool full
+[1779283705] miner ID [1]:Ilaria pays Alice 53 coins
+[1779283705] miner ID [1]:WARNING: transaction pool full
+[1779283705] miner ID [1]:Giovanna pays Francesco 9 coins
+[1779283705] miner ID [1]:WARNING: transaction pool full
+[1779283705] miner ID [1]:Francesco pays Bob 93 coins
+[1779283705] miner ID [1]:WARNING: transaction pool full
+[1779283705] miner ID [1]:Bob pays Ilaria 25 coins
+[1779283705] miner ID [1]:WARNING: transaction pool full
+[1779283705] miner ID [1]:Alice pays Bob 56 coins
+[1779283708] miner ID [1]:Confirmed block received from node
+[1779283713] miner ID [1]:Confirmed block received from node
+[1779283713] miner ID [1]:Mining successful
+[1779283713] miner ID [1]:Block sent to nodes
+[1779283713] miner ID [1]:Confirmed block received from node
+[1779283713] miner ID [1]:Confirmed block received from node
+[1779283715] miner ID [1]:Confirmed block received from node
+[1779283715] miner ID [1]:Lottery won but no transactions to mine
+[1779283717] miner ID [1]:Confirmed block received from node
+[1779283720] miner ID [1]:Alice pays Bob 10 coins
+[1779283720] miner ID [1]:Francesco pays Alice 17 coins
+[1779283720] miner ID [1]:Giovanna pays Francesco 87 coins
+[1779283720] miner ID [1]:Bob pays Alice 56 coins
+[1779283720] miner ID [1]:Alice pays Ilaria 82 coins
+[1779283722] miner ID [1]:Bob pays Ilaria 61 coins
+[1779283724] miner ID [1]:Mining successful
+[1779283724] miner ID [1]:Block sent to nodes
+[1779283724] miner ID [1]:Confirmed block received from node
+[1779283724] miner ID [1]:Confirmed block received from node
+[1779283726] miner ID [1]:Bob pays Alice 92 coins
+[1779283728] miner ID [1]:Giovanna pays Bob 52 coins
+[1779283728] miner ID [1]:Bob pays Giovanna 59 coins
+[1779283728] miner ID [1]:Giovanna pays Alice 4 coins
+[1779283728] miner ID [1]:Giovanna pays Ilaria 17 coins
+[1779283728] miner ID [1]:Alice pays Ilaria 89 coins
+[1779283728] miner ID [1]:Alice pays Giacomo 86 coins
+[1779283735] miner ID [1]:Alice pays Francesco 41 coins
+[1779283735] miner ID [1]:Francesco pays Bob 8 coins
+[1779283735] miner ID [1]:Confirmed block received from node
+[1779283738] miner ID [1]:Confirmed block received from node
+[1779283738] miner ID [1]:Mining successful
+[1779283738] miner ID [1]:Block sent to nodes
+[1779283738] miner ID [1]:Confirmed block received from node
+[1779283738] miner ID [1]:Confirmed block received from node
+[1779283765] miner ID [1]:Giacomo pays Alice 21 coins
+[1779283769] miner ID [1]:Bob pays Alice 74 coins
+[1779283769] miner ID [1]:Giovanna pays Bob 22 coins
+[1779283771] miner ID [1]:Giacomo pays Giovanna 24 coins
+[1779283771] miner ID [1]:Francesco pays Bob 54 coins
+[1779283771] miner ID [1]:Ilaria pays Giovanna 27 coins
+[1779283771] miner ID [1]:Giacomo pays Giovanna 52 coins
+[1779283771] miner ID [1]:Francesco pays Giacomo 49 coins
+[1779283771] miner ID [1]:WARNING: transaction pool full
+[1779283771] miner ID [1]:Alice pays Giovanna 2 coins
+[1779283776] miner ID [1]:WARNING: transaction pool full
+[1779283776] miner ID [1]:Bob pays Giovanna 58 coins
+[1779283776] miner ID [1]:WARNING: transaction pool full
+[1779283776] miner ID [1]:Giacomo pays Giovanna 34 coins
+[1779283776] miner ID [1]:WARNING: transaction pool full
+[1779283776] miner ID [1]:Francesco pays Bob 44 coins
+[1779283776] miner ID [1]:WARNING: transaction pool full
+[1779283776] miner ID [1]:Giovanna pays Ilaria 94 coins
+[1779283776] miner ID [1]:WARNING: transaction pool full
+[1779283776] miner ID [1]:Francesco pays Bob 49 coins
+[1779283777] miner ID [1]:WARNING: transaction pool full
+[1779283777] miner ID [1]:Ilaria pays Francesco 75 coins
+[1779283782] miner ID [1]:WARNING: transaction pool full
+[1779283782] miner ID [1]:Bob pays Ilaria 51 coins
+[1779283782] miner ID [1]:WARNING: transaction pool full
+[1779283782] miner ID [1]:Giacomo pays Ilaria 23 coins
+[1779283782] miner ID [1]:WARNING: transaction pool full
+[1779283782] miner ID [1]:Alice pays Bob 85 coins
+[1779283782] miner ID [1]:WARNING: transaction pool full
+[1779283782] miner ID [1]:Alice pays Giovanna 34 coins
+[1779283782] miner ID [1]:WARNING: transaction pool full
+[1779283782] miner ID [1]:Ilaria pays Giacomo 78 coins
+[1779283784] miner ID [1]:WARNING: transaction pool full
+[1779283784] miner ID [1]:Giovanna pays Alice 84 coins
+[1779283784] miner ID [1]:WARNING: transaction pool full
+[1779283784] miner ID [1]:Francesco pays Bob 90 coins
+[1779283784] miner ID [1]:WARNING: transaction pool full
+[1779283784] miner ID [1]:Francesco pays Alice 41 coins
+[1779283784] miner ID [1]:WARNING: transaction pool full
+[1779283784] miner ID [1]:Bob pays Giovanna 30 coins
+[1779283784] miner ID [1]:WARNING: transaction pool full
+[1779283784] miner ID [1]:Francesco pays Giacomo 32 coins
+[1779283784] miner ID [1]:Mining successful
+[1779283784] miner ID [1]:Block sent to nodes
+[1779283784] miner ID [1]:Confirmed block received from node
+[1779283785] miner ID [1]:Ilaria pays Bob 3 coins
+[1779283785] miner ID [1]:Francesco pays Giovanna 31 coins
+[1779283785] miner ID [1]:Francesco pays Bob 85 coins
+[1779283785] miner ID [1]:Francesco pays Ilaria 84 coins
+[1779283787] miner ID [1]:Mining successful
+[1779283787] miner ID [1]:Block sent to nodes
+[1779283787] miner ID [1]:Confirmed block received from node
+[1779283787] miner ID [1]:Confirmed block received from node
+[1779283792] miner ID [1]:Giovanna pays Giacomo 91 coins
+[1779283792] miner ID [1]:Francesco pays Ilaria 4 coins
+[1779283792] miner ID [1]:Bob pays Ilaria 68 coins
+[1779283792] miner ID [1]:Ilaria pays Giacomo 13 coins
+[1779283792] miner ID [1]:Giacomo pays Ilaria 76 coins
+[1779283792] miner ID [1]:Francesco pays Giacomo 22 coins
+[1779283792] miner ID [1]:Alice pays Giovanna 71 coins
+[1779283792] miner ID [1]:Ilaria pays Giacomo 69 coins
+[1779283792] miner ID [1]:WARNING: transaction pool full
+[1779283792] miner ID [1]:Alice pays Bob 97 coins
+[1779283792] miner ID [1]:WARNING: transaction pool full
+[1779283792] miner ID [1]:Giovanna pays Ilaria 63 coins
+[1779283792] miner ID [1]:Mining successful
+[1779283792] miner ID [1]:Block sent to nodes
+[1779283792] miner ID [1]:Confirmed block received from node
+[1779283792] miner ID [1]:Confirmed block received from node
+[1779283792] miner ID [1]:Confirmed block received from node
+[1779283792] miner ID [1]:Confirmed block received from node
+[1779283797] miner ID [1]:Bob pays Ilaria 35 coins
+[1779283797] miner ID [1]:Ilaria pays Francesco 94 coins
+[1779283797] miner ID [1]:Giacomo pays Ilaria 82 coins
+[1779283797] miner ID [1]:Alice pays Francesco 18 coins
+[1779283797] miner ID [1]:Giovanna pays Alice 38 coins
+[1779283797] miner ID [1]:Bob pays Alice 27 coins
+[1779283797] miner ID [1]:Ilaria pays Giacomo 68 coins
+[1779283797] miner ID [1]:Francesco pays Bob 73 coins
+[1779283797] miner ID [1]:WARNING: transaction pool full
+[1779283797] miner ID [1]:Giovanna pays Bob 82 coins
+[1779283797] miner ID [1]:WARNING: transaction pool full
+[1779283797] miner ID [1]:Ilaria pays Francesco 97 coins
+[1779283797] miner ID [1]:Confirmed block received from node
+[1779283797] miner ID [1]:Mining successful
+[1779283797] miner ID [1]:Block sent to nodes
+[1779283797] miner ID [1]:Confirmed block received from node
+[1779283797] miner ID [1]:Confirmed block received from node
+[1779283797] miner ID [1]:Lottery won but no transactions to mine
+[1779283798] miner ID [1]:Francesco pays Alice 83 coins
+[1779283798] miner ID [1]:Ilaria pays Giovanna 4 coins
+[1779283798] miner ID [1]:Giacomo pays Alice 83 coins
+[1779283798] miner ID [1]:Ilaria pays Alice 47 coins
+[1779283798] miner ID [1]:Bob pays Alice 87 coins
+[1779283798] miner ID [1]:Mining successful
+[1779283798] miner ID [1]:Block sent to nodes
+[1779283798] miner ID [1]:Confirmed block received from node
+[1779283798] miner ID [1]:Lottery won but no transactions to mine
+[1779283802] miner ID [1]:Giovanna pays Giacomo 72 coins
+[1779283802] miner ID [1]:Alice pays Ilaria 32 coins
+[1779283802] miner ID [1]:Alice pays Bob 34 coins
+[1779283802] miner ID [1]:Alice pays Bob 4 coins
+[1779283802] miner ID [1]:Alice pays Francesco 63 coins
+[1779283802] miner ID [1]:Francesco pays Giovanna 35 coins
+[1779283802] miner ID [1]:Giacomo pays Alice 67 coins
+[1779283802] miner ID [1]:Giovanna pays Bob 69 coins
+[1779283802] miner ID [1]:WARNING: transaction pool full
+[1779283802] miner ID [1]:Giovanna pays Bob 66 coins
+[1779283802] miner ID [1]:WARNING: transaction pool full
+[1779283802] miner ID [1]:Bob pays Giovanna 90 coins
+[1779283802] miner ID [1]:WARNING: transaction pool full
+[1779283802] miner ID [1]:Giacomo pays Francesco 15 coins
+[1779283802] miner ID [1]:Ilaria pays Bob 74 coins
+[1779283802] miner ID [1]:WARNING: transaction pool full
+[1779283802] miner ID [1]:Giovanna pays Ilaria 15 coins
+[1779283802] miner ID [1]:WARNING: transaction pool full
+[1779283802] miner ID [1]:Ilaria pays Giovanna 27 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Bob pays Giovanna 40 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Ilaria pays Giacomo 76 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Bob pays Francesco 23 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Bob pays Giovanna 61 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Giacomo pays Bob 37 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Bob pays Francesco 24 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Bob pays Francesco 8 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Giacomo pays Alice 7 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Giovanna pays Bob 32 coins
+[1779283814] miner ID [1]:WARNING: transaction pool full
+[1779283814] miner ID [1]:Alice pays Francesco 50 coins
+[1779283814] miner ID [1]:Mining successful
+[1779283814] miner ID [1]:Block sent to nodes
+[1779283814] miner ID [1]:Confirmed block received from node
+[1779283814] miner ID [1]:Lottery won but no transactions to mine
+[1779283814] miner ID [1]:Confirmed block received from node
+[1779283814] miner ID [1]:Lottery won but no transactions to mine
+[1779283818] miner ID [1]:Confirmed block received from node
+[1779283819] miner ID [1]:Confirmed block received from node
+[1779283820] miner ID [1]:Confirmed block received from node
+[1779283820] miner ID [1]:Confirmed block received from node
+[1779283822] miner ID [1]:Francesco pays Ilaria 45 coins
+[1779283822] miner ID [1]:Alice pays Giacomo 18 coins
+[1779283822] miner ID [1]:Bob pays Giacomo 63 coins
+[1779283822] miner ID [1]:Francesco pays Bob 29 coins
+[1779283822] miner ID [1]:Bob pays Alice 41 coins
+[1779283825] miner ID [1]:Confirmed block received from node
+[1779283825] miner ID [1]:Confirmed block received from node
+[1779283828] miner ID [1]:Confirmed block received from node
+[1779283830] miner ID [1]:Confirmed block received from node
+[1779283834] miner ID [1]:Giovanna pays Francesco 2 coins
+[1779283834] miner ID [1]:Ilaria pays Francesco 77 coins
+[1779283834] miner ID [1]:Bob pays Giovanna 32 coins
+[1779283834] miner ID [1]:WARNING: transaction pool full
+[1779283834] miner ID [1]:Francesco pays Giacomo 23 coins
+[1779283834] miner ID [1]:WARNING: transaction pool full
+[1779283834] miner ID [1]:Bob pays Alice 1 coins
+[1779283837] miner ID [1]:WARNING: transaction pool full
+[1779283837] miner ID [1]:Ilaria pays Giovanna 23 coins
+[1779283837] miner ID [1]:WARNING: transaction pool full
+[1779283837] miner ID [1]:Alice pays Giovanna 82 coins
+[1779283837] miner ID [1]:WARNING: transaction pool full
+[1779283837] miner ID [1]:Giacomo pays Bob 84 coins
+[1779283837] miner ID [1]:WARNING: transaction pool full
+[1779283837] miner ID [1]:Giovanna pays Giacomo 44 coins
+[1779283839] miner ID [1]:WARNING: transaction pool full
+[1779283839] miner ID [1]:Bob pays Giacomo 34 coins
+[1779283839] miner ID [1]:WARNING: transaction pool full
+[1779283839] miner ID [1]:Alice pays Francesco 2 coins
+[1779283839] miner ID [1]:Mining successful
+[1779283839] miner ID [1]:Block sent to nodes
+[1779283839] miner ID [1]:Confirmed block received from node
+[1779283839] miner ID [1]:Lottery won but no transactions to mine
+[1779283839] miner ID [1]:Confirmed block received from node
+[1779283843] miner ID [1]:Giovanna pays Ilaria 94 coins
+[1779283843] miner ID [1]:Giacomo pays Alice 45 coins
+[1779283843] miner ID [1]:Francesco pays Giacomo 25 coins
+[1779283843] miner ID [1]:Alice pays Giacomo 8 coins
+[1779283843] miner ID [1]:Bob pays Giacomo 84 coins
+[1779283843] miner ID [1]:Ilaria pays Francesco 93 coins
+[1779283843] miner ID [1]:Confirmed block received from node
+[1779283846] miner ID [1]:Confirmed block received from node
+[1779283848] miner ID [1]:Giacomo pays Bob 51 coins
+[1779283848] miner ID [1]:Ilaria pays Giacomo 82 coins
+[1779283848] miner ID [1]:WARNING: transaction pool full
+[1779283848] miner ID [1]:Giovanna pays Giacomo 57 coins
+[1779283848] miner ID [1]:WARNING: transaction pool full
+[1779283848] miner ID [1]:Giacomo pays Ilaria 8 coins
+[1779283848] miner ID [1]:WARNING: transaction pool full
+[1779283848] miner ID [1]:Francesco pays Alice 33 coins
+[1779283849] miner ID [1]:Confirmed block received from node
+[1779283849] miner ID [1]:Confirmed block received from node
+[1779283850] miner ID [1]:WARNING: transaction pool full
+[1779283850] miner ID [1]:Giovanna pays Ilaria 75 coins
+[1779283850] miner ID [1]:WARNING: transaction pool full
+[1779283850] miner ID [1]:Francesco pays Alice 62 coins
+[1779283859] miner ID [1]:WARNING: transaction pool full
+[1779283859] miner ID [1]:Ilaria pays Giovanna 25 coins
+[1779283859] miner ID [1]:WARNING: transaction pool full
+[1779283859] miner ID [1]:Giovanna pays Francesco 17 coins
+[1779283859] miner ID [1]:WARNING: transaction pool full
+[1779283859] miner ID [1]:Alice pays Ilaria 21 coins
+[1779283859] miner ID [1]:WARNING: transaction pool full
+[1779283859] miner ID [1]:Bob pays Alice 3 coins
+[1779283859] miner ID [1]:Confirmed block received from node
+[1779283860] miner ID [1]:Confirmed block received from node
+[1779283864] miner ID [1]:WARNING: transaction pool full
+[1779283864] miner ID [1]:Ilaria pays Bob 44 coins
+[1779283864] miner ID [1]:WARNING: transaction pool full
+[1779283864] miner ID [1]:Giovanna pays Bob 18 coins
+[1779283864] miner ID [1]:WARNING: transaction pool full
+[1779283864] miner ID [1]:Francesco pays Alice 81 coins
+[1779283864] miner ID [1]:Mining successful
+[1779283864] miner ID [1]:Block sent to nodes
+[1779283864] miner ID [1]:Confirmed block received from node
+[1779283866] miner ID [1]:Confirmed block received from node
+[1779283866] miner ID [1]:Confirmed block received from node
+[1779283866] miner ID [1]:Confirmed block received from node
+[1779283867] miner ID [1]:Confirmed block received from node
+[1779283871] miner ID [1]:Confirmed block received from node
+[1779283871] miner ID [1]:Lottery won but no transactions to mine
+[1779283872] miner ID [1]:Confirmed block received from node
+[1779283872] miner ID [1]:Lottery won but no transactions to mine
+[1779283876] miner ID [1]:Confirmed block received from node
+[1779283876] miner ID [1]:Lottery won but no transactions to mine
+[1779283878] miner ID [1]:Francesco pays Bob 21 coins
+[1779283878] miner ID [1]:Giacomo pays Francesco 88 coins
+[1779283878] miner ID [1]:Francesco pays Ilaria 64 coins
+[1779283878] miner ID [1]:Alice pays Francesco 94 coins
+[1779283878] miner ID [1]:Bob pays Francesco 74 coins
+[1779283878] miner ID [1]:Bob pays Giovanna 47 coins
+[1779283878] miner ID [1]:Mining successful
+[1779283878] miner ID [1]:Block sent to nodes
+[1779283878] miner ID [1]:Confirmed block received from node
+[1779283878] miner ID [1]:Confirmed block received from node
+[1779283879] miner ID [1]:Bob pays Francesco 63 coins
+[1779283879] miner ID [1]:Alice pays Francesco 80 coins
+[1779283879] miner ID [1]:Giacomo pays Ilaria 49 coins
+[1779283879] miner ID [1]:Ilaria pays Bob 77 coins
+[1779283879] miner ID [1]:Francesco pays Giovanna 99 coins
+[1779283880] miner ID [1]:Confirmed block received from node
+[1779283882] miner ID [1]:Confirmed block received from node
+[1779283883] miner ID [1]:Francesco pays Giacomo 47 coins
+[1779283883] miner ID [1]:Bob pays Alice 79 coins
+[1779283883] miner ID [1]:Ilaria pays Francesco 41 coins
+[1779283889] miner ID [1]:WARNING: transaction pool full
+[1779283889] miner ID [1]:Giacomo pays Francesco 45 coins
+[1779283889] miner ID [1]:WARNING: transaction pool full
+[1779283889] miner ID [1]:Ilaria pays Giacomo 23 coins
+[1779283889] miner ID [1]:Mining successful
+[1779283889] miner ID [1]:Block sent to nodes
+[1779283889] miner ID [1]:Confirmed block received from node
+[1779283889] miner ID [1]:Confirmed block received from node
+[1779283893] miner ID [1]:Confirmed block received from node
+[1779283894] miner ID [1]:Giacomo pays Bob 96 coins
+[1779283894] miner ID [1]:Giovanna pays Alice 5 coins
+[1779283894] miner ID [1]:Alice pays Giovanna 62 coins
+[1779283894] miner ID [1]:Giacomo pays Giovanna 8 coins
+[1779283894] miner ID [1]:Ilaria pays Bob 59 coins
+[1779283894] miner ID [1]:Mining successful
+[1779283894] miner ID [1]:Block sent to nodes
+[1779283894] miner ID [1]:Confirmed block received from node
+[1779283894] miner ID [1]:Confirmed block received from node
+[1779283895] miner ID [1]:Confirmed block received from node
+[1779283895] miner ID [1]:Confirmed block received from node
+[1779283898] miner ID [1]:Confirmed block received from node
+[1779283899] miner ID [1]:Confirmed block received from node
+[1779283902] miner ID [1]:Confirmed block received from node
+[1779283903] miner ID [1]:Confirmed block received from node
+[1779283906] miner ID [1]:Giovanna pays Francesco 39 coins
+[1779283906] miner ID [1]:Giacomo pays Alice 32 coins
+[1779283906] miner ID [1]:Francesco pays Giovanna 44 coins
+[1779283906] miner ID [1]:Francesco pays Bob 90 coins
+[1779283906] miner ID [1]:Giovanna pays Giacomo 70 coins
+[1779283906] miner ID [1]:Alice pays Ilaria 65 coins
+[1779283906] miner ID [1]:Bob pays Alice 2 coins
+[1779283906] miner ID [1]:Bob pays Ilaria 59 coins
+[1779283906] miner ID [1]:WARNING: transaction pool full
+[1779283906] miner ID [1]:Bob pays Giovanna 79 coins
+[1779283906] miner ID [1]:WARNING: transaction pool full
+[1779283906] miner ID [1]:Bob pays Giacomo 54 coins
+[1779283906] miner ID [1]:Mining successful
+[1779283906] miner ID [1]:Block sent to nodes
+[1779283906] miner ID [1]:Confirmed block received from node
+[1779283907] miner ID [1]:Giovanna pays Bob 11 coins
+[1779283907] miner ID [1]:Bob pays Francesco 34 coins
+[1779283907] miner ID [1]:Alice pays Ilaria 97 coins
+[1779283907] miner ID [1]:Ilaria pays Giacomo 25 coins
+[1779283907] miner ID [1]:Ilaria pays Giacomo 82 coins
+[1779283908] miner ID [1]:Confirmed block received from node
+[1779283908] miner ID [1]:Confirmed block received from node
+[1779283909] miner ID [1]:Mining successful
+[1779283909] miner ID [1]:Block sent to nodes
+[1779283909] miner ID [1]:Confirmed block received from node
+[1779283909] miner ID [1]:Confirmed block received from node
+[1779283912] miner ID [1]:Confirmed block received from node
+[1779283912] miner ID [1]:Lottery won but no transactions to mine
+[1779283912] miner ID [1]:Confirmed block received from node
+[1779283912] miner ID [1]:Lottery won but no transactions to mine
+[1779283912] miner ID [1]:Confirmed block received from node
+[1779283917] miner ID [1]:Ilaria pays Alice 83 coins
+[1779283917] miner ID [1]:Giovanna pays Bob 27 coins
+[1779283917] miner ID [1]:Francesco pays Ilaria 71 coins
+[1779283918] miner ID [1]:Ilaria pays Giovanna 83 coins
+[1779283918] miner ID [1]:Giacomo pays Francesco 4 coins
+[1779283918] miner ID [1]:Alice pays Giovanna 92 coins
+[1779283918] miner ID [1]:Giacomo pays Ilaria 28 coins
+[1779283918] miner ID [1]:Francesco pays Giovanna 82 coins
+[1779283918] miner ID [1]:Mining successful
+[1779283918] miner ID [1]:Block sent to nodes
+[1779283918] miner ID [1]:Confirmed block received from node
+[1779283918] miner ID [1]:Lottery won but no transactions to mine
+[1779283920] miner ID [1]:Alice pays Giovanna 21 coins
+[1779283920] miner ID [1]:Francesco pays Alice 7 coins
+[1779283920] miner ID [1]:Francesco pays Giacomo 97 coins
+[1779283920] miner ID [1]:Giovanna pays Alice 47 coins
+[1779283920] miner ID [1]:Alice pays Ilaria 34 coins
+[1779283922] miner ID [1]:Alice pays Ilaria 94 coins
+[1779283922] miner ID [1]:Giacomo pays Francesco 29 coins
+[1779283923] miner ID [1]:Confirmed block received from node
+[1779283924] miner ID [1]:Confirmed block received from node
+[1779283924] miner ID [1]:Mining successful
+[1779283924] miner ID [1]:Block sent to nodes
+[1779283924] miner ID [1]:Confirmed block received from node
+[1779283927] miner ID [1]:Bob pays Alice 61 coins
+[1779283927] miner ID [1]:Giovanna pays Francesco 86 coins
+[1779283927] miner ID [1]:Giovanna pays Ilaria 51 coins
+[1779283927] miner ID [1]:Bob pays Giacomo 83 coins
+[1779283927] miner ID [1]:Alice pays Giacomo 19 coins
+[1779283927] miner ID [1]:Alice pays Ilaria 17 coins
+[1779283927] miner ID [1]:Francesco pays Ilaria 67 coins
+[1779283927] miner ID [1]:Bob pays Alice 46 coins
+[1779283927] miner ID [1]:WARNING: transaction pool full
+[1779283927] miner ID [1]:Bob pays Francesco 12 coins
+[1779283930] miner ID [1]:WARNING: transaction pool full
+[1779283930] miner ID [1]:Ilaria pays Alice 80 coins
+[1779283930] miner ID [1]:WARNING: transaction pool full
+[1779283930] miner ID [1]:Ilaria pays Giacomo 31 coins
+[1779283930] miner ID [1]:WARNING: transaction pool full
+[1779283930] miner ID [1]:Ilaria pays Francesco 22 coins
+[1779283930] miner ID [1]:WARNING: transaction pool full
+[1779283930] miner ID [1]:Giovanna pays Giacomo 24 coins
+[1779283930] miner ID [1]:WARNING: transaction pool full
+[1779283930] miner ID [1]:Francesco pays Alice 25 coins
+[1779283930] miner ID [1]:Mining successful
+[1779283930] miner ID [1]:Block sent to nodes
+[1779283930] miner ID [1]:Confirmed block received from node
+[1779283934] miner ID [1]:Alice pays Bob 58 coins
+[1779283934] miner ID [1]:Giovanna pays Francesco 95 coins
+[1779283934] miner ID [1]:Giovanna pays Ilaria 77 coins
+[1779283934] miner ID [1]:Giovanna pays Bob 98 coins
+[1779283934] miner ID [1]:Francesco pays Alice 85 coins
+[1779283934] miner ID [1]:Giacomo pays Ilaria 63 coins
+[1779283934] miner ID [1]:Alice pays Bob 19 coins
+[1779283934] miner ID [1]:Giacomo pays Francesco 65 coins
+[1779283934] miner ID [1]:WARNING: transaction pool full
+[1779283934] miner ID [1]:Francesco pays Alice 61 coins
+[1779283934] miner ID [1]:WARNING: transaction pool full
+[1779283934] miner ID [1]:Giacomo pays Bob 65 coins
+[1779283934] miner ID [1]:Confirmed block received from node
+[1779283935] miner ID [1]:Confirmed block received from node
+[1779283935] miner ID [1]:Mining successful
+[1779283935] miner ID [1]:Block sent to nodes
+[1779283935] miner ID [1]:Confirmed block received from node
+[1779283936] miner ID [1]:Ilaria pays Giacomo 66 coins
+[1779283936] miner ID [1]:Alice pays Giovanna 48 coins
+[1779283936] miner ID [1]:Bob pays Giacomo 38 coins
+[1779283936] miner ID [1]:Mining successful
+[1779283936] miner ID [1]:Block sent to nodes
+[1779283936] miner ID [1]:Confirmed block received from node
+[1779283937] miner ID [1]:Alice pays Francesco 96 coins
+[1779283937] miner ID [1]:Giacomo pays Bob 42 coins
+[1779283937] miner ID [1]:Bob pays Ilaria 80 coins
+[1779283937] miner ID [1]:Mining successful
+[1779283937] miner ID [1]:Block sent to nodes
+[1779283937] miner ID [1]:Confirmed block received from node
+[1779283942] miner ID [1]:Bob pays Giovanna 74 coins
+[1779283942] miner ID [1]:Giovanna pays Bob 57 coins
+[1779283942] miner ID [1]:Giacomo pays Alice 54 coins
+[1779283942] miner ID [1]:Giacomo pays Giovanna 66 coins
+[1779283942] miner ID [1]:Alice pays Giovanna 15 coins
+[1779283943] miner ID [1]:Ilaria pays Francesco 39 coins
+[1779283943] miner ID [1]:Giacomo pays Francesco 79 coins
+[1779283944] miner ID [1]:Bob pays Ilaria 96 coins
+[1779283944] miner ID [1]:WARNING: transaction pool full
+[1779283944] miner ID [1]:Bob pays Giovanna 71 coins
+[1779283944] miner ID [1]:WARNING: transaction pool full
+[1779283944] miner ID [1]:Bob pays Alice 8 coins
+[1779283944] miner ID [1]:Confirmed block received from node
+[1779283945] miner ID [1]:Confirmed block received from node
+[1779283945] miner ID [1]:Confirmed block received from node
+[1779283948] miner ID [1]:WARNING: transaction pool full
+[1779283948] miner ID [1]:Giovanna pays Giacomo 62 coins
+[1779283948] miner ID [1]:WARNING: transaction pool full
+[1779283948] miner ID [1]:Giovanna pays Giacomo 81 coins
+[1779283948] miner ID [1]:WARNING: transaction pool full
+[1779283948] miner ID [1]:Alice pays Giacomo 13 coins
+[1779283948] miner ID [1]:WARNING: transaction pool full
+[1779283948] miner ID [1]:Alice pays Francesco 30 coins
+[1779283948] miner ID [1]:WARNING: transaction pool full
+[1779283948] miner ID [1]:Bob pays Francesco 40 coins
+[1779283950] miner ID [1]:Confirmed block received from node
+[1779283953] miner ID [1]:Confirmed block received from node
+[1779283953] miner ID [1]:Confirmed block received from node
+[1779283954] miner ID [1]:WARNING: transaction pool full
+[1779283954] miner ID [1]:Bob pays Ilaria 20 coins
+[1779283954] miner ID [1]:WARNING: transaction pool full
+[1779283954] miner ID [1]:Bob pays Ilaria 80 coins
+[1779283954] miner ID [1]:WARNING: transaction pool full
+[1779283954] miner ID [1]:Giacomo pays Giovanna 66 coins
+[1779283954] miner ID [1]:WARNING: transaction pool full
+[1779283954] miner ID [1]:Giovanna pays Giacomo 93 coins
+[1779283954] miner ID [1]:WARNING: transaction pool full
+[1779283954] miner ID [1]:Francesco pays Ilaria 2 coins
+[1779283957] miner ID [1]:Mining successful
+[1779283957] miner ID [1]:Block sent to nodes
+[1779283957] miner ID [1]:Confirmed block received from node
+[1779283963] miner ID [1]:Miner shutting down

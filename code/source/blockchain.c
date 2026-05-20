@@ -219,7 +219,7 @@ static int line_to_block(char *line, Block *b) { //arg: riga csv, puntatore al b
     b->nonce     = hex_to_int(fields[4]);
 
     strncpy(b->prev_hash,   fields[2], HASH_LENGTH); //no conversioni , stringhe salvate nel buffer
-    b->prev_hash[HASH_LENGTH];
+    b->prev_hash[HASH_LENGTH] = '\0';
 	strncpy(b->merkle_root, fields[3], HASH_LENGTH);
 	b->merkle_root[HASH_LENGTH] = '\0';
 

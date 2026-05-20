@@ -1,0 +1,923 @@
+[1779280955] node ID [1]:node avviato correttamente
+[1779280955] node ID [1]:Nodo avviato
+[1779280971] node ID [1]:Blocco ricevuto da peer
+[1779280971] node ID [1]:Block add to blockchain
+[1779280971] node ID [1]:signal: SIGUSR2 send to miner
+[1779280971] node ID [1]:Block send to peer
+[1779280971] node ID [1]:Block send to peer
+[1779280971] node ID [1]:Blocco ricevuto da peer
+[1779280971] node ID [1]:Block add to blockchain
+[1779280971] node ID [1]:signal: SIGUSR2 send to miner
+[1779280971] node ID [1]:Block send to peer
+[1779280971] node ID [1]:Block send to peer
+[1779280975] node ID [1]:Blocco ricevuto da peer
+[1779280975] node ID [1]:Block is already in the blockchain, rejected
+[1779280975] node ID [1]:Blocco ricevuto da peer
+[1779280975] node ID [1]:Block is already in the blockchain, rejected
+[1779280995] node ID [1]:Blocco ricevuto da peer
+[1779280995] node ID [1]:Block add to blockchain
+[1779280995] node ID [1]:signal: SIGUSR2 send to miner
+[1779280995] node ID [1]:Block send to peer
+[1779280995] node ID [1]:Block send to peer
+[1779281007] node ID [1]:Blocco ricevuto da peer
+[1779281007] node ID [1]:Block is already in the blockchain, rejected
+[1779281007] node ID [1]:Blocco ricevuto da peer
+[1779281007] node ID [1]:Block is already in the blockchain, rejected
+[1779281010] node ID [1]:Blocco ricevuto da peer
+[1779281010] node ID [1]:Block is already in the blockchain, rejected
+[1779281010] node ID [1]:Blocco ricevuto da peer
+[1779281010] node ID [1]:Block is already in the blockchain, rejected
+[1779281039] node ID [1]:Blocco ricevuto da peer
+[1779281039] node ID [1]:Block is already in the blockchain, rejected
+[1779281039] node ID [1]:Blocco ricevuto da peer
+[1779281039] node ID [1]:Block is already in the blockchain, rejected
+[1779281048] node ID [1]:Blocco ricevuto da peer
+[1779281048] node ID [1]:Block is already in the blockchain, rejected
+[1779281048] node ID [1]:Blocco ricevuto da peer
+[1779281048] node ID [1]:Block is already in the blockchain, rejected
+[1779281050] node ID [1]:Blocco ricevuto da peer
+[1779281050] node ID [1]:Block add to blockchain
+[1779281050] node ID [1]:signal: SIGUSR2 send to miner
+[1779281050] node ID [1]:Block send to peer
+[1779281050] node ID [1]:Block send to peer
+[1779281066] node ID [1]:Blocco ricevuto da peer
+[1779281066] node ID [1]:Block is already in the blockchain, rejected
+[1779281066] node ID [1]:Blocco ricevuto da peer
+[1779281066] node ID [1]:Block is already in the blockchain, rejected
+[1779281066] node ID [1]:Blocco ricevuto da peer
+[1779281066] node ID [1]:Block is already in the blockchain, rejected
+[1779281066] node ID [1]:Blocco ricevuto da peer
+[1779281066] node ID [1]:Block is already in the blockchain, rejected
+[1779281079] node ID [1]:Blocco ricevuto da peer
+[1779281079] node ID [1]:Block is already in the blockchain, rejected
+[1779281079] node ID [1]:Blocco ricevuto da peer
+[1779281079] node ID [1]:Block is already in the blockchain, rejected
+[1779281079] node ID [1]:Blocco ricevuto da peer
+[1779281079] node ID [1]:Block is already in the blockchain, rejected
+[1779281079] node ID [1]:Blocco ricevuto da peer
+[1779281079] node ID [1]:Block is already in the blockchain, rejected
+[1779281094] node ID [1]:Blocco ricevuto da peer
+[1779281094] node ID [1]:Block is already in the blockchain, rejected
+[1779281094] node ID [1]:Blocco ricevuto da peer
+[1779281094] node ID [1]:Block is already in the blockchain, rejected
+[1779281105] node ID [1]:Blocco ricevuto da peer
+[1779281105] node ID [1]:Block is already in the blockchain, rejected
+[1779281105] node ID [1]:Blocco ricevuto da peer
+[1779281105] node ID [1]:Block is already in the blockchain, rejected
+[1779281115] node ID [1]:Blocco ricevuto da peer
+[1779281115] node ID [1]:Block is already in the blockchain, rejected
+[1779281115] node ID [1]:Blocco ricevuto da peer
+[1779281115] node ID [1]:Block is already in the blockchain, rejected
+[1779281119] node ID [1]:Blocco ricevuto da peer
+[1779281119] node ID [1]:Block is already in the blockchain, rejected
+[1779281119] node ID [1]:Blocco ricevuto da peer
+[1779281119] node ID [1]:Block is already in the blockchain, rejected
+[1779281119] node ID [1]:Blocco ricevuto da peer
+[1779281119] node ID [1]:Block is already in the blockchain, rejected
+[1779281119] node ID [1]:Blocco ricevuto da peer
+[1779281119] node ID [1]:Block is already in the blockchain, rejected
+[1779281119] node ID [1]:Blocco ricevuto da peer
+[1779281119] node ID [1]:Block is already in the blockchain, rejected
+[1779281128] node ID [1]:Blocco ricevuto da peer
+[1779281128] node ID [1]:Block is already in the blockchain, rejected
+[1779281128] node ID [1]:Blocco ricevuto da peer
+[1779281128] node ID [1]:Block is already in the blockchain, rejected
+[1779281133] node ID [1]:Blocco ricevuto da peer
+[1779281133] node ID [1]:Block add to blockchain
+[1779281133] node ID [1]:signal: SIGUSR2 send to miner
+[1779281133] node ID [1]:Block send to peer
+[1779281133] node ID [1]:Block send to peer
+[1779281133] node ID [1]:Blocco ricevuto da peer
+[1779281133] node ID [1]:Block add to blockchain
+[1779281133] node ID [1]:signal: SIGUSR2 send to miner
+[1779281133] node ID [1]:Block send to peer
+[1779281133] node ID [1]:Block send to peer
+[1779281140] node ID [1]:Blocco ricevuto da peer
+[1779281140] node ID [1]:Block is already in the blockchain, rejected
+[1779281140] node ID [1]:Blocco ricevuto da peer
+[1779281140] node ID [1]:Block is already in the blockchain, rejected
+[1779281146] node ID [1]:Blocco ricevuto da peer
+[1779281146] node ID [1]:Block is already in the blockchain, rejected
+[1779281146] node ID [1]:Blocco ricevuto da peer
+[1779281146] node ID [1]:Block is already in the blockchain, rejected
+[1779281147] node ID [1]:Blocco ricevuto da peer
+[1779281147] node ID [1]:Block is already in the blockchain, rejected
+[1779281147] node ID [1]:Blocco ricevuto da peer
+[1779281147] node ID [1]:Block is already in the blockchain, rejected
+[1779281147] node ID [1]:Blocco ricevuto da peer
+[1779281147] node ID [1]:Block is already in the blockchain, rejected
+[1779281147] node ID [1]:Blocco ricevuto da peer
+[1779281147] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281160] node ID [1]:Blocco ricevuto da peer
+[1779281160] node ID [1]:Block is already in the blockchain, rejected
+[1779281170] node ID [1]:Blocco ricevuto da peer
+[1779281170] node ID [1]:Block is already in the blockchain, rejected
+[1779281170] node ID [1]:Blocco ricevuto da peer
+[1779281170] node ID [1]:Block is already in the blockchain, rejected
+[1779281172] node ID [1]:Blocco ricevuto da peer
+[1779281172] node ID [1]:Block is already in the blockchain, rejected
+[1779281172] node ID [1]:Blocco ricevuto da peer
+[1779281172] node ID [1]:Block is already in the blockchain, rejected
+[1779281177] node ID [1]:Blocco ricevuto da peer
+[1779281177] node ID [1]:Block is already in the blockchain, rejected
+[1779281177] node ID [1]:Blocco ricevuto da peer
+[1779281177] node ID [1]:Block is already in the blockchain, rejected
+[1779281177] node ID [1]:Blocco ricevuto da peer
+[1779281177] node ID [1]:Block is already in the blockchain, rejected
+[1779281177] node ID [1]:Blocco ricevuto da peer
+[1779281177] node ID [1]:Block is already in the blockchain, rejected
+[1779281177] node ID [1]:Blocco ricevuto da peer
+[1779281177] node ID [1]:Block is already in the blockchain, rejected
+[1779281181] node ID [1]:Blocco ricevuto da peer
+[1779281181] node ID [1]:Block is already in the blockchain, rejected
+[1779281181] node ID [1]:Blocco ricevuto da peer
+[1779281181] node ID [1]:Block is already in the blockchain, rejected
+[1779281185] node ID [1]:Blocco ricevuto da peer
+[1779281185] node ID [1]:Block is already in the blockchain, rejected
+[1779281185] node ID [1]:Blocco ricevuto da peer
+[1779281185] node ID [1]:Block is already in the blockchain, rejected
+[1779281190] node ID [1]:Blocco ricevuto da peer
+[1779281190] node ID [1]:Block is already in the blockchain, rejected
+[1779281190] node ID [1]:Blocco ricevuto da peer
+[1779281190] node ID [1]:Block is already in the blockchain, rejected
+[1779281190] node ID [1]:Blocco ricevuto da peer
+[1779281190] node ID [1]:Block is already in the blockchain, rejected
+[1779281190] node ID [1]:Blocco ricevuto da peer
+[1779281190] node ID [1]:Block is already in the blockchain, rejected
+[1779281191] node ID [1]:Blocco ricevuto da peer
+[1779281191] node ID [1]:Block is already in the blockchain, rejected
+[1779281191] node ID [1]:Blocco ricevuto da peer
+[1779281191] node ID [1]:Block is already in the blockchain, rejected
+[1779281202] node ID [1]:Blocco ricevuto da peer
+[1779281202] node ID [1]:Block add to blockchain
+[1779281202] node ID [1]:signal: SIGUSR2 send to miner
+[1779281202] node ID [1]:Block send to peer
+[1779281202] node ID [1]:Block send to peer
+[1779281202] node ID [1]:Blocco ricevuto da peer
+[1779281202] node ID [1]:Block is already in the blockchain, rejected
+[1779281203] node ID [1]:Blocco ricevuto da peer
+[1779281203] node ID [1]:Block add to blockchain
+[1779281203] node ID [1]:signal: SIGUSR2 send to miner
+[1779281203] node ID [1]:Block send to peer
+[1779281203] node ID [1]:Block send to peer
+[1779281204] node ID [1]:Blocco ricevuto da peer
+[1779281204] node ID [1]:Block add to blockchain
+[1779281204] node ID [1]:signal: SIGUSR2 send to miner
+[1779281204] node ID [1]:Block send to peer
+[1779281204] node ID [1]:Block send to peer
+[1779281206] node ID [1]:Blocco ricevuto da peer
+[1779281206] node ID [1]:Block add to blockchain
+[1779281206] node ID [1]:signal: SIGUSR2 send to miner
+[1779281206] node ID [1]:Block send to peer
+[1779281206] node ID [1]:Block send to peer
+[1779281206] node ID [1]:Blocco ricevuto da peer
+[1779281206] node ID [1]:Block add to blockchain
+[1779281206] node ID [1]:signal: SIGUSR2 send to miner
+[1779281206] node ID [1]:Block send to peer
+[1779281206] node ID [1]:Block send to peer
+[1779281207] node ID [1]:Blocco ricevuto da peer
+[1779281207] node ID [1]:Block add to blockchain
+[1779281207] node ID [1]:signal: SIGUSR2 send to miner
+[1779281207] node ID [1]:Block send to peer
+[1779281207] node ID [1]:Block send to peer
+[1779281212] node ID [1]:Blocco ricevuto da peer
+[1779281212] node ID [1]:Block add to blockchain
+[1779281212] node ID [1]:signal: SIGUSR2 send to miner
+[1779281212] node ID [1]:Block send to peer
+[1779281212] node ID [1]:Block send to peer
+[1779281226] node ID [1]:Blocco ricevuto da peer
+[1779281226] node ID [1]:Block is already in the blockchain, rejected
+[1779281226] node ID [1]:Blocco ricevuto da peer
+[1779281226] node ID [1]:Block is already in the blockchain, rejected
+[1779281231] node ID [1]:Blocco ricevuto da peer
+[1779281231] node ID [1]:Block add to blockchain
+[1779281231] node ID [1]:signal: SIGUSR2 send to miner
+[1779281231] node ID [1]:Block send to peer
+[1779281231] node ID [1]:Block send to peer
+[1779281231] node ID [1]:Blocco ricevuto da peer
+[1779281231] node ID [1]:Block add to blockchain
+[1779281231] node ID [1]:signal: SIGUSR2 send to miner
+[1779281231] node ID [1]:Block send to peer
+[1779281231] node ID [1]:Block send to peer
+[1779281242] node ID [1]:Blocco ricevuto da peer
+[1779281242] node ID [1]:Block is already in the blockchain, rejected
+[1779281242] node ID [1]:Blocco ricevuto da peer
+[1779281242] node ID [1]:Block is already in the blockchain, rejected
+[1779281248] node ID [1]:Blocco ricevuto da peer
+[1779281248] node ID [1]:Block is already in the blockchain, rejected
+[1779281248] node ID [1]:Blocco ricevuto da peer
+[1779281248] node ID [1]:Block is already in the blockchain, rejected
+[1779281248] node ID [1]:Blocco ricevuto da peer
+[1779281248] node ID [1]:Block is already in the blockchain, rejected
+[1779281248] node ID [1]:Blocco ricevuto da peer
+[1779281248] node ID [1]:Block is already in the blockchain, rejected
+[1779281248] node ID [1]:Blocco ricevuto da peer
+[1779281248] node ID [1]:Block is already in the blockchain, rejected
+[1779281252] node ID [1]:Blocco ricevuto da peer
+[1779281252] node ID [1]:Block is already in the blockchain, rejected
+[1779281252] node ID [1]:Blocco ricevuto da peer
+[1779281252] node ID [1]:Block is already in the blockchain, rejected
+[1779281258] node ID [1]:Blocco ricevuto da peer
+[1779281258] node ID [1]:Block is already in the blockchain, rejected
+[1779281258] node ID [1]:Blocco ricevuto da peer
+[1779281258] node ID [1]:Block is already in the blockchain, rejected
+[1779281259] node ID [1]:Blocco ricevuto da peer
+[1779281259] node ID [1]:Block is already in the blockchain, rejected
+[1779281259] node ID [1]:Blocco ricevuto da peer
+[1779281259] node ID [1]:Block is already in the blockchain, rejected
+[1779281269] node ID [1]:Blocco ricevuto da peer
+[1779281269] node ID [1]:Block is already in the blockchain, rejected
+[1779281269] node ID [1]:Blocco ricevuto da peer
+[1779281269] node ID [1]:Block is already in the blockchain, rejected
+[1779281281] node ID [1]:Blocco ricevuto da peer
+[1779281281] node ID [1]:Block is already in the blockchain, rejected
+[1779281281] node ID [1]:Blocco ricevuto da peer
+[1779281281] node ID [1]:Block is already in the blockchain, rejected
+[1779281290] node ID [1]:Blocco ricevuto da peer
+[1779281290] node ID [1]:Block is already in the blockchain, rejected
+[1779281290] node ID [1]:Blocco ricevuto da peer
+[1779281290] node ID [1]:Block is already in the blockchain, rejected
+[1779281290] node ID [1]:Blocco ricevuto da peer
+[1779281290] node ID [1]:Block is already in the blockchain, rejected
+[1779281290] node ID [1]:Blocco ricevuto da peer
+[1779281290] node ID [1]:Block is already in the blockchain, rejected
+[1779281297] node ID [1]:Blocco ricevuto da peer
+[1779281297] node ID [1]:Block is already in the blockchain, rejected
+[1779281297] node ID [1]:Blocco ricevuto da peer
+[1779281297] node ID [1]:Block is already in the blockchain, rejected
+[1779281302] node ID [1]:Blocco ricevuto da peer
+[1779281302] node ID [1]:Block is already in the blockchain, rejected
+[1779281302] node ID [1]:Blocco ricevuto da peer
+[1779281302] node ID [1]:Block is already in the blockchain, rejected
+[1779281303] node ID [1]:Blocco ricevuto da peer
+[1779281303] node ID [1]:Block is already in the blockchain, rejected
+[1779281303] node ID [1]:Blocco ricevuto da peer
+[1779281303] node ID [1]:Block is already in the blockchain, rejected
+[1779281311] node ID [1]:Blocco ricevuto da peer
+[1779281311] node ID [1]:Block add to blockchain
+[1779281311] node ID [1]:signal: SIGUSR2 send to miner
+[1779281311] node ID [1]:Block send to peer
+[1779281311] node ID [1]:Block send to peer
+[1779281311] node ID [1]:Blocco ricevuto da peer
+[1779281311] node ID [1]:Block add to blockchain
+[1779281311] node ID [1]:signal: SIGUSR2 send to miner
+[1779281311] node ID [1]:Block send to peer
+[1779281311] node ID [1]:Block send to peer
+[1779281311] node ID [1]:Blocco ricevuto da peer
+[1779281311] node ID [1]:Block is already in the blockchain, rejected
+[1779281314] node ID [1]:Blocco ricevuto da peer
+[1779281314] node ID [1]:Block is already in the blockchain, rejected
+[1779281314] node ID [1]:Blocco ricevuto da peer
+[1779281314] node ID [1]:Block is already in the blockchain, rejected
+[1779281324] node ID [1]:Blocco ricevuto da peer
+[1779281324] node ID [1]:Block add to blockchain
+[1779281324] node ID [1]:signal: SIGUSR2 send to miner
+[1779281324] node ID [1]:Block send to peer
+[1779281324] node ID [1]:Block send to peer
+[1779281328] node ID [1]:Blocco ricevuto da peer
+[1779281328] node ID [1]:Block is already in the blockchain, rejected
+[1779281328] node ID [1]:Blocco ricevuto da peer
+[1779281328] node ID [1]:Block is already in the blockchain, rejected
+[1779281328] node ID [1]:Blocco ricevuto da peer
+[1779281328] node ID [1]:Block is already in the blockchain, rejected
+[1779281328] node ID [1]:Blocco ricevuto da peer
+[1779281328] node ID [1]:Block is already in the blockchain, rejected
+[1779281332] node ID [1]:Blocco ricevuto da peer
+[1779281332] node ID [1]:Block add to blockchain
+[1779281332] node ID [1]:signal: SIGUSR2 send to miner
+[1779281332] node ID [1]:Block send to peer
+[1779281332] node ID [1]:Block send to peer
+[1779281341] node ID [1]:Blocco ricevuto da peer
+[1779281341] node ID [1]:Block is already in the blockchain, rejected
+[1779281341] node ID [1]:Blocco ricevuto da peer
+[1779281341] node ID [1]:Block is already in the blockchain, rejected
+[1779281345] node ID [1]:Blocco ricevuto da peer
+[1779281345] node ID [1]:Block is already in the blockchain, rejected
+[1779281345] node ID [1]:Blocco ricevuto da peer
+[1779281345] node ID [1]:Block is already in the blockchain, rejected
+[1779281345] node ID [1]:Blocco ricevuto da peer
+[1779281345] node ID [1]:Block is already in the blockchain, rejected
+[1779281345] node ID [1]:Blocco ricevuto da peer
+[1779281345] node ID [1]:Block is already in the blockchain, rejected
+[1779281353] node ID [1]:Blocco ricevuto da peer
+[1779281353] node ID [1]:Block add to blockchain
+[1779281353] node ID [1]:signal: SIGUSR2 send to miner
+[1779281353] node ID [1]:Block send to peer
+[1779281353] node ID [1]:Block send to peer
+[1779281358] node ID [1]:Blocco ricevuto da peer
+[1779281358] node ID [1]:Block add to blockchain
+[1779281358] node ID [1]:signal: SIGUSR2 send to miner
+[1779281358] node ID [1]:Block send to peer
+[1779281358] node ID [1]:Block send to peer
+[1779281368] node ID [1]:Blocco ricevuto da peer
+[1779281368] node ID [1]:Block is already in the blockchain, rejected
+[1779281368] node ID [1]:Blocco ricevuto da peer
+[1779281368] node ID [1]:Block is already in the blockchain, rejected
+[1779281371] node ID [1]:Blocco ricevuto da peer
+[1779281371] node ID [1]:Block is already in the blockchain, rejected
+[1779281371] node ID [1]:Blocco ricevuto da peer
+[1779281371] node ID [1]:Block is already in the blockchain, rejected
+[1779281375] node ID [1]:Blocco ricevuto da peer
+[1779281375] node ID [1]:Block is already in the blockchain, rejected
+[1779281375] node ID [1]:Blocco ricevuto da peer
+[1779281375] node ID [1]:Block is already in the blockchain, rejected
+[1779281375] node ID [1]:Blocco ricevuto da peer
+[1779281375] node ID [1]:Block is already in the blockchain, rejected
+[1779281375] node ID [1]:Blocco ricevuto da peer
+[1779281375] node ID [1]:Block is already in the blockchain, rejected
+[1779281376] node ID [1]:Blocco ricevuto da peer
+[1779281376] node ID [1]:Block is already in the blockchain, rejected
+[1779281391] node ID [1]:Blocco ricevuto da peer
+[1779281391] node ID [1]:Block is already in the blockchain, rejected
+[1779281391] node ID [1]:Blocco ricevuto da peer
+[1779281391] node ID [1]:Block is already in the blockchain, rejected
+[1779281394] node ID [1]:Blocco ricevuto da peer
+[1779281394] node ID [1]:Block is already in the blockchain, rejected
+[1779281394] node ID [1]:Blocco ricevuto da peer
+[1779281394] node ID [1]:Block is already in the blockchain, rejected
+[1779281394] node ID [1]:Blocco ricevuto da peer
+[1779281394] node ID [1]:Block is already in the blockchain, rejected
+[1779281396] node ID [1]:Blocco ricevuto da peer
+[1779281396] node ID [1]:Block is already in the blockchain, rejected
+[1779281396] node ID [1]:Blocco ricevuto da peer
+[1779281396] node ID [1]:Block is already in the blockchain, rejected
+[1779281413] node ID [1]:Blocco ricevuto da peer
+[1779281413] node ID [1]:Block add to blockchain
+[1779281413] node ID [1]:signal: SIGUSR2 send to miner
+[1779281413] node ID [1]:Block send to peer
+[1779281413] node ID [1]:Block send to peer
+[1779281436] node ID [1]:Blocco ricevuto da peer
+[1779281436] node ID [1]:Block is already in the blockchain, rejected
+[1779281436] node ID [1]:Blocco ricevuto da peer
+[1779281436] node ID [1]:Block is already in the blockchain, rejected
+[1779281437] node ID [1]:Blocco ricevuto da peer
+[1779281437] node ID [1]:Block is already in the blockchain, rejected
+[1779281437] node ID [1]:Blocco ricevuto da peer
+[1779281437] node ID [1]:Block is already in the blockchain, rejected
+[1779281439] node ID [1]:Blocco ricevuto da peer
+[1779281439] node ID [1]:Block is already in the blockchain, rejected
+[1779281440] node ID [1]:Blocco ricevuto da peer
+[1779281440] node ID [1]:Block is already in the blockchain, rejected
+[1779281442] node ID [1]:Blocco ricevuto da peer
+[1779281442] node ID [1]:Block is already in the blockchain, rejected
+[1779281443] node ID [1]:Blocco ricevuto da peer
+[1779281443] node ID [1]:Block is already in the blockchain, rejected
+[1779281443] node ID [1]:Blocco ricevuto da peer
+[1779281443] node ID [1]:Block is already in the blockchain, rejected
+[1779281443] node ID [1]:Blocco ricevuto da peer
+[1779281443] node ID [1]:Block is already in the blockchain, rejected
+[1779281456] node ID [1]:Blocco ricevuto da peer
+[1779281456] node ID [1]:Block is already in the blockchain, rejected
+[1779281456] node ID [1]:Blocco ricevuto da peer
+[1779281456] node ID [1]:Block is already in the blockchain, rejected
+[1779281456] node ID [1]:Blocco ricevuto da peer
+[1779281456] node ID [1]:Block is already in the blockchain, rejected
+[1779281456] node ID [1]:Blocco ricevuto da peer
+[1779281456] node ID [1]:Block is already in the blockchain, rejected
+[1779281456] node ID [1]:Blocco ricevuto da peer
+[1779281456] node ID [1]:Block is already in the blockchain, rejected
+[1779281457] node ID [1]:Blocco ricevuto da peer
+[1779281457] node ID [1]:Block is already in the blockchain, rejected
+[1779281457] node ID [1]:Blocco ricevuto da peer
+[1779281457] node ID [1]:Block is already in the blockchain, rejected
+[1779281466] node ID [1]:Blocco ricevuto da peer
+[1779281466] node ID [1]:Block add to blockchain
+[1779281466] node ID [1]:signal: SIGUSR2 send to miner
+[1779281466] node ID [1]:Block send to peer
+[1779281466] node ID [1]:Block send to peer
+[1779281493] node ID [1]:Blocco ricevuto da peer
+[1779281493] node ID [1]:Block is already in the blockchain, rejected
+[1779281493] node ID [1]:Blocco ricevuto da peer
+[1779281493] node ID [1]:Block is already in the blockchain, rejected
+[1779281493] node ID [1]:Blocco ricevuto da peer
+[1779281493] node ID [1]:Block is already in the blockchain, rejected
+[1779281493] node ID [1]:Blocco ricevuto da peer
+[1779281493] node ID [1]:Block is already in the blockchain, rejected
+[1779281497] node ID [1]:Blocco ricevuto da peer
+[1779281497] node ID [1]:Block is already in the blockchain, rejected
+[1779281497] node ID [1]:Blocco ricevuto da peer
+[1779281497] node ID [1]:Block is already in the blockchain, rejected
+[1779281501] node ID [1]:Blocco ricevuto da peer
+[1779281501] node ID [1]:Block is already in the blockchain, rejected
+[1779281501] node ID [1]:Blocco ricevuto da peer
+[1779281501] node ID [1]:Block is already in the blockchain, rejected
+[1779281501] node ID [1]:Blocco ricevuto da peer
+[1779281501] node ID [1]:Block is already in the blockchain, rejected
+[1779281501] node ID [1]:Blocco ricevuto da peer
+[1779281501] node ID [1]:Block is already in the blockchain, rejected
+[1779281504] node ID [1]:Blocco ricevuto da peer
+[1779281504] node ID [1]:Block is already in the blockchain, rejected
+[1779281504] node ID [1]:Blocco ricevuto da peer
+[1779281504] node ID [1]:Block is already in the blockchain, rejected
+[1779281504] node ID [1]:Blocco ricevuto da peer
+[1779281504] node ID [1]:Block is already in the blockchain, rejected
+[1779281504] node ID [1]:Blocco ricevuto da peer
+[1779281504] node ID [1]:Block is already in the blockchain, rejected
+[1779281506] node ID [1]:Blocco ricevuto da peer
+[1779281506] node ID [1]:Block is already in the blockchain, rejected
+[1779281506] node ID [1]:Blocco ricevuto da peer
+[1779281506] node ID [1]:Block is already in the blockchain, rejected
+[1779281511] node ID [1]:Blocco ricevuto da peer
+[1779281511] node ID [1]:Block is already in the blockchain, rejected
+[1779281511] node ID [1]:Blocco ricevuto da peer
+[1779281511] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281515] node ID [1]:Blocco ricevuto da peer
+[1779281515] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281516] node ID [1]:Blocco ricevuto da peer
+[1779281516] node ID [1]:Block is already in the blockchain, rejected
+[1779281530] node ID [1]:Blocco ricevuto da peer
+[1779281530] node ID [1]:Block is already in the blockchain, rejected
+[1779281530] node ID [1]:Blocco ricevuto da peer
+[1779281530] node ID [1]:Block is already in the blockchain, rejected
+[1779281535] node ID [1]:Blocco ricevuto da peer
+[1779281535] node ID [1]:Block is already in the blockchain, rejected
+[1779281535] node ID [1]:Blocco ricevuto da peer
+[1779281535] node ID [1]:Block is already in the blockchain, rejected
+[1779281535] node ID [1]:Blocco ricevuto da peer
+[1779281535] node ID [1]:Block is already in the blockchain, rejected
+[1779281535] node ID [1]:Blocco ricevuto da peer
+[1779281535] node ID [1]:Block is already in the blockchain, rejected
+[1779281535] node ID [1]:Blocco ricevuto da peer
+[1779281535] node ID [1]:Block is already in the blockchain, rejected
+[1779281544] node ID [1]:Blocco ricevuto da peer
+[1779281544] node ID [1]:Block is already in the blockchain, rejected
+[1779281544] node ID [1]:Blocco ricevuto da peer
+[1779281544] node ID [1]:Block is already in the blockchain, rejected
+[1779281553] node ID [1]:Blocco ricevuto da peer
+[1779281553] node ID [1]:Block add to blockchain
+[1779281553] node ID [1]:signal: SIGUSR2 send to miner
+[1779281553] node ID [1]:Block send to peer
+[1779281553] node ID [1]:Block send to peer
+[1779281553] node ID [1]:Blocco ricevuto da peer
+[1779281553] node ID [1]:Block add to blockchain
+[1779281553] node ID [1]:signal: SIGUSR2 send to miner
+[1779281553] node ID [1]:Block send to peer
+[1779281553] node ID [1]:Block send to peer
+[1779281553] node ID [1]:Blocco ricevuto da peer
+[1779281553] node ID [1]:Block add to blockchain
+[1779281553] node ID [1]:signal: SIGUSR2 send to miner
+[1779281553] node ID [1]:Block send to peer
+[1779281553] node ID [1]:Block send to peer
+[1779281562] node ID [1]:Blocco ricevuto da peer
+[1779281562] node ID [1]:Block is already in the blockchain, rejected
+[1779281562] node ID [1]:Blocco ricevuto da peer
+[1779281562] node ID [1]:Block is already in the blockchain, rejected
+[1779281563] node ID [1]:Blocco ricevuto da peer
+[1779281563] node ID [1]:Block is already in the blockchain, rejected
+[1779281563] node ID [1]:Blocco ricevuto da peer
+[1779281563] node ID [1]:Block is already in the blockchain, rejected
+[1779281563] node ID [1]:Blocco ricevuto da peer
+[1779281563] node ID [1]:Block is already in the blockchain, rejected
+[1779281563] node ID [1]:Blocco ricevuto da peer
+[1779281563] node ID [1]:Block is already in the blockchain, rejected
+[1779281566] node ID [1]:Blocco ricevuto da peer
+[1779281566] node ID [1]:Block is already in the blockchain, rejected
+[1779281566] node ID [1]:Blocco ricevuto da peer
+[1779281566] node ID [1]:Block is already in the blockchain, rejected
+[1779281580] node ID [1]:Blocco ricevuto da peer
+[1779281580] node ID [1]:Block is already in the blockchain, rejected
+[1779281580] node ID [1]:Blocco ricevuto da peer
+[1779281580] node ID [1]:Block is already in the blockchain, rejected
+[1779281585] node ID [1]:Blocco ricevuto da peer
+[1779281585] node ID [1]:Block is already in the blockchain, rejected
+[1779281585] node ID [1]:Blocco ricevuto da peer
+[1779281585] node ID [1]:Block is already in the blockchain, rejected
+[1779281587] node ID [1]:Blocco ricevuto da peer
+[1779281587] node ID [1]:Block is already in the blockchain, rejected
+[1779281587] node ID [1]:Blocco ricevuto da peer
+[1779281587] node ID [1]:Block is already in the blockchain, rejected
+[1779281587] node ID [1]:Blocco ricevuto da peer
+[1779281587] node ID [1]:Block is already in the blockchain, rejected
+[1779281587] node ID [1]:Blocco ricevuto da peer
+[1779281587] node ID [1]:Block is already in the blockchain, rejected
+[1779281587] node ID [1]:Blocco ricevuto da peer
+[1779281587] node ID [1]:Block is already in the blockchain, rejected
+[1779281590] node ID [1]:Blocco ricevuto da peer
+[1779281590] node ID [1]:Block is already in the blockchain, rejected
+[1779281590] node ID [1]:Blocco ricevuto da peer
+[1779281590] node ID [1]:Block is already in the blockchain, rejected
+[1779281595] node ID [1]:Blocco ricevuto da peer
+[1779281595] node ID [1]:Block is already in the blockchain, rejected
+[1779281595] node ID [1]:Blocco ricevuto da peer
+[1779281595] node ID [1]:Block is already in the blockchain, rejected
+[1779281597] node ID [1]:Blocco ricevuto da peer
+[1779281597] node ID [1]:Block is already in the blockchain, rejected
+[1779281597] node ID [1]:Blocco ricevuto da peer
+[1779281597] node ID [1]:Block is already in the blockchain, rejected
+[1779281597] node ID [1]:Blocco ricevuto da peer
+[1779281597] node ID [1]:Block is already in the blockchain, rejected
+[1779281604] node ID [1]:Blocco ricevuto da peer
+[1779281604] node ID [1]:Block add to blockchain
+[1779281604] node ID [1]:signal: SIGUSR2 send to miner
+[1779281604] node ID [1]:Block send to peer
+[1779281604] node ID [1]:Block send to peer
+[1779281624] node ID [1]:Blocco ricevuto da peer
+[1779281624] node ID [1]:Block add to blockchain
+[1779281624] node ID [1]:signal: SIGUSR2 send to miner
+[1779281624] node ID [1]:Block send to peer
+[1779281624] node ID [1]:Block send to peer
+[1779281632] node ID [1]:Blocco ricevuto da peer
+[1779281632] node ID [1]:Block add to blockchain
+[1779281632] node ID [1]:signal: SIGUSR2 send to miner
+[1779281632] node ID [1]:Block send to peer
+[1779281632] node ID [1]:Block send to peer
+[1779281632] node ID [1]:Blocco ricevuto da peer
+[1779281632] node ID [1]:Block add to blockchain
+[1779281632] node ID [1]:signal: SIGUSR2 send to miner
+[1779281632] node ID [1]:Block send to peer
+[1779281632] node ID [1]:Block send to peer
+[1779281632] node ID [1]:Blocco ricevuto da peer
+[1779281632] node ID [1]:Block is already in the blockchain, rejected
+[1779281641] node ID [1]:Blocco ricevuto da peer
+[1779281641] node ID [1]:Block is already in the blockchain, rejected
+[1779281641] node ID [1]:Blocco ricevuto da peer
+[1779281641] node ID [1]:Block is already in the blockchain, rejected
+[1779281647] node ID [1]:Blocco ricevuto da peer
+[1779281647] node ID [1]:Block is already in the blockchain, rejected
+[1779281647] node ID [1]:Blocco ricevuto da peer
+[1779281647] node ID [1]:Block is already in the blockchain, rejected
+[1779281651] node ID [1]:Blocco ricevuto da peer
+[1779281651] node ID [1]:Block is already in the blockchain, rejected
+[1779281651] node ID [1]:Blocco ricevuto da peer
+[1779281651] node ID [1]:Block is already in the blockchain, rejected
+[1779281651] node ID [1]:Blocco ricevuto da peer
+[1779281651] node ID [1]:Block is already in the blockchain, rejected
+[1779281651] node ID [1]:Blocco ricevuto da peer
+[1779281651] node ID [1]:Block is already in the blockchain, rejected
+[1779281651] node ID [1]:Blocco ricevuto da peer
+[1779281651] node ID [1]:Block is already in the blockchain, rejected
+[1779281659] node ID [1]:Blocco ricevuto da peer
+[1779281659] node ID [1]:Block add to blockchain
+[1779281659] node ID [1]:signal: SIGUSR2 send to miner
+[1779281659] node ID [1]:Block send to peer
+[1779281659] node ID [1]:Block send to peer
+[1779281660] node ID [1]:Blocco ricevuto da peer
+[1779281660] node ID [1]:Block add to blockchain
+[1779281660] node ID [1]:signal: SIGUSR2 send to miner
+[1779281660] node ID [1]:Block send to peer
+[1779281660] node ID [1]:Block send to peer
+[1779281662] node ID [1]:Blocco ricevuto da peer
+[1779281662] node ID [1]:Block is already in the blockchain, rejected
+[1779281662] node ID [1]:Blocco ricevuto da peer
+[1779281662] node ID [1]:Block is already in the blockchain, rejected
+[1779281667] node ID [1]:Blocco ricevuto da peer
+[1779281667] node ID [1]:Block add to blockchain
+[1779281667] node ID [1]:signal: SIGUSR2 send to miner
+[1779281667] node ID [1]:Block send to peer
+[1779281667] node ID [1]:Block send to peer
+[1779281670] node ID [1]:Blocco ricevuto da peer
+[1779281670] node ID [1]:Block add to blockchain
+[1779281670] node ID [1]:signal: SIGUSR2 send to miner
+[1779281670] node ID [1]:Block send to peer
+[1779281670] node ID [1]:Block send to peer
+[1779281670] node ID [1]:Blocco ricevuto da peer
+[1779281670] node ID [1]:Block add to blockchain
+[1779281670] node ID [1]:signal: SIGUSR2 send to miner
+[1779281670] node ID [1]:Block send to peer
+[1779281670] node ID [1]:Block send to peer
+[1779281683] node ID [1]:Blocco ricevuto da peer
+[1779281683] node ID [1]:Block is already in the blockchain, rejected
+[1779281683] node ID [1]:Blocco ricevuto da peer
+[1779281683] node ID [1]:Block is already in the blockchain, rejected
+[1779281683] node ID [1]:Blocco ricevuto da peer
+[1779281683] node ID [1]:Block is already in the blockchain, rejected
+[1779281683] node ID [1]:Blocco ricevuto da peer
+[1779281683] node ID [1]:Block is already in the blockchain, rejected
+[1779281685] node ID [1]:Blocco ricevuto da peer
+[1779281685] node ID [1]:Block is already in the blockchain, rejected
+[1779281685] node ID [1]:Blocco ricevuto da peer
+[1779281685] node ID [1]:Block is already in the blockchain, rejected
+[1779281694] node ID [1]:Blocco ricevuto da peer
+[1779281694] node ID [1]:Block add to blockchain
+[1779281694] node ID [1]:signal: SIGUSR2 send to miner
+[1779281694] node ID [1]:Block send to peer
+[1779281694] node ID [1]:Block send to peer
+[1779281694] node ID [1]:Blocco ricevuto da peer
+[1779281694] node ID [1]:Block add to blockchain
+[1779281694] node ID [1]:signal: SIGUSR2 send to miner
+[1779281694] node ID [1]:Block send to peer
+[1779281694] node ID [1]:Block send to peer
+[1779281694] node ID [1]:Blocco ricevuto da peer
+[1779281694] node ID [1]:Block add to blockchain
+[1779281694] node ID [1]:signal: SIGUSR2 send to miner
+[1779281694] node ID [1]:Block send to peer
+[1779281694] node ID [1]:Block send to peer
+[1779281699] node ID [1]:Blocco ricevuto da peer
+[1779281699] node ID [1]:Block add to blockchain
+[1779281699] node ID [1]:signal: SIGUSR2 send to miner
+[1779281699] node ID [1]:Block send to peer
+[1779281699] node ID [1]:Block send to peer
+[1779281699] node ID [1]:Blocco ricevuto da peer
+[1779281699] node ID [1]:Block is already in the blockchain, rejected
+[1779281704] node ID [1]:Blocco ricevuto da peer
+[1779281704] node ID [1]:Block add to blockchain
+[1779281704] node ID [1]:signal: SIGUSR2 send to miner
+[1779281704] node ID [1]:Block send to peer
+[1779281704] node ID [1]:Block send to peer
+[1779281713] node ID [1]:Blocco ricevuto da peer
+[1779281713] node ID [1]:Block add to blockchain
+[1779281713] node ID [1]:signal: SIGUSR2 send to miner
+[1779281713] node ID [1]:Block send to peer
+[1779281713] node ID [1]:Block send to peer
+[1779281713] node ID [1]:Blocco ricevuto da peer
+[1779281713] node ID [1]:Block add to blockchain
+[1779281713] node ID [1]:signal: SIGUSR2 send to miner
+[1779281713] node ID [1]:Block send to peer
+[1779281713] node ID [1]:Block send to peer
+[1779281713] node ID [1]:Blocco ricevuto da peer
+[1779281713] node ID [1]:Block is already in the blockchain, rejected
+[1779281721] node ID [1]:Blocco ricevuto da peer
+[1779281721] node ID [1]:Block add to blockchain
+[1779281721] node ID [1]:signal: SIGUSR2 send to miner
+[1779281721] node ID [1]:Block send to peer
+[1779281721] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Blocco ricevuto da peer
+[1779281723] node ID [1]:Block add to blockchain
+[1779281723] node ID [1]:signal: SIGUSR2 send to miner
+[1779281723] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Blocco ricevuto da peer
+[1779281723] node ID [1]:Block add to blockchain
+[1779281723] node ID [1]:signal: SIGUSR2 send to miner
+[1779281723] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Blocco ricevuto da peer
+[1779281723] node ID [1]:Block add to blockchain
+[1779281723] node ID [1]:signal: SIGUSR2 send to miner
+[1779281723] node ID [1]:Block send to peer
+[1779281723] node ID [1]:Block send to peer
+[1779281729] node ID [1]:Blocco ricevuto da peer
+[1779281729] node ID [1]:Block add to blockchain
+[1779281729] node ID [1]:signal: SIGUSR2 send to miner
+[1779281729] node ID [1]:Block send to peer
+[1779281729] node ID [1]:Block send to peer
+[1779281743] node ID [1]:Blocco ricevuto da peer
+[1779281743] node ID [1]:Block add to blockchain
+[1779281743] node ID [1]:signal: SIGUSR2 send to miner
+[1779281743] node ID [1]:Block send to peer
+[1779281743] node ID [1]:Block send to peer
+[1779281743] node ID [1]:Blocco ricevuto da peer
+[1779281743] node ID [1]:Block add to blockchain
+[1779281743] node ID [1]:signal: SIGUSR2 send to miner
+[1779281743] node ID [1]:Block send to peer
+[1779281743] node ID [1]:Block send to peer
+[1779281745] node ID [1]:Blocco ricevuto da peer
+[1779281745] node ID [1]:Block add to blockchain
+[1779281745] node ID [1]:signal: SIGUSR2 send to miner
+[1779281745] node ID [1]:Block send to peer
+[1779281745] node ID [1]:Block send to peer
+[1779281746] node ID [1]:Blocco ricevuto da peer
+[1779281746] node ID [1]:Block add to blockchain
+[1779281746] node ID [1]:signal: SIGUSR2 send to miner
+[1779281746] node ID [1]:Block send to peer
+[1779281746] node ID [1]:Block send to peer
+[1779281756] node ID [1]:Blocco ricevuto da peer
+[1779281756] node ID [1]:Block is already in the blockchain, rejected
+[1779281756] node ID [1]:Blocco ricevuto da peer
+[1779281756] node ID [1]:Block is already in the blockchain, rejected
+[1779281759] node ID [1]:Blocco ricevuto da peer
+[1779281759] node ID [1]:Block is already in the blockchain, rejected
+[1779281759] node ID [1]:Blocco ricevuto da peer
+[1779281759] node ID [1]:Block is already in the blockchain, rejected
+[1779281768] node ID [1]:Blocco ricevuto da peer
+[1779281768] node ID [1]:Block add to blockchain
+[1779281768] node ID [1]:signal: SIGUSR2 send to miner
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Blocco ricevuto da peer
+[1779281768] node ID [1]:Block add to blockchain
+[1779281768] node ID [1]:signal: SIGUSR2 send to miner
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Blocco ricevuto da peer
+[1779281768] node ID [1]:Block add to blockchain
+[1779281768] node ID [1]:signal: SIGUSR2 send to miner
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Blocco ricevuto da peer
+[1779281768] node ID [1]:Block add to blockchain
+[1779281768] node ID [1]:signal: SIGUSR2 send to miner
+[1779281768] node ID [1]:Block send to peer
+[1779281768] node ID [1]:Block send to peer
+[1779281777] node ID [1]:Blocco ricevuto da peer
+[1779281777] node ID [1]:Block add to blockchain
+[1779281777] node ID [1]:signal: SIGUSR2 send to miner
+[1779281777] node ID [1]:Block send to peer
+[1779281777] node ID [1]:Block send to peer
+[1779281785] node ID [1]:Blocco ricevuto da peer
+[1779281785] node ID [1]:Block add to blockchain
+[1779281785] node ID [1]:signal: SIGUSR2 send to miner
+[1779281785] node ID [1]:Block send to peer
+[1779281785] node ID [1]:Block send to peer
+[1779281789] node ID [1]:Blocco ricevuto da peer
+[1779281789] node ID [1]:Block add to blockchain
+[1779281789] node ID [1]:signal: SIGUSR2 send to miner
+[1779281789] node ID [1]:Block send to peer
+[1779281789] node ID [1]:Block send to peer
+[1779281789] node ID [1]:Blocco ricevuto da peer
+[1779281789] node ID [1]:Block add to blockchain
+[1779281789] node ID [1]:signal: SIGUSR2 send to miner
+[1779281789] node ID [1]:Block send to peer
+[1779281789] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Blocco ricevuto da peer
+[1779281800] node ID [1]:Block add to blockchain
+[1779281800] node ID [1]:signal: SIGUSR2 send to miner
+[1779281800] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Blocco ricevuto da peer
+[1779281800] node ID [1]:Block add to blockchain
+[1779281800] node ID [1]:signal: SIGUSR2 send to miner
+[1779281800] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Blocco ricevuto da peer
+[1779281800] node ID [1]:Block add to blockchain
+[1779281800] node ID [1]:signal: SIGUSR2 send to miner
+[1779281800] node ID [1]:Block send to peer
+[1779281800] node ID [1]:Block send to peer
+[1779281805] node ID [1]:Blocco ricevuto da peer
+[1779281805] node ID [1]:Block add to blockchain
+[1779281805] node ID [1]:signal: SIGUSR2 send to miner
+[1779281805] node ID [1]:Block send to peer
+[1779281805] node ID [1]:Block send to peer
+[1779281812] node ID [1]:Blocco ricevuto da peer
+[1779281812] node ID [1]:Block add to blockchain
+[1779281812] node ID [1]:signal: SIGUSR2 send to miner
+[1779281812] node ID [1]:Block send to peer
+[1779281812] node ID [1]:Block send to peer
+[1779281812] node ID [1]:Blocco ricevuto da peer
+[1779281812] node ID [1]:Block add to blockchain
+[1779281812] node ID [1]:signal: SIGUSR2 send to miner
+[1779281812] node ID [1]:Block send to peer
+[1779281812] node ID [1]:Block send to peer
+[1779281816] node ID [1]:Blocco ricevuto da peer
+[1779281816] node ID [1]:Block add to blockchain
+[1779281816] node ID [1]:signal: SIGUSR2 send to miner
+[1779281816] node ID [1]:Block send to peer
+[1779281816] node ID [1]:Block send to peer
+[1779281822] node ID [1]:Blocco ricevuto da peer
+[1779281822] node ID [1]:Block add to blockchain
+[1779281822] node ID [1]:signal: SIGUSR2 send to miner
+[1779281822] node ID [1]:Block send to peer
+[1779281822] node ID [1]:Block send to peer
+[1779281822] node ID [1]:Blocco ricevuto da peer
+[1779281822] node ID [1]:Block is already in the blockchain, rejected
+[1779281822] node ID [1]:Blocco ricevuto da peer
+[1779281822] node ID [1]:Block add to blockchain
+[1779281822] node ID [1]:signal: SIGUSR2 send to miner
+[1779281822] node ID [1]:Block send to peer
+[1779281822] node ID [1]:Block send to peer
+[1779281834] node ID [1]:Blocco ricevuto da peer
+[1779281834] node ID [1]:Block is already in the blockchain, rejected
+[1779281834] node ID [1]:Blocco ricevuto da peer
+[1779281834] node ID [1]:Block is already in the blockchain, rejected
+[1779281836] node ID [1]:Blocco ricevuto da peer
+[1779281836] node ID [1]:Block is already in the blockchain, rejected
+[1779281836] node ID [1]:Blocco ricevuto da peer
+[1779281836] node ID [1]:Block is already in the blockchain, rejected
+[1779281845] node ID [1]:Blocco ricevuto da peer
+[1779281845] node ID [1]:Block add to blockchain
+[1779281845] node ID [1]:signal: SIGUSR2 send to miner
+[1779281845] node ID [1]:Block send to peer
+[1779281845] node ID [1]:Block send to peer
+[1779281862] node ID [1]:Blocco ricevuto da peer
+[1779281862] node ID [1]:Block is already in the blockchain, rejected
+[1779281862] node ID [1]:Blocco ricevuto da peer
+[1779281862] node ID [1]:Block is already in the blockchain, rejected
+[1779281870] node ID [1]:Blocco ricevuto da peer
+[1779281870] node ID [1]:Block is already in the blockchain, rejected
+[1779281870] node ID [1]:Blocco ricevuto da peer
+[1779281870] node ID [1]:Block is already in the blockchain, rejected
+[1779281874] node ID [1]:Blocco ricevuto da peer
+[1779281874] node ID [1]:Block add to blockchain
+[1779281874] node ID [1]:signal: SIGUSR2 send to miner
+[1779281874] node ID [1]:Block send to peer
+[1779281874] node ID [1]:Block send to peer
+[1779281879] node ID [1]:Blocco ricevuto da peer
+[1779281879] node ID [1]:Block is already in the blockchain, rejected
+[1779281879] node ID [1]:Blocco ricevuto da peer
+[1779281879] node ID [1]:Block is already in the blockchain, rejected
+[1779281879] node ID [1]:Blocco ricevuto da peer
+[1779281879] node ID [1]:Block is already in the blockchain, rejected
+[1779281882] node ID [1]:Blocco ricevuto da peer
+[1779281882] node ID [1]:Block add to blockchain
+[1779281882] node ID [1]:signal: SIGUSR2 send to miner
+[1779281882] node ID [1]:Block send to peer
+[1779281882] node ID [1]:Block send to peer
+[1779281884] node ID [1]:Blocco ricevuto da peer
+[1779281884] node ID [1]:Block add to blockchain
+[1779281884] node ID [1]:signal: SIGUSR2 send to miner
+[1779281884] node ID [1]:Block send to peer
+[1779281884] node ID [1]:Block send to peer
+[1779281884] node ID [1]:Blocco ricevuto da peer
+[1779281884] node ID [1]:Block add to blockchain
+[1779281884] node ID [1]:signal: SIGUSR2 send to miner
+[1779281884] node ID [1]:Block send to peer
+[1779281884] node ID [1]:Block send to peer
+[1779281897] node ID [1]:Blocco ricevuto da peer
+[1779281897] node ID [1]:Block is already in the blockchain, rejected
+[1779281897] node ID [1]:Blocco ricevuto da peer
+[1779281897] node ID [1]:Block is already in the blockchain, rejected
+[1779281909] node ID [1]:Blocco ricevuto da peer
+[1779281909] node ID [1]:Block add to blockchain
+[1779281909] node ID [1]:signal: SIGUSR2 send to miner
+[1779281909] node ID [1]:Block send to peer
+[1779281909] node ID [1]:Block send to peer
+[1779281936] node ID [1]:Blocco ricevuto da peer
+[1779281936] node ID [1]:Block is already in the blockchain, rejected
+[1779281936] node ID [1]:Blocco ricevuto da peer
+[1779281936] node ID [1]:Block is already in the blockchain, rejected
+[1779281950] node ID [1]:Blocco ricevuto da peer
+[1779281950] node ID [1]:Block add to blockchain
+[1779281950] node ID [1]:signal: SIGUSR2 send to miner
+[1779281950] node ID [1]:Block send to peer
+[1779281950] node ID [1]:Block send to peer
+[1779281964] node ID [1]:Blocco ricevuto da peer
+[1779281964] node ID [1]:Block is already in the blockchain, rejected
+[1779281964] node ID [1]:Blocco ricevuto da peer
+[1779281964] node ID [1]:Block is already in the blockchain, rejected
+[1779281970] node ID [1]:Blocco ricevuto da peer
+[1779281970] node ID [1]:Block is already in the blockchain, rejected
+[1779281970] node ID [1]:Blocco ricevuto da peer
+[1779281970] node ID [1]:Block is already in the blockchain, rejected
+[1779281970] node ID [1]:Blocco ricevuto da peer
+[1779281970] node ID [1]:Block is already in the blockchain, rejected
+[1779281970] node ID [1]:Blocco ricevuto da peer
+[1779281970] node ID [1]:Block is already in the blockchain, rejected
+[1779281972] node ID [1]:Blocco ricevuto da peer
+[1779281972] node ID [1]:Block add to blockchain
+[1779281972] node ID [1]:signal: SIGUSR2 send to miner
+[1779281972] node ID [1]:Block send to peer
+[1779281972] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Blocco ricevuto da peer
+[1779281977] node ID [1]:Block add to blockchain
+[1779281977] node ID [1]:signal: SIGUSR2 send to miner
+[1779281977] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Blocco ricevuto da peer
+[1779281977] node ID [1]:Block add to blockchain
+[1779281977] node ID [1]:signal: SIGUSR2 send to miner
+[1779281977] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Blocco ricevuto da peer
+[1779281977] node ID [1]:Block is already in the blockchain, rejected
+[1779281977] node ID [1]:Blocco ricevuto da peer
+[1779281977] node ID [1]:Block add to blockchain
+[1779281977] node ID [1]:signal: SIGUSR2 send to miner
+[1779281977] node ID [1]:Block send to peer
+[1779281977] node ID [1]:Block send to peer
+[1779281988] node ID [1]:Blocco ricevuto da peer
+[1779281988] node ID [1]:Block is already in the blockchain, rejected
+[1779281988] node ID [1]:Blocco ricevuto da peer
+[1779281988] node ID [1]:Block is already in the blockchain, rejected
+[1779281995] node ID [1]:Blocco ricevuto da peer
+[1779281995] node ID [1]:Block is already in the blockchain, rejected
+[1779281995] node ID [1]:Blocco ricevuto da peer
+[1779281995] node ID [1]:Block is already in the blockchain, rejected
+[1779281997] node ID [1]:Blocco ricevuto da peer
+[1779281997] node ID [1]:Block is already in the blockchain, rejected
+[1779281997] node ID [1]:Blocco ricevuto da peer
+[1779281997] node ID [1]:Block is already in the blockchain, rejected
+[1779281997] node ID [1]:Blocco ricevuto da peer
+[1779281997] node ID [1]:Block is already in the blockchain, rejected
+[1779281997] node ID [1]:Blocco ricevuto da peer
+[1779281997] node ID [1]:Block is already in the blockchain, rejected
+[1779281997] node ID [1]:Blocco ricevuto da peer
+[1779281997] node ID [1]:Block is already in the blockchain, rejected
+[1779281998] node ID [1]:Blocco ricevuto da peer
+[1779281998] node ID [1]:Block is already in the blockchain, rejected
+[1779281998] node ID [1]:Blocco ricevuto da peer
+[1779281998] node ID [1]:Block is already in the blockchain, rejected
+[1779282007] node ID [1]:Nodo in chiusura
+[1779282007] node ID [1]:node chiuso

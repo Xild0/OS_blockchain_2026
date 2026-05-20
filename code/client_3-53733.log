@@ -1,0 +1,16 @@
+[1779286580] client ID [3]:client avviato correttamente
+[1779286580] client ID [3]:Client started
+[1779286580] client ID [3]:Alice pays Giovanna 20 coins
+[1779286581] client ID [3]:Alice pays Giacomo 77 coins
+[1779286582] client ID [3]:Bob pays Giacomo 88 coins
+[1779286583] client ID [3]:Francesco pays Ilaria 71 coins
+[1779286584] client ID [3]:Giacomo pays Francesco 23 coins
+[1779286585] client ID [3]:Ilaria pays Bob 24 coins
+[1779286586] client ID [3]:Giovanna pays Ilaria 75 coins
+[1779286587] client ID [3]:Bob pays Francesco 46 coins
+[1779286588] client ID [3]:Bob pays Alice 25 coins
+[1779286589] client ID [3]:Alice pays Giacomo 54 coins
+[1779286590] client ID [3]:ERROR: transaction not sent
+[1779286591] client ID [3]:Giacomo pays Francesco 72 coins
+[1779286591] client ID [3]:Client shutting down
+[1779286591] client ID [3]:client chiuso
