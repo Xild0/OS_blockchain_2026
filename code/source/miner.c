@@ -299,7 +299,9 @@ static void build_and_broadcast_block(void){
 int miner_main(int id,
                int n_nodes,
                int diff){
-    log_init("miner", id);
+    if(log_init("miner", id) != 0){
+        return 1;
+    }
     char logname[64];
 
     key_t key;

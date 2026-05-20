@@ -21,12 +21,7 @@ static sem_t *sem_blockchain = NULL;
 static sem_t *sem_block = NULL;
 static int node_id = -1;
 static int num_nodes = 0;
-static FILE *logfile = NULL;
 
-void node_log(const char *msg){
-    fprintf(logfile, "NODE ID: [%d], timestamp: [%ld], message: %s\n", node_id, (long)time(NULL), msg );
-    fflush(logfile);
-}
 
 static void sem_lock(sem_t *sem){
     sem_wait(sem);
@@ -54,8 +49,7 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     const Block *prev = &blockchain->blocks[blockchain->length-1];
 
     if(b->index != prev->index+1){
-        node_log("Wrong index!");
-
+        log_write("Wrong index! Atteso %lu, ricevuto %lu. Interruzione con codice: %s", prev->index + 1, b->index, error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
 
@@ -73,7 +67,7 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     sha256_hex(prev_hex, strlen(prev_hex), computed_hash);
     computed_hash[SHA256_HEX_LEN] = '\0';
     if(strcmp(b->prev_hash, computed_hash)!= 0){
-        node_log("ERROR: prev hash do not correspond!");
+        log_write("ERROR: prev hash do not correspond! Interruzione con codice: %s", error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
 
@@ -84,7 +78,7 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     calcola_merkle_root(tx_copy, computed_merkel);
 
     if(strcmp(b->merkle_root, computed_merkel)!=0){
-        node_log("ERROR: merkel root do not correspond");
+        log_write("ERROR: merkel root do not correspond! Interruzione con codice: %s", error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
     return BC_OK;
@@ -97,7 +91,7 @@ static void handle_new_block(const Block* b){
     Blockchain *linked_list = &shm->blockchain;
 
     if(linked_list->length >0 && linked_list->blocks[linked_list->length-1].index >= b->index){
-        node_log("Block is already in the blockchain, rejected");
+        log_write("Block is already in the blockchain, rejected");
         sem_unlock(sem_blockchain);
         return;
     }
@@ -109,7 +103,7 @@ static void handle_new_block(const Block* b){
 
     linked_list->blocks[linked_list->length]=*b;
     linked_list->length++;
-    node_log("Block add to blockchain");
+    log_write("Block add to blockchain");
     sem_unlock(sem_blockchain);
 
     sem_lock(sem_block);
@@ -122,7 +116,7 @@ static void handle_new_block(const Block* b){
             kill(shm->miner_pids[i], SIGUSR2);
         }
     }
-    node_log("signal: SIGUSR2 send to miner");
+    log_write("signal: SIGUSR2 send to miner");
 
     for (int i = 0; i < num_nodes; i++)
     {
@@ -132,13 +126,13 @@ static void handle_new_block(const Block* b){
 
         int fd = open(fifo_path, O_WRONLY | O_NONBLOCK);
         if(fd<0){
-            node_log("cannot open fifo peer");
+            log_write("cannot open fifo peer");
             continue;
         }
 
         write(fd, b, sizeof(Block));
         close(fd);
-        node_log("Block send to peer");
+        log_write("Block send to peer");
     }
     
     
@@ -150,7 +144,7 @@ static void handle_parent_command(int command_fifo){
     if(s<=0){return;}
     command[s] = '\0';
 
-    node_log(command);
+    log_write("%s", command);
 
     int pfd = open("parent.fifo", O_WRONLY | O_NONBLOCK);
     if(pfd<0){return;}
@@ -169,13 +163,12 @@ static void handle_parent_command(int command_fifo){
 }
 
 int node_main(int id, int n_nodes, int shm_fd){
+    if(log_init("node", id) != 0){
+        return 1;
+    }
+
     node_id = id;
     num_nodes = n_nodes;
-
-    char logname[64];
-    snprintf(logname, sizeof(logname), "node_%d_%d.log", node_id, (int)getpid());
-    logfile = fopen(logname, "w");
-    if(!logfile) logfile = stderr;
 
     shm = (SharedMemory *)mmap(NULL, sizeof(SharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     if(shm == MAP_FAILED){
@@ -206,7 +199,7 @@ int node_main(int id, int n_nodes, int shm_fd){
     int cmd_fd  = open(command_fifo,  O_RDONLY | O_NONBLOCK);
     int cmd_wr  = open(command_fifo,  O_WRONLY | O_NONBLOCK);
 
-    node_log("Nodo avviato");
+    log_write("Nodo avviato");
 
     // Main loop 
     while (!got_stop) {
@@ -226,7 +219,7 @@ int node_main(int id, int n_nodes, int shm_fd){
         Block peer_block;
         ssize_t n = read(peer_fd, &peer_block, sizeof(Block));
         if (n == sizeof(Block)) {
-            node_log("Blocco ricevuto da peer");
+            log_write("Blocco ricevuto da peer");
             handle_new_block(&peer_block);
         }
 
@@ -236,7 +229,7 @@ int node_main(int id, int n_nodes, int shm_fd){
         usleep(50000); // 50ms per non consumare CPU
     }
 
-    node_log("Nodo in chiusura");
+    log_write("Nodo in chiusura");
     close(peer_fd);
     close(peer_wr);
     close(cmd_fd);
@@ -244,7 +237,7 @@ int node_main(int id, int n_nodes, int shm_fd){
     munmap(shm, sizeof(SharedMemory));
     sem_close(sem_blockchain);
     sem_close(sem_block);
-    if (logfile != stderr) fclose(logfile);
+    log_close();
     return 0;
 
 
