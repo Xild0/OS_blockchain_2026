@@ -14,54 +14,48 @@
  * aggiungere log_close() prima del return 0 finale 
  */
 
-// Variabili globali statiche (limitate a questo file).
-// Poiché ogni processo avrà il proprio spazio di memoria, non ci sono conflitti.
-static FILE *logfile = NULL;
-static char current_process_type[32] = "unknown";
-static int current_id = -1;
+static FILE *logfile_ptr = NULL; 
+static char proc_type_global[32];
+static int proc_id_global = -1;
 
-int log_init(const char *process_type, int id) {
+int log_init(const char *process_type, int id){
     char filename[128];
-    pid_t pid = getpid();
-    
-    // Salva i dati per formattare le righe di log
-    snprintf(current_process_type, sizeof(current_process_type), "%s", process_type);
-    current_id = id;
+    proc_id_global = id;
+    snprintf(proc_type_global, sizeof(proc_type_global), "%s", process_type);
 
-    // Crea il nome del file come da specifiche: nome_processo-PID.log
-    snprintf(filename, sizeof(filename), "%s_%d_%d.log", process_type, id, (int)pid);
-    
-    logfile = fopen(filename, "w");
-    if (!logfile) {
-        perror("Errore apertura file log");
+    // nome: process_type_ID-PID.log (es: client_0-7777.log)
+    snprintf(filename, sizeof(filename), "%s_%d-%d.log", process_type, id, (int)getpid());
+
+    logfile_ptr = fopen(filename, "w");
+    if (logfile_ptr == NULL){
+        perror("Errore apertura file di log globale");
         return -1;
     }
+
+    log_write("%s avviato correttamente", process_type);
     return 0;
 }
 
-void log_msg(const char *format, ...) {
-    if (!logfile) return; // Sicurezza: se init non è stato chiamato o ha fallito
+void log_write(const char *format, ...){
+    if(logfile_ptr == NULL) return; 
 
-    time_t now = time(NULL);
-    
-    // Stampa l'intestazione standard (es. "NODE ID: [1], timestamp: [171423456], message: ")
-    // Convertiamo in maiuscolo il tipo processo per consistenza
-    fprintf(logfile, "%s ID: [%d], timestamp: [%ld], message: ", 
-            current_process_type, current_id, (long)now);
+    // scrittura prefisso con timestamp, nome processo e ID
+    fprintf(logfile_ptr, "[%ld] %s ID [%d]:", (long)time(NULL), proc_type_global, proc_id_global);
 
-    // Gestione degli argomenti variabili
+    // gestione argomenti variabili tipo printf
     va_list args;
     va_start(args, format);
-    vfprintf(logfile, format, args);
+    vfprintf(logfile_ptr, format, args);
     va_end(args);
 
-    fprintf(logfile, "\n"); // Ritorno a capo
-    fflush(logfile);        // Forza la scrittura su disco per non perdere i log in caso di crash
+    fprintf(logfile_ptr, "\n");                 // va a capo
+    fflush(logfile_ptr);                        // forza lo svuotamento del buffer
 }
 
-void log_close(void) {
-    if (logfile) {
-        fclose(logfile);
-        logfile = NULL;
+void log_close(void){
+    if(logfile_ptr != NULL){
+        log_write("%s chiuso", proc_type_global);
+        fclose(logfile_ptr);
+        logfile_ptr = NULL;
     }
 }

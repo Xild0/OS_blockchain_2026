@@ -8,6 +8,8 @@
 #include <sys/msg.h>
 #include "../include/blockchain.h"
 #include "../include/client.h"
+#include "../include/log.h"
+#include "../include/errors.h"
 
 #define NUM_NAMES 6
 

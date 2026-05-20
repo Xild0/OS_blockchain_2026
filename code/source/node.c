@@ -10,6 +10,8 @@
 #include <time.h>
 #include "../include/blockchain.h"
 #include "../include/sha256.h"
+#include "../include/log.h"
+#include "../include/errors.h"
 
 static sig_atomic_t got_new_block = 0;
 static sig_atomic_t got_stop = 0;

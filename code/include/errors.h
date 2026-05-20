@@ -12,6 +12,9 @@
 #define EMPTY_BLOCKCHAIN        7
 
 // errori interni per operazioni di lettura e scrittura sui file
+/*
+  VANNO INSERITI ANCHE NEL FILE BASH 
+*/ 
 #define BC_OK                  0
 #define BC_ERR_FILE_OPEN      -1
 #define BC_ERR_FILE_WRITE     -2

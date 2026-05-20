@@ -11,6 +11,8 @@
 #include "../include/blockchain.h"
 #include "../include/sha256.h"
 #include "../include/miner.h"
+#include "../include/log.h"
+#include "../include/errors.h"
 
 // Flag used to stop the miner correctly
 static sig_atomic_t got_stop = 0;
