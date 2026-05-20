@@ -343,6 +343,7 @@ int miner_main(int id,
     }
 
 
+    /*
      // Open shared memory (already created by parent)
     shm_fd = shm_open("/blockchain_shm", O_RDONLY, 0);
     if(shm_fd < 0){
@@ -355,7 +356,7 @@ int miner_main(int id,
         log_write("ERROR: mmap failed");
         return 1;
     }
- 
+    */
 
     // Initial blockchain state
     memset(prev_hash, '0', HASH_LENGTH);

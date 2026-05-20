@@ -1,31 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
-#include <semaphore.h>
+#include <stdarg.h>
+#include <sys/stat.h>
+#include <sys/types.h>  
 #include "../include/log.h"
-
-
-/** TO-DO 
- * includere log.h e errors.h nei file .c dei processi
- * sostituire la creazione manuale dei file con log_init("miner", miner_id);
- * sostituire tutte le chiamate miner_log("...") con log_msg("...");
- * aggiungere log_close() prima del return 0 finale 
- */
 
 static FILE *logfile_ptr = NULL; 
 static char proc_type_global[32];
 static int proc_id_global = -1;
 
 int log_init(const char *process_type, int id){
-    char filename[128];
     proc_id_global = id;
     snprintf(proc_type_global, sizeof(proc_type_global), "%s", process_type);
 
-    // nome: process_type_ID-PID.log (es: client_0-7777.log)
-    snprintf(filename, sizeof(filename), "%s_%d-%d.log", process_type, id, (int)getpid());
+    // creazione cartella "logs" se non esiste. 0777 indica i permessi POSIX standard
+    mkdir("logs", 0777);                        
 
+    // meglio esagerare sulla dimensione per evitare troncamenti
+    char filename[256];         
+
+    // nome: process_type_ID-PID.log (es: client_0-7777.log)
+    snprintf(filename, sizeof(filename), "logs/%s_%d-%d.log", process_type, id, (int)getpid());
+
+    // apertura dei file di log
     logfile_ptr = fopen(filename, "w");
     if (logfile_ptr == NULL){
         perror("Errore apertura file di log globale");
@@ -37,6 +37,7 @@ int log_init(const char *process_type, int id){
 }
 
 void log_write(const char *format, ...){
+    // se init fallito o non chiamato
     if(logfile_ptr == NULL) return; 
 
     // scrittura prefisso con timestamp, nome processo e ID
