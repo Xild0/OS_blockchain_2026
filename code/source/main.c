@@ -268,14 +268,6 @@ static void run_cli(void){
         }
         else if (strncmp(line, "submit ", 7) == 0) {
     submit_transaction(line + 7);
-        //!! necessario??
-       /*else if (strncmp(line, "submit ", 7) == 0) {
-            // rimuove le virgolette se presenti
-            char *tx = line + 7;
-            if (tx[0] == '"') tx++;
-            size_t len = strlen(tx);
-            if (len > 0 && tx[len-1] == '"') tx[len-1] = '\0';
-            submit_transaction(tx);*/
     }else{
         printf("Unknown command\n");
     }

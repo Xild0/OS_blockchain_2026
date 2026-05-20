@@ -126,7 +126,7 @@ static void handle_new_block(const Block* b){
     {
         if(i == node_id) continue;
         char fifo_path[64];
-        snprintf(fifo_path, sizeof(fifo_path), "node_%d_peer.fifo", i);
+        snprintf(fifo_path, sizeof(fifo_path), "node_%d_block.fifo", i);
 
         int fd = open(fifo_path, O_WRONLY | O_NONBLOCK);
         if(fd<0){
@@ -193,7 +193,7 @@ int node_main(int id, int n_nodes, int shm_fd){
 
     // crea le FIFO
     char peer_fifo[64], command_fifo[64];
-    snprintf(peer_fifo, sizeof(peer_fifo), "node_%d_peer.fifo", node_id);
+    snprintf(peer_fifo, sizeof(peer_fifo), "node_%d_block.fifo", node_id);
     snprintf(command_fifo,  sizeof(command_fifo),  "node_%d_cmd.fifo",  node_id);
     mkfifo(peer_fifo, 0666);
     mkfifo(command_fifo,  0666);
