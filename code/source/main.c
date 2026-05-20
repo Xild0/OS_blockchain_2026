@@ -111,7 +111,7 @@ static void pause_all(void){ //sends SIGSTOP to all child processes to make them
         }
     }
 
-    printf("The system is paused");
+    printf("The system is paused\n");
 }
 
 static void resume_all(void){ //sends SIGCONT to all child processes to make them resume
@@ -150,7 +150,25 @@ static void submit_transaction(const char *tx){
 }
 
 static void request_blockchain(void){
-    int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for blockchain
+   sem_t *sem = sem_open("/sem_blockchain", 0);
+    if(sem == SEM_FAILED){
+        perror("Error: failed to open semaphore\n");
+        return;
+    }
+ 
+    sem_wait(sem);
+    int length = shm->blockchain.length;
+    printf("Blockchain length: %d\n", length);
+    for(int i = 0; i < length; i++){
+        printf("  Block %lu:\n", shm->blockchain.blocks[i].index);
+        printf("    prev_hash:    %s\n", shm->blockchain.blocks[i].prev_hash);
+        printf("    merkle_root:  %s\n", shm->blockchain.blocks[i].merkle_root);
+        printf("    transactions: %s\n", shm->blockchain.blocks[i].transactions);
+    }
+    sem_post(sem);
+    sem_close(sem);
+   
+   /* int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for blockchain
     if(fd<0){
         perror("Failed to open node\n");
         return;
@@ -178,11 +196,29 @@ static void request_blockchain(void){
         }
     }else{
         perror("No response received\n");
-    }
+    }*/
 }
 
 static void request_block_by_Index(uint64_t index){
-    int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for block by index
+      sem_t *sem = sem_open("/sem_blockchain", 0);
+    if(sem == SEM_FAILED){
+        perror("Error: failed to open semaphore\n");
+        return;
+    }
+ 
+    sem_wait(sem);
+    if(index < (uint64_t)shm->blockchain.length){
+        Block *b = &shm->blockchain.blocks[index];
+        printf("Block %lu:\n", b->index);
+        printf("  prev_hash:    %s\n", b->prev_hash);
+        printf("  merkle_root:  %s\n", b->merkle_root);
+        printf("  transactions: %s\n", b->transactions);
+    } else {
+        printf("Block %lu not found (blockchain length: %d)\n", index, shm->blockchain.length);
+    }
+    sem_post(sem);
+    sem_close(sem);
+    /*int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for block by index
     if(fd<0){
         perror("Error: failed to open node\n");
         return;
@@ -211,7 +247,7 @@ static void request_block_by_Index(uint64_t index){
         printf("transactions:%s - ", b.transactions);
     }else{
         perror("Block not found\n");
-    }
+    }*/
 }
 
 static void save_blockchain(const char *filename){ //read from shm and save on file
@@ -260,8 +296,8 @@ static void run_cli(void){
         }else if(strcmp(line, "pause")==0){pause_all();
         } else if(strcmp(line, "resume")==0){resume_all();
         } else if (strcmp(line, "request blockchain")==0){request_blockchain();
-        } else if (strncmp(line, "request block with index", 22)==0){
-            uint64_t idx = (uint64_t)atoll(line + 22); //!!
+        } else if (strncmp(line, "request block", 14)==0){
+            uint64_t idx = (uint64_t)atoll(line + 14); 
             request_block_by_Index(idx);
         } else if(strncmp(line, "save blockchain ", 16) == 0) {
             save_blockchain(line + 16);

@@ -32,7 +32,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
         }
         ptr++;
     }
-    printf("Contatore stringhe: %i\n", count);                                  // stampo il contatore di stringhe
+    //printf("Contatore stringhe: %i\n", count);                                  // stampo il contatore di stringhe
     uint16_t c_count = count;
 
     if(count == 0){
@@ -58,10 +58,10 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
         }
     }
 
-    
+    /*
     for (int i = 0; i < count; ++i){                                            // stampo le stringhe separatamente
         printf("Stringa %i: %s\n", i+1, array_transactions[i]);
-    }
+    }*/
     
 
     char **array_transactions_sha256 = malloc(count * sizeof(char*));                               // creo un array di puntatori lungo count che puntano a stringhe lunghe 65 caratteri    
@@ -71,7 +71,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
         array_transactions_sha256[i] = malloc(SHA256_BUFFER_LEN);               
         sha256_hex(array_transactions[i], strlen(array_transactions[i]), array_transactions_sha256[i]);        // eseguo hashing sha256
         array_transactions_sha256[i][SHA256_HEX_LEN] = '\0';                                                   // aggiungo terminatore di stringa
-        printf("Stampa hash %i: %s\n\n", i+1, array_transactions_sha256[i]);
+       // printf("Stampa hash %i: %s\n\n", i+1, array_transactions_sha256[i]);
     }
 
     for (int i = 0; i < count; ++i)

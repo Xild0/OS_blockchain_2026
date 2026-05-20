@@ -17,9 +17,18 @@
 // Flag used to stop the miner correctly
 static sig_atomic_t got_stop = 0;
 
+// Flag set by SIGUSR2 when a block is confirmed by a node
+static sig_atomic_t got_confirmed = 0;
+
 // Miner information
 static int num_nodes = 0;
 static int difficulty = 1;
+
+// Logfile pointer
+static FILE *logfile = NULL;
+
+// Shared memory pointer (read-only for miner)
+static SharedMemory *shm = NULL;
 
 // Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
@@ -39,6 +48,13 @@ static int waiting_confirmation = 0;
 static void handler_sigterm(int sig){
     (void)sig;
     got_stop = 1;
+}
+
+
+// SIGUSR2 handler: node confirmed a block
+static void handler_sigusr2(int sig){
+    (void)sig;
+    got_confirmed = 1;
 }
 
 // Computes the hash of an entire block. The fields are concatenated in hexadecimal form
@@ -166,9 +182,7 @@ static void remove_mined_transactions(const Block *confirmed){
     }
 
     // Check the last transaction
-    if(strlen(start) > 0 &&
-       !is_transaction_in_block(start,
-                                confirmed->transactions)){
+    if(strlen(start) > 0 && !is_transaction_in_block(start, confirmed->transactions)){
 
         if(new_count > 0){
             strcat(new_pool, "::");
@@ -307,11 +321,12 @@ int miner_main(int id,
     key_t key;
 
     int msqid;
+    int shm_fd;
 
-    char my_fifo[64];
+    /*char my_fifo[64];
 
     int fifo_rd;
-    int fifo_wr;
+    int fifo_wr;*/
 
     num_nodes = n_nodes;
 
@@ -322,6 +337,21 @@ int miner_main(int id,
     else{
         difficulty = diff;
     }
+
+
+     // Open shared memory (already created by parent)
+    shm_fd = shm_open("/blockchain_shm", O_RDONLY, 0);
+    if(shm_fd < 0){
+        log_write("ERROR: shm_open failed");
+        return 1;
+    }
+    shm = (SharedMemory *)mmap(NULL, sizeof(SharedMemory),
+                               PROT_READ, MAP_SHARED, shm_fd, 0);
+    if(shm == MAP_FAILED){
+        log_write("ERROR: mmap failed");
+        return 1;
+    }
+ 
 
     // Initial blockchain state
     memset(prev_hash, '0', HASH_LENGTH);
@@ -337,6 +367,7 @@ int miner_main(int id,
 
     // Register SIGTERM handler
     signal(SIGTERM, handler_sigterm);
+    signal(SIGUSR2, handler_sigusr2);
 
     // Generate System V IPC key
     key = ftok(MSGQUEUE_PATH,
@@ -355,6 +386,7 @@ int miner_main(int id,
         return 1;
     }
 
+    /*
     // FIFO used to receive confirmed blocks from nodes
     sprintf(my_fifo,
             "miner_%d_block.fifo",
@@ -382,30 +414,38 @@ int miner_main(int id,
         }
 
         return 1;
-    }
+    }*/
 
     log_write("Miner started");
 
     // Main loop
     while(!got_stop){
 
+        if(got_confirmed){
+            got_confirmed = 0;
+            // Read the confirmed block from shared memory
+            Block confirmed = shm->confirmed;
+            handle_confirmed_block(&confirmed);
+        }
+
+        
         Block confirmed;
-
         ssize_t n;
-
         int sleep_seconds;
 
         // Read all pending transactions
         drain_message_queue(msqid);
 
-        // Check if a confirmed block arrived
+        
+
+        /* Check if a confirmed block arrived
         n = read(fifo_rd,
                  &confirmed,
                  sizeof(Block));
 
         if(n == sizeof(Block)){
             handle_confirmed_block(&confirmed);
-        }
+        }*/
 
         // Simulate mining work
         sleep_seconds = 1 + (rand() % 5);
@@ -416,9 +456,17 @@ int miner_main(int id,
             break;
         }
 
+        // Check confirmation again after sleep
+        if(got_confirmed){
+            got_confirmed = 0;
+            Block confirmed = shm->confirmed;
+            handle_confirmed_block(&confirmed);
+        }
+
         // Read new transactions again after sleeping
         drain_message_queue(msqid);
 
+        /*
         // Check confirmations again
         n = read(fifo_rd,
                  &confirmed,
@@ -426,7 +474,7 @@ int miner_main(int id,
 
         if(n == sizeof(Block)){
             handle_confirmed_block(&confirmed);
-        }
+        }*/
 
         current_nonce++;
 
@@ -451,13 +499,17 @@ int miner_main(int id,
 
     log_write("Miner shutting down");
 
+
+    munmap(shm, sizeof(SharedMemory));
+    close(shm_fd);
+    fclose(logfile);
+
+    /*
     close(fifo_rd);
 
     close(fifo_wr);
 
-    unlink(my_fifo);
-
-    log_close();
+    unlink(my_fifo);*/
 
     return 0;
 }

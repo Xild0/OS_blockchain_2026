@@ -132,7 +132,4 @@ int client_main(int id, int transaction_frequency){
     return 0;
 }
 
-/*
-int main(){
-    return client_main(0, 1);
-}*/
+

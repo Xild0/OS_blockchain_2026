@@ -149,7 +149,14 @@ static void handle_parent_command(int command_fifo){
     int pfd = open("parent.fifo", O_WRONLY | O_NONBLOCK);
     if(pfd<0){return;}
 
-    if(strncmp(command, "request blockchain", 18)==0){
+     // manda l'intera blockchain
+    if(strcmp(command, "request blockchain") == 0){
+        sem_lock(sem_blockchain);
+        write(pfd, &shm->blockchain, sizeof(Blockchain));
+        sem_unlock(sem_blockchain);
+
+        //manda un singolo blocco per index
+    }else if(strncmp(command, "request blockchain", 19)==0){
         uint64_t index = (uint64_t)atoll(command + 19);
         sem_lock(sem_blockchain);
         if(index <(uint64_t)shm->blockchain.length){
