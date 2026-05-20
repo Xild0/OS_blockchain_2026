@@ -18,12 +18,8 @@
 static sig_atomic_t got_stop = 0;
 
 // Miner information
-static int miner_id = -1;
 static int num_nodes = 0;
 static int difficulty = 1;
-
-// Logfile pointer
-static FILE *logfile = NULL;
 
 // Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
@@ -43,22 +39,6 @@ static int waiting_confirmation = 0;
 static void handler_sigterm(int sig){
     (void)sig;
     got_stop = 1;
-}
-
-// Writes messages inside the logfile
-static void miner_log(const char *msg){
-
-    if(logfile == NULL){
-        return;
-    }
-
-    fprintf(logfile,
-            "MINER ID: [%d], timestamp: [%ld], message: %s\n",
-            miner_id,
-            (long)time(NULL),
-            msg);
-
-    fflush(logfile);
 }
 
 // Computes the hash of an entire block. The fields are concatenated in hexadecimal form
@@ -102,7 +82,7 @@ static void add_transaction_to_pool(const char *tx){
     }
 
     if(new_len >= MAX_TX_LEN){
-        miner_log("WARNING: transaction pool full");
+        log_write("WARNING: transaction pool full");
         return;
     }
 
@@ -218,7 +198,7 @@ static void drain_message_queue(int msqid){
 
         add_transaction_to_pool(msg.content);
 
-        miner_log(msg.content);
+        log_write("%s", msg.content);
     }
 }
 
@@ -227,7 +207,7 @@ static void handle_confirmed_block(const Block *b){
 
     char new_prev_hash[SHA256_BUFFER_LEN];
 
-    miner_log("Confirmed block received from node");
+    log_write("Confirmed block received from node");
 
     // Update local blockchain state
     compute_block_hash(b, new_prev_hash);
@@ -264,18 +244,18 @@ static void broadcast_block(const Block *b){
                   O_WRONLY | O_NONBLOCK);
 
         if(fd < 0){
-            miner_log("WARNING: cannot open node fifo");
+            log_write("WARNING: cannot open node fifo");
             continue;
         }
 
         if(write(fd, b, sizeof(Block)) < 0){
-            miner_log("WARNING: write to node fifo failed");
+            log_write("WARNING: write to node fifo failed");
         }
 
         close(fd);
     }
 
-    miner_log("Block sent to nodes");
+    log_write("Block sent to nodes");
 }
 
 // Builds a new block and broadcasts it
@@ -302,7 +282,7 @@ static void build_and_broadcast_block(void){
 
     new_block.nonce = current_nonce;
 
-    miner_log("Mining successful");
+    log_write("Mining successful");
 
     broadcast_block(&new_block);
 
@@ -319,7 +299,7 @@ static void build_and_broadcast_block(void){
 int miner_main(int id,
                int n_nodes,
                int diff){
-
+    log_init("miner", id);
     char logname[64];
 
     key_t key;
@@ -331,8 +311,6 @@ int miner_main(int id,
     int fifo_rd;
     int fifo_wr;
 
-    miner_id = id;
-
     num_nodes = n_nodes;
 
     // Protect against invalid difficulty
@@ -341,19 +319,6 @@ int miner_main(int id,
     }
     else{
         difficulty = diff;
-    }
-
-    // Create logfile name
-    sprintf(logname,
-            "miner_%d_%d.log",
-            miner_id,
-            (int)getpid());
-
-    logfile = fopen(logname, "w");
-
-    if(logfile == NULL){
-        perror("fopen");
-        return 1;
     }
 
     // Initial blockchain state
@@ -376,8 +341,7 @@ int miner_main(int id,
                MSGQUEUE_PROJ_ID);
 
     if(key == -1){
-        miner_log("ERROR: ftok failed");
-        fclose(logfile);
+        log_write("ERROR: ftok failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
         return 1;
     }
 
@@ -385,15 +349,14 @@ int miner_main(int id,
     msqid = msgget(key, 0666);
 
     if(msqid == -1){
-        miner_log("ERROR: msgget failed");
-        fclose(logfile);
+        log_write("ERROR: msgget failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
         return 1;
     }
 
     // FIFO used to receive confirmed blocks from nodes
     sprintf(my_fifo,
             "miner_%d_block.fifo",
-            miner_id);
+            id);
 
     mkfifo(my_fifo, 0666);
 
@@ -406,7 +369,7 @@ int miner_main(int id,
 
     if(fifo_rd < 0 || fifo_wr < 0){
 
-        miner_log("ERROR: cannot open miner fifo");
+        log_write("ERROR: cannot open miner fifo");
 
         if(fifo_rd >= 0){
             close(fifo_rd);
@@ -416,12 +379,10 @@ int miner_main(int id,
             close(fifo_wr);
         }
 
-        fclose(logfile);
-
         return 1;
     }
 
-    miner_log("Miner started");
+    log_write("Miner started");
 
     // Main loop
     while(!got_stop){
@@ -480,13 +441,13 @@ int miner_main(int id,
                 }
                 else{
 
-                    miner_log("Lottery won but no transactions to mine");
+                    log_write("Lottery won but no transactions to mine");
                 }
             }
         }
     }
 
-    miner_log("Miner shutting down");
+    log_write("Miner shutting down");
 
     close(fifo_rd);
 
@@ -494,7 +455,7 @@ int miner_main(int id,
 
     unlink(my_fifo);
 
-    fclose(logfile);
+    log_close();
 
     return 0;
 }
