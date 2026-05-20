@@ -141,6 +141,7 @@ static void resume_all(void){ //sends SIGCONT to all child processes to make the
 
 static void submit_transaction(const char *tx){
     TxMessage msg;
+    memset(&msg, 0, sizeof(TxMessage));                         // azzero tutto l'array
     int l = MAX_TX_LEN-1;
     msg.mtype = MSG_TYPE_TRANSACTION;
     strncpy(msg.content, tx, l);

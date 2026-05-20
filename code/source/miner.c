@@ -280,6 +280,7 @@ static void broadcast_block(const Block *b){
 static void build_and_broadcast_block(void){
 
     Block new_block;
+    memset(&new_block, 0, sizeof(Block));               // azzero tutti i parametri della struttura
 
     new_block.index = next_index;
 
@@ -343,8 +344,8 @@ int miner_main(int id,
     }
 
 
-    /*
-     // Open shared memory (already created by parent)
+    
+    // Open shared memory (already created by parent)
     shm_fd = shm_open("/blockchain_shm", O_RDONLY, 0);
     if(shm_fd < 0){
         log_write("ERROR: shm_open failed");
@@ -356,7 +357,7 @@ int miner_main(int id,
         log_write("ERROR: mmap failed");
         return 1;
     }
-    */
+    
 
     // Initial blockchain state
     memset(prev_hash, '0', HASH_LENGTH);

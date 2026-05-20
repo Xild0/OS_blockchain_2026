@@ -103,6 +103,7 @@ int client_main(int id, int transaction_frequency){
     while(!got_stop){
 
         TxMessage msg;
+        memset(&msg, 0, sizeof(TxMessage));                     // azzero tutto l'array
 
         // Message type used by miners
         msg.mtype = MSG_TYPE_TRANSACTION;
