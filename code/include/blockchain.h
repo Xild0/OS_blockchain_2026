@@ -1,7 +1,6 @@
 #ifndef BLOCKCHAIN_H
 #define BLOCKCHAIN_H
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -10,7 +9,7 @@
 #include <string.h>
 #include <semaphore.h>
 #include <sys/mman.h> 
-
+#include "errors.h"
 
 #define MAX_BLOCKS 5000									// arbitrary number max transaction divided by "::"
 #define HASH_LENGTH 64 									// 64 hex char equal to 256 bit
@@ -20,16 +19,7 @@
 #define SHA256_BUFFER_LEN 65
 #define CONC_LEN 128
 #define CONC_BUFFER_LEN 130
-#define BC_OK                  0
-#define BC_ERR_FILE_OPEN      -1
-#define BC_ERR_FILE_WRITE     -2
-#define BC_ERR_FILE_READ      -3
-#define BC_ERR_INVALID_FORMAT -4
-#define BC_ERR_FULL           -5
-#define BC_ERR_NULL_ARG       -6
-#define BC_ERR_INVALID_BLOCK  -7
 #define CSV_HEADER "index, timestamp, prev_hash, merkle_root, nonce, transactions\n"
-
 
 #define MSGQUEUE_PATH "/tmp/blockchain_queue"
 #define MSGQUEUE_PROJ_ID 'B'
@@ -37,6 +27,7 @@
 
 #define MAX_MINERS 16
 #define MAX_NODES 16
+
 
 typedef struct Block
 {

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "../include/blockchain.h"
 #include "../include/sha256.h"
+#include "../include/errors.h"
 
 
 
