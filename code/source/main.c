@@ -1,5 +1,5 @@
 // test run: 
-//      $gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/ipc.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
+//      $gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
 //      $ ./blockchain 2 2 3 1 12 
 //      1->tx_frequency, 12->difficulty
 
@@ -39,31 +39,34 @@ static int shm_fd      = -1;
 static SharedMemory *shm = NULL;
 
 static void cleanup(){ //deallocates resoruces of sem, shm, msgqueue, fifo after stop call 
-        sem_unlink("/sem_blockchain");
-        sem_unlink("/sem_block");
-        if(shm !=NULL){
-            shm_unlink("/blockchain_shm");
-        }
-        if(msqid >=0){
-            msgctl(msqid, IPC_RMID, NULL);
-        }
+    sem_unlink("/sem_blockchain");
+    sem_unlink("/sem_block");
 
-        for (int i=0; i<num_nodes; i++){
-            char fifo[64];
-            snprintf(fifo, sizeof(fifo), "node_%d_block.fifo", i);
-            unlink(fifo);
-            snprintf(fifo, sizeof(fifo), "node_%d_cmd.fifo", i);
-            unlink(fifo);
-        }
-        
-        for(int i =0; i<num_miners; i++){
-            char fifo[64];
-            snprintf(fifo, sizeof(fifo), "miner_%d_block.fifo", i);
-            unlink(fifo);
-        }
+    if(shm_fd >= 0){
+        close(shm_fd);
+    }
+    shm_unlink("/blockchain_shm");
 
-        unlink("parent.fifo");
-        unlink(MSGQUEUE_PATH);
+    if(msqid >=0){
+        msgctl(msqid, IPC_RMID, NULL);
+    }
+
+    for (int i=0; i<num_nodes; i++){
+        char fifo[64];
+        snprintf(fifo, sizeof(fifo), "node_%d_block.fifo", i);
+        unlink(fifo);
+        snprintf(fifo, sizeof(fifo), "node_%d_cmd.fifo", i);
+        unlink(fifo);
+    }
+    
+    for(int i =0; i<num_miners; i++){
+        char fifo[64];
+        snprintf(fifo, sizeof(fifo), "miner_%d_block.fifo", i);
+        unlink(fifo);
+    }
+
+    unlink("parent.fifo");
+    unlink(MSGQUEUE_PATH);
 }
 
 static void stop_all(void){ //terminates all child processes and wait for them to finish
@@ -138,10 +141,11 @@ static void resume_all(void){ //sends SIGCONT to all child processes to make the
 
 static void submit_transaction(const char *tx){
     TxMessage msg;
+    memset(&msg, 0, sizeof(TxMessage));                         // azzero tutto l'array
     int l = MAX_TX_LEN-1;
     msg.mtype = MSG_TYPE_TRANSACTION;
     strncpy(msg.content, tx, l);
-    //msg.content[l] = '\0';
+    msg.content[l] = '\0';
     if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT)==-1){
         perror("Failed transaction submission\n");
     }else{
@@ -368,6 +372,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     memset(shm, 0, sizeof(SharedMemory));
+    // close(shm_fd);                              // chiudendo fq, i figli che nascono con fork non lo ereditano inutilmente
 
     //sem
     sem_unlink("/sem_blockchain");
