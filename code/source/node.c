@@ -182,6 +182,7 @@ int node_main(int id, int n_nodes, int shm_fd){
         perror("mmap");
         return 1;
     }
+    close(shm_fd);
 
     sem_blockchain = sem_open("/sem_blockchain", 0);
     sem_block = sem_open("/sem_block", 0);

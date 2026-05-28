@@ -19,7 +19,7 @@
 #include "../include/blockchain.h"
 #include "../include/miner.h"
 #include "../include/client.h"
-#include <../include/log.h>
+#include "../include/log.h"
 
 // dichiarazioni
 int node_main(int id, int n_nodes, int shm_fd);
@@ -71,6 +71,27 @@ static void cleanup(){ //deallocates resoruces of sem, shm, msgqueue, fifo after
 }
 
 static void stop_all(void){ //terminates all child processes and wait for them to finish
+    for (int i = 0; i < num_nodes; ++i)
+    {
+        if (node_pids[i] > 0){
+            kill(node_pids[i], SIGCONT);
+        }
+    }
+
+    for (int i = 0; i < num_miners; ++i)
+    {
+        if (miner_pids[i] > 0){
+            kill(miner_pids[i], SIGCONT);
+        }
+    }
+
+    for (int i = 0; i < num_clients; ++i)
+    {
+        if (client_pids[i] > 0){
+            kill(client_pids[i], SIGCONT);
+        }
+    }
+
     for(int i=0; i<num_nodes; i++){
         if(node_pids[i] > 0){
             kill(node_pids[i], SIGTERM);
@@ -452,6 +473,7 @@ int main(int argc, char *argv[]){
             return 1; 
         }
         if (pid == 0) {
+            close(shm_fd);
             exit(miner_main(i, num_nodes, difficulty));
         }
         miner_pids[i] = pid;
@@ -469,6 +491,7 @@ int main(int argc, char *argv[]){
             return 1; 
         }
         if (pid == 0) {
+            close(shm_fd);
             exit(client_main(i, tx_frequency));
         }
         client_pids[i] = pid;
