@@ -19,6 +19,7 @@
 #include "../include/blockchain.h"
 #include "../include/miner.h"
 #include "../include/client.h"
+#include <../include/log.h>
 
 // dichiarazioni
 int node_main(int id, int n_nodes, int shm_fd);
@@ -481,9 +482,4 @@ int main(int argc, char *argv[]){
     return 0;
 
 }
-
-
-
-
-
 

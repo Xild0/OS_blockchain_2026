@@ -30,65 +30,70 @@ if [ "$comando" == "--hash" ]; then
 
 # MERKLE
 elif [ "$comando" == "--merkle" ]; then
-    
-    string="$parametro"
-    # echo "Stringa transazioni ricevuta: $tx_string"
+    tx_string="$parametro"
+    # echo "DEBUG: parametro='$parametro'" >&2
+    # echo "DEBUG: string='$tx_string'" >&2
 
-    if [ -z "$string" ]; then
-        hash_result=$(echo -n "" | sha256sum | awk '{print $1}')
+    # caso stringa vuota
+    if [ -z "$tx_string" ]; then
+        echo -n "" | sha256sum | awk '{print $1}'
         exit 0
     fi
 
-    string_singola="${string//::/:}"
-    IFS=':' read -r -a tx_array <<< "$string_singola"
-    
-    # echo "DEBUG: separate ${#tx_array[@]} transazioni"
+    declare -a tx_array=()
+    resto="$tx_string"
+    while [[ "$resto" == *::* ]]; do
+        parte="${resto%%::*}"       # prendo tutto quello che sta prima del primo "::"
+        tx_array+=("$parte")
+        resto="${resto#*::}"        # rimuovo la parte appena presa + i due punti
+    done
+    tx_array+=("$resto")           # aggiungo l'ultima transazione rimasta
 
+    # hash di ogni transazione singola
     declare -a hashes=()
-
     for tx in "${tx_array[@]}"; do
         h=$(echo -n "$tx" | sha256sum | awk '{print $1}')
-        # echo "DEBUG: hash transazione singola: $h"
         hashes+=("$h")
     done
 
-    while [ ${#hashes[@]} -gt 1 ]; do
-        # echo "DEBUG: inizio nuovo livello albero, elementi attuali = ${#hashes[@]}"
-        
-        if [ $(( ${#hashes[@]} % 2 )) -ne 0 ]; then
-            # echo "DEBUG: numero dispari, aggiungo padding vuoto"
-            # ============================
-            # TODO: padding numero dispari
-            # ============================
+    count=${#hashes[@]}
 
-            empty_hash=$(echo "" | sha256sum | awk '{print $1}')
-            hashes+=("$empty_hash")
-            # echo "DEBUG: hash stringa vuota aggiunto = $empty_hash"
+    # caso singola transazione
+    if [ "$count" -eq 1 ]; then
+        hash_vuoto="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        concatenata="${hashes[0]}${hash_vuoto}"
+        risultato=$(echo -n "$concatenata" | sha256sum | awk '{print $1}')
+        echo "$risultato"
+        exit 0
+    fi
+
+    # calcolo merkle root livello per livello
+    while [ ${#hashes[@]} -gt 1 ]; do
+
+        # se il numero di hash è dispari, aggiungo sha256("") come padding
+        if [ $(( ${#hashes[@]} % 2 )) -ne 0 ]; then
+            hash_vuoto=$(echo -n "" | sha256sum | awk '{print $1}')
+            hashes+=("$hash_vuoto")
         fi
 
         declare -a new_hashes=()
-        
         for (( i=0; i<${#hashes[@]}; i+=2 )); do
             h1="${hashes[$i]}"
             h2="${hashes[$i+1]}"
-            
-            # echo "DEBUG: sto accoppiando indice $i e $((i+1))"
-            combined=$(echo -n "${h1}${h2}" | sha256sum | awk '{print $1}')
-            new_hashes+=("$combined")
+            concatenata=$(echo -n "${h1}${h2}" | sha256sum | awk '{print $1}')
+            new_hashes+=("$concatenata")
         done
-        
+
         hashes=("${new_hashes[@]}")
     done
 
-    # echo "DEBUG: finito! stampo la root"
     echo "${hashes[0]}"
     exit 0
 
 
 
-
 # VERIFY 
-elif [ "$comando" == "--verify" ] || [ "$comando" == "-verify" ]; then
+elif [ "$comando" == "--verify" ]; then
     
     csv_file="$parametro"
 
@@ -152,8 +157,8 @@ elif [ "$comando" == "--verify" ] || [ "$comando" == "-verify" ]; then
 
 else
     echo "Comandi disponibili: ./Blockchain.sh {--hash|--merkle|--verify} <argomento>"
-    echo "./Blockchain.sh --hash <string>"
-    echo "./Blockchain.sh --merkle <list of::various::transactions:Alice pays Bob 10 coins"
-    echo "./Blockchain.sh --verify <file.csv>"
+    echo "./blockchain.sh --hash <string>"
+    echo "./blockchain.sh --merkle <list of::various::transactions:Alice pays Bob 10 coins"
+    echo "./blockchain.sh --verify <file.csv>"
     exit 1
 fi
