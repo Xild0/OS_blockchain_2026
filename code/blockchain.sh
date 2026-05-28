@@ -1,49 +1,46 @@
 #!/bin/bash
 
+SUCCESS=0
 INVALID_BLOCK=1
 CHAIN_MISMATCH=2
 INVALID_TRANSACTION=3
 BLOCK_NOT_FOUND=4
-GENERIC_ERROR=5
+INVALID_ARGUMENT=5
+FILE_NOT_FOUND=6
+EMPTY_BLOCKCHAIN=7
 
 comando="$1"
 parametro="$2"
-
-# echo "DEBUG: script avviato, comando=$comando, parametro=$parametro"
+#echo "Script avviato, comando=$comando, parametro=$parametro"
 
 
 
 # HASH
-if [ "$comando" == "--hash" ] || [ "$comando" == "-hash" ]; then
-    
+if [ "$comando" == "--hash" ]; then
     if [ -z "$parametro" ]; then
-        echo "Errore: block_hex mancante."
-        exit $GENERIC_ERROR
+        echo "Errore: no stringa da convertire."
+        exit $INVALID_ARGUMENT
     fi
-
-    # Decodifica stringa esadecimale e calcolo hash
-    hash_result=$(echo -n "$parametro" | xxd -r -p | sha256sum | awk '{print $1}')
-    # echo "DEBUG: hash_result parziale = $hash_result"
-    
+    # calcolo hash
+    hash_result=$(echo -n "$parametro" | sha256sum | awk '{print $1}')
     echo "$hash_result"
     exit 0
 
 
 
-
 # MERKLE
-elif [ "$comando" == "--merkle" ] || [ "$comando" == "-merkle" ]; then
+elif [ "$comando" == "--merkle" ]; then
     
-    tx_string="$parametro"
-    # echo "DEBUG: stringa transazioni ricevuta: $tx_string"
+    string="$parametro"
+    # echo "Stringa transazioni ricevuta: $tx_string"
 
-    if [ -z "$tx_string" ]; then
-        echo -n "" | sha256sum | awk '{print $1}'
+    if [ -z "$string" ]; then
+        hash_result=$(echo -n "" | sha256sum | awk '{print $1}')
         exit 0
     fi
 
-    tx_string_single_colon="${tx_string//::/:}"
-    IFS=':' read -r -a tx_array <<< "$tx_string_single_colon"
+    string_singola="${string//::/:}"
+    IFS=':' read -r -a tx_array <<< "$string_singola"
     
     # echo "DEBUG: separate ${#tx_array[@]} transazioni"
 
@@ -97,7 +94,7 @@ elif [ "$comando" == "--verify" ] || [ "$comando" == "-verify" ]; then
 
     if [ ! -f "$csv_file" ]; then
         echo "Errore: file CSV mancante o inaccessibile."
-        exit $BLOCK_NOT_FOUND
+        exit $INVALID_ARGUMENT
     fi
 
     prev_index="-1"
@@ -106,7 +103,7 @@ elif [ "$comando" == "--verify" ] || [ "$comando" == "-verify" ]; then
 
     cat "$csv_file" | while IFS=',' read -r index timestamp p_hash merkle nonce txs; do
         
-        # echo "DEBUG: leggo riga CSV -> index=$index"
+        echo "DEBUG: leggo riga CSV -> index=$index"
         
         if [[ "$index" == "index" || "$index" == "index"* ]]; then
             # echo "DEBUG: salto l'intestazione"
@@ -154,6 +151,9 @@ elif [ "$comando" == "--verify" ] || [ "$comando" == "-verify" ]; then
     fi
 
 else
-    echo "Uso: ./blockchain.sh {--hash|--merkle|--verify} <argomento>"
+    echo "Comandi disponibili: ./Blockchain.sh {--hash|--merkle|--verify} <argomento>"
+    echo "./Blockchain.sh --hash <string>"
+    echo "./Blockchain.sh --merkle <list of::various::transactions:Alice pays Bob 10 coins"
+    echo "./Blockchain.sh --verify <file.csv>"
     exit 1
 fi

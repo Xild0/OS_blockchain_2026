@@ -23,6 +23,11 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
 
     uint16_t count = 0;                                                          // conta quante stringhe ci sono nell'array
     uint16_t tx_count = 0;                                                       // contatore per selezionare il puntatore alle stringhe
+
+    if (*transactions == '\0'){
+        sha256_hex("", 0, merkle_root);
+    }
+
     char *ptr = transactions;                                                   // puntatore utile per scorrere la stringa concatenate
     char *start = ptr;                                                          // punta all'inizio della stringa concatenata
     
@@ -33,14 +38,10 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
         ptr++;
     }
     //printf("Contatore stringhe: %i\n", count);                                  // stampo il contatore di stringhe
+    ++count;
     uint16_t c_count = count;
 
-    if(count == 0){
-        sha256_hex("", 0, merkle_root);
-        return;
-    }
-
-    char **array_transactions = malloc(count * sizeof(char*));                                            // creo un array di puntatori a stringhe
+    char **array_transactions = malloc(count * sizeof(char*));                   // creo un array di puntatori a stringhe
     ptr = transactions;                                                         // resetto il puntatore per scorrere
 
     while(*ptr != '\0'){
@@ -57,6 +58,11 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
             ptr++;
         }
     }
+    uint64_t diff = ptr - start;
+    array_transactions[tx_count] = malloc(diff+1);
+    strncpy(array_transactions[tx_count], start, diff); 
+    array_transactions[tx_count][diff] = '\0';                          
+    tx_count++;                      
 
     /*
     for (int i = 0; i < count; ++i){                                            // stampo le stringhe separatamente

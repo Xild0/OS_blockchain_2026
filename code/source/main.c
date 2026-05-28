@@ -142,10 +142,11 @@ static void resume_all(void){ //sends SIGCONT to all child processes to make the
 static void submit_transaction(const char *tx){
     TxMessage msg;
     memset(&msg, 0, sizeof(TxMessage));                         // azzero tutto l'array
-    int l = MAX_TX_LEN-1;
+    //int l = MAX_TX_LEN-1;
     msg.mtype = MSG_TYPE_TRANSACTION;
-    strncpy(msg.content, tx, l);
-    msg.content[l] = '\0';
+    snprintf(msg.content, sizeof(msg.content), "%s::", tx);         // copia tx nel buffer, then append "::" e mette \0 finale
+    //strncpy(msg.content, tx, l);
+    //msg.content[l] = '\0';
     if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT)==-1){
         perror("Failed transaction submission\n");
     }else{
@@ -315,6 +316,9 @@ static void run_cli(void){
 }
 
 int main(int argc, char *argv[]){
+
+    log_cleanup();
+
     if(argc <4){
         fprintf(stderr, "Usage: %s <num_nodes> <num_miners> <num_clients> [tx_frequency] [difficulty] [initial_state.csv]\n", argv[0]);
         return 1;
