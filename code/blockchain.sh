@@ -17,9 +17,13 @@ parametro="$2"
 
 # HASH
 if [ "$comando" == "--hash" ]; then
-    if [ -z "$parametro" ]; then
-        echo "Errore: no stringa da convertire."
+    if [ "$#" -lt 2 ]; then
+        echo "Errore: nessuna stringa da convertire."
         exit $INVALID_ARGUMENT
+    elif [ -z "$2" ]; then 
+        hash_result=$(echo -n "" | sha256sum | awk '{print $1}')
+        echo $hash_result
+        exit 0
     fi
     # calcolo hash
     hash_result=$(echo -n "$parametro" | sha256sum | awk '{print $1}')
@@ -34,8 +38,12 @@ elif [ "$comando" == "--merkle" ]; then
     # echo "DEBUG: parametro='$parametro'" >&2
     # echo "DEBUG: string='$tx_string'" >&2
 
+    if [ "$#" -lt 2 ]; then
+        echo "Errore: nessuna stringa da convertire."
+        exit $INVALID_ARGUMENT
+
     # caso stringa vuota
-    if [ -z "$tx_string" ]; then
+    elif [ -z "$2" ]; then
         echo -n "" | sha256sum | awk '{print $1}'
         exit 0
     fi
@@ -92,65 +100,92 @@ elif [ "$comando" == "--merkle" ]; then
 
 
 
-# VERIFY 
+# VERIFY
 elif [ "$comando" == "--verify" ]; then
-    
+
     csv_file="$parametro"
 
-    if [ ! -f "$csv_file" ]; then
-        echo "Errore: file CSV mancante o inaccessibile."
+    # controllo dell'argomento
+    if [ -z "$csv_file" ]; then
+        echo "Errore: specificare file CSV."
         exit $INVALID_ARGUMENT
     fi
 
-    prev_index="-1"
+    # controllo che il file esista
+    if [ ! -f "$csv_file" ]; then
+        echo "Errore: file CSV non trovato."
+        exit $FILE_NOT_FOUND
+    fi
+
+    # controllo blockchain
+    block_count=$(awk '!/^index/' "$csv_file" | wc -l)
+    if [ "$block_count" -eq 0 ]; then
+        echo "Errore: la blockchain è vuota."
+        exit $EMPTY_BLOCKCHAIN
+    fi
+
+    prev_index_dec=-1
     prev_hash=""
     is_valid=1
 
-    cat "$csv_file" | while IFS=',' read -r index timestamp p_hash merkle nonce txs; do
-        
-        echo "DEBUG: leggo riga CSV -> index=$index"
-        
-        if [[ "$index" == "index" || "$index" == "index"* ]]; then
-            # echo "DEBUG: salto l'intestazione"
+    while IFS=',' read -r idx ts p_hash merkle nonce txs; do
+
+        # salto riga di intestazione
+        if [[ "$idx" == "index"* ]]; then
             continue
         fi
 
-        if [ "$prev_index" != "-1" ]; then
-            
-            # echo "DEBUG: prev_index=$prev_index"
-            expected_index=$((prev_index + 1))
-            # echo "DEBUG: expected=$expected_index, index_letto=$index"
-            
-            if [ "$index" != "$expected_index" ]; then
-                # echo "SONO QUI - Trovato errore nell'indice!"
-                echo "Errore INVALID_BLOCK: Indice non valido trovato a $index."
+        # converto indice da hex a decimale
+        idx_dec=$(printf '%d' "0x$idx")
+
+        # il primo blocco deve avere indice 0
+        if [ "$prev_index_dec" -eq -1 ] && [ "$idx_dec" -ne 0 ]; then
+            echo "Errore BLOCK_NOT_FOUND: il blocco genesi manca."
+            is_valid=0
+            break
+        fi
+
+        # dal secondo blocco in poi controllo indice e prev_hash
+        if [ "$prev_index_dec" -ne -1 ]; then
+            expected=$((prev_index_dec + 1))
+            if [ "$idx_dec" -ne "$expected" ]; then
+                echo "Errore INVALID_BLOCK: indice non valido (atteso $expected, trovato $idx_dec)"
                 is_valid=0
-                # echo "DEBUG: is_valid settato a $is_valid, esco dal while"
                 break
             fi
-
             if [ "$p_hash" != "$prev_hash" ]; then
-                echo "Errore CHAIN_MISMATCH: Hash non concatenato correttamente all'indice $index."
+                echo "Errore CHAIN_MISMATCH: prev_hash non corretto al blocco $idx_dec"
                 is_valid=0
                 break
             fi
         fi
 
-        prev_index="$index"
-        prev_hash="fake_calculated_hash" # Da sostituire con la chiamata reale ad hash
-    done
+        txs_clean="${txs%\"}"
+        txs_clean="${txs_clean#\"}"
+        if [ -z "$txs_clean" ]; then
+            echo "Errore INVALID_TRANSACTION: nessuna transazione al blocco $idx_dec"
+            is_valid=0
+            break
+        fi
 
-    # echo "DEBUG: fuori dal while"
-    # echo "DEBUG: is_valid vale $is_valid"
+        # verifico merkle root
+        computed_merkle=$(./blockchain.sh --merkle "$txs_clean")
+        if [ "$computed_merkle" != "$merkle" ]; then
+            echo "Errore INVALID_BLOCK: merkle root non valida al blocco $idx_dec"
+            is_valid=0
+            break
+        fi
 
-    # =================================================================================
-    # TODO: why is_valid stampa sempre 1 anche se entra nel break???
-    # =================================================================================
+        # calcolo l'hash del blocco. Questo hash diventerà il prev_hash per il successivo blocco
+        block_data="${idx}${ts}${p_hash}${merkle}${nonce}${txs_clean}"
+        prev_hash=$(./blockchain.sh --hash "$block_data")
+        prev_index_dec="$idx_dec"
 
+    done < "$csv_file"
 
-    if [ $is_valid -eq 1 ]; then
+    if [ "$is_valid" -eq 1 ]; then
         echo "Integrità della Blockchain verificata con successo."
-        exit 0
+        exit $SUCCESS
     else
         exit $INVALID_BLOCK
     fi
