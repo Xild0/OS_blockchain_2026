@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <sys/stat.h>
 #include <sys/types.h>  
+#include <dirent.h>
 #include "../include/log.h"
 
 static FILE *logfile_ptr = NULL; 
@@ -59,4 +60,21 @@ void log_close(void){
         fclose(logfile_ptr);
         logfile_ptr = NULL;
     }
+}
+
+void log_cleanup(void){
+    DIR *dir = opendir("logs");
+    if (dir == NULL) return;
+
+    struct dirent *entry;
+    char filepath[512];
+
+    while ((entry = readdir(dir)) != NULL){
+        if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, ".") == 0){
+            continue;
+        }
+        snprintf(filepath, sizeof(filepath), "logs/%s", entry->d_name);
+        remove(filepath);  
+    }
+    closedir(dir);
 }

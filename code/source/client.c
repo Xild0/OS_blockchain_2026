@@ -25,7 +25,7 @@ static const char *names[NUM_NAMES] = {
     "Francesco",
     "Giacomo"
 };
-
+    
 // SIGTERM handler
 // The client does not stop immediately: it only sets the flag and exits the loop safely
 static void handler_sigterm(int sig){

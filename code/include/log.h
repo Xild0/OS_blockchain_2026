@@ -7,4 +7,6 @@ void log_write(const char *format, ...);              // si usa come printf, scr
 
 void log_close(void);                               // chiude il file di log
 
+void log_cleanup(void); 							// pulisce tutti i log della scorsa run
+
 #endif
