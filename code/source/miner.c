@@ -359,14 +359,21 @@ int miner_main(int id,
     }
     
 
-    // Initial blockchain state
-    memset(prev_hash, '0', HASH_LENGTH);
+    // FIXED: controllo fondamentale se programma parte da initial_state.csv 
+    // Se blockchain ha già blocchi dentro shm, il miner non può minare il blocco 0 
+    // altrimenti i nodes lo scartano (LOOP INFINITO)
+    if (shm->blockchain.length > 0){
+        Block last_block = shm->blockchain.blocks[shm->blockchain.length -1];                   // ultimo blocco memoria condivisa
+        next_index = last_block.index + 1;                                                       // indice corretto per prossimo blocco
+        compute_block_hash(&last_block, prev_hash);                                             //  calcolo prev_hash partendo dall'ultimo blocco valido
+    } else {
 
-    prev_hash[HASH_LENGTH] = '\0';
+        // caso base di prima: nessuna blockchain caricata, miner parte da zero con blocco genesi 
 
-    next_index = 0;
-
-    current_nonce = 0;
+        memset(prev_hash, '0', HASH_LENGTH);                                
+        prev_hash[HASH_LENGTH] = '\0';
+        next_index = 0;
+    }
 
     // Different random seed for each miner
     srand(time(NULL) ^ getpid());

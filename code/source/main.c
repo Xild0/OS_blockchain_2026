@@ -166,7 +166,7 @@ static void submit_transaction(const char *tx){
     memset(&msg, 0, sizeof(TxMessage));                         // azzero tutto l'array
     //int l = MAX_TX_LEN-1;
     msg.mtype = MSG_TYPE_TRANSACTION;
-    snprintf(msg.content, sizeof(msg.content), "%s::", tx);         // copia tx nel buffer, then append "::" e mette \0 finale
+    snprintf(msg.content, sizeof(msg.content), "%s", tx);         // copia tx nel buffer e mette \0 finale
     //strncpy(msg.content, tx, l);
     //msg.content[l] = '\0';
     if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT)==-1){

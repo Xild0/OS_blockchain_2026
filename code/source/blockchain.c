@@ -26,6 +26,7 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
 
     if (*transactions == '\0'){
         sha256_hex("", 0, merkle_root);
+        return;
     }
 
     char *ptr = transactions;                                                   // puntatore utile per scorrere la stringa concatenate
@@ -34,8 +35,10 @@ void calcola_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     while(*ptr != '\0'){                                                        // scorro per tutta la stringa concatenata
         if(ptr[0] == ':' && ptr[1] == ':'){                                     // quando trovo '::' incremento il contatore di stringhe
             count++;
+            ptr+=2;
+        }else{
+            ptr++;
         }
-        ptr++;
     }
     //printf("Contatore stringhe: %i\n", count);                                  // stampo il contatore di stringhe
     ++count;
@@ -213,7 +216,7 @@ static int line_to_block(char *line, Block *b) { //arg: riga csv, puntatore al b
     for (int i = 0; i < 5; i++) {
         fields[i] = ptr;
         ptr = strchr(ptr, ','); //ptr alla virgola
-        if (!ptr){ return -1;}
+        if (!ptr){ return BC_ERR_INVALID_FORMAT;}
         *ptr = '\0';
         ptr++;
     }
@@ -263,6 +266,10 @@ int blockchain_load(Blockchain *bc, const char *filename) { //arg: puntatore str
 
     bc->length = 0; //init contatore blocchi
     while (read_line(fd, line, sizeof(line)) >= 0) { //fichè il file non finisce
+        if (line[0]=='\0'){         // ignora le righe vuote 
+            continue;
+        }
+
         if (bc->length >= MAX_BLOCKS) { //finchè num blocchi < max
             close(fd);
             return BC_ERR_FULL;
