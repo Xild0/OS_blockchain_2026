@@ -323,7 +323,7 @@ static void run_cli(void){
         }else if(strcmp(line, "pause")==0){pause_all();
         } else if(strcmp(line, "resume")==0){resume_all();
         } else if (strcmp(line, "request blockchain")==0){request_blockchain();
-        } else if (strncmp(line, "request block", 14)==0){
+        } else if (strncmp(line, "request block ", 14)==0){
             uint64_t idx = (uint64_t)atoll(line + 14); 
             request_block_by_Index(idx);
         } else if(strncmp(line, "save blockchain ", 16) == 0) {
