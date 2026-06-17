@@ -204,14 +204,14 @@ static void drain_message_queue(int msqid){
     while(1){
         res = msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT);
         if(res == -1){
-            // se non ci sono messaggi usciamo dal ciclo
+            // if there are no messages we exit the loop
             if(errno == ENOMSG) break;
 
-            // se è stato interroto da un segnale, ignora e riprova
+            // if it was interrupted by a signal, ignore and retry
             if(errno == EINTR) continue;
 
-            // per altri errori, log e break
-            log_write("Errore fatale msgrcv");
+            // for other errors, log and break
+            log_write("Fatal error in msgrcv");
             break;
         }
         add_transaction_to_pool(msg.content);
@@ -280,7 +280,7 @@ static void broadcast_block(const Block *b){
 static void build_and_broadcast_block(void){
 
     Block new_block;
-    memset(&new_block, 0, sizeof(Block));               // azzero tutti i parametri della struttura
+    memset(&new_block, 0, sizeof(Block)); // set to zero all parameters of the structure
 
     new_block.index = next_index;
 
@@ -327,15 +327,8 @@ int miner_main(int id,
 
     int msqid;
     int shm_fd;
-
-    /*char my_fifo[64];
-
-    int fifo_rd;
-    int fifo_wr;*/
-
     num_nodes = n_nodes;
 
-    // Protect against invalid difficulty
     if(diff <= 0){
         difficulty = 1;
     }
@@ -343,8 +336,6 @@ int miner_main(int id,
         difficulty = diff;
     }
 
-
-    
     // Open shared memory (already created by parent)
     shm_fd = shm_open("/blockchain_shm", O_RDONLY, 0);
     if(shm_fd < 0){
@@ -358,17 +349,11 @@ int miner_main(int id,
         return 1;
     }
     
-
-    // FIXED: controllo fondamentale se programma parte da initial_state.csv 
-    // Se blockchain ha già blocchi dentro shm, il miner non può minare il blocco 0 
-    // altrimenti i nodes lo scartano (LOOP INFINITO)
     if (shm->blockchain.length > 0){
-        Block last_block = shm->blockchain.blocks[shm->blockchain.length -1];                   // ultimo blocco memoria condivisa
-        next_index = last_block.index + 1;                                                       // indice corretto per prossimo blocco
-        compute_block_hash(&last_block, prev_hash);                                             //  calcolo prev_hash partendo dall'ultimo blocco valido
+        Block last_block = shm->blockchain.blocks[shm->blockchain.length -1]; // last block of shm 
+        next_index = last_block.index + 1;                          
+        compute_block_hash(&last_block, prev_hash);  //calculate prev_hash from last valid block 
     } else {
-
-        // caso base di prima: nessuna blockchain caricata, miner parte da zero con blocco genesi 
 
         memset(prev_hash, '0', HASH_LENGTH);                                
         prev_hash[HASH_LENGTH] = '\0';
@@ -399,36 +384,6 @@ int miner_main(int id,
         return 1;
     }
 
-    /*
-    // FIFO used to receive confirmed blocks from nodes
-    sprintf(my_fifo,
-            "miner_%d_block.fifo",
-            id);
-
-    mkfifo(my_fifo, 0666);
-
-    // Double open trick: avoids EOF when nobody is writing
-    fifo_rd = open(my_fifo,
-                   O_RDONLY | O_NONBLOCK);
-
-    fifo_wr = open(my_fifo,
-                   O_WRONLY | O_NONBLOCK);
-
-    if(fifo_rd < 0 || fifo_wr < 0){
-
-        log_write("ERROR: cannot open miner fifo");
-
-        if(fifo_rd >= 0){
-            close(fifo_rd);
-        }
-
-        if(fifo_wr >= 0){
-            close(fifo_wr);
-        }
-
-        return 1;
-    }*/
-
     log_write("Miner started");
 
     // Main loop
@@ -449,17 +404,6 @@ int miner_main(int id,
         // Read all pending transactions
         drain_message_queue(msqid);
 
-        
-
-        /* Check if a confirmed block arrived
-        n = read(fifo_rd,
-                 &confirmed,
-                 sizeof(Block));
-
-        if(n == sizeof(Block)){
-            handle_confirmed_block(&confirmed);
-        }*/
-
         // Simulate mining work
         sleep_seconds = 1 + (rand() % 5);
 
@@ -478,22 +422,9 @@ int miner_main(int id,
 
         // Read new transactions again after sleeping
         drain_message_queue(msqid);
-
-        /*
-        // Check confirmations again
-        n = read(fifo_rd,
-                 &confirmed,
-                 sizeof(Block));
-
-        if(n == sizeof(Block)){
-            handle_confirmed_block(&confirmed);
-        }*/
-
         current_nonce++;
 
-        // Mine only if waiting_confirmation is false
         if(waiting_confirmation == 0){
-
             // Probability = 1 / difficulty
             if((rand() % difficulty) == 0){
 
@@ -516,13 +447,5 @@ int miner_main(int id,
     munmap(shm, sizeof(SharedMemory));
     close(shm_fd);
     log_close();
-
-    /*
-    close(fifo_rd);
-
-    close(fifo_wr);
-
-    unlink(my_fifo);*/
-
     return 0;
 }

@@ -21,7 +21,6 @@
 #include "../include/client.h"
 #include "../include/log.h"
 
-// dichiarazioni
 int node_main(int id, int n_nodes, int shm_fd);
 int miner_main(int id, int n_nodes, int difficulty);
 int client_main(int id, int tx_frequency);
@@ -163,12 +162,10 @@ static void resume_all(void){ //sends SIGCONT to all child processes to make the
 
 static void submit_transaction(const char *tx){
     TxMessage msg;
-    memset(&msg, 0, sizeof(TxMessage));                         // azzero tutto l'array
-    //int l = MAX_TX_LEN-1;
+    memset(&msg, 0, sizeof(TxMessage));                         // set array to zero
     msg.mtype = MSG_TYPE_TRANSACTION;
-    snprintf(msg.content, sizeof(msg.content), "%s", tx);         // copia tx nel buffer e mette \0 finale
-    //strncpy(msg.content, tx, l);
-    //msg.content[l] = '\0';
+    snprintf(msg.content, sizeof(msg.content), "%s", tx);         // copy tx to buffer and add \0 terminator
+   
     if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT)==-1){
         perror("Failed transaction submission\n");
     }else{
@@ -187,47 +184,18 @@ static void request_blockchain(void){
     int length = shm->blockchain.length;
     printf("Blockchain length: %d\n", length);
     for(int i = 0; i < length; i++){
-        printf("  Block %lu:\n", shm->blockchain.blocks[i].index);
-        printf("    prev_hash:    %s\n", shm->blockchain.blocks[i].prev_hash);
-        printf("    merkle_root:  %s\n", shm->blockchain.blocks[i].merkle_root);
-        printf("    transactions: %s\n", shm->blockchain.blocks[i].transactions);
+        printf(" Block %lu:\n", shm->blockchain.blocks[i].index);
+        printf(" prev_hash:    %s\n", shm->blockchain.blocks[i].prev_hash);
+        printf(" merkle_root:  %s\n", shm->blockchain.blocks[i].merkle_root);
+        printf(" transactions: %s\n", shm->blockchain.blocks[i].transactions);
     }
     sem_post(sem);
     sem_close(sem);
    
-   /* int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for blockchain
-    if(fd<0){
-        perror("Failed to open node\n");
-        return;
-    }
-    char cmd[] = "request blockchain";
-    write(fd, cmd, sizeof(cmd));
-    close(fd);
-
-    mkfifo("parent.fifo", 0666); //parent fifo creation
-    int pfd = open("parent.fifo", O_RDONLY | O_NONBLOCK); //read response
-    if(pfd<0){
-        perror("Failed to open parent fifo\n");
-        return;
-    }
-    usleep(200000); // 200ms for response
-
-    Blockchain bc;
-    ssize_t bytesR = read(pfd, &bc, sizeof(Blockchain));
-    close(pfd);
-
-    if(bytesR == sizeof(Blockchain)){
-        printf("Blockchain lenght: %d\n", bc.length);
-        for(int i=0; i<bc.length; i++){
-            printf("  Block index:%lu \n prev_hash: %s\n", bc.blocks[i].index, bc.blocks[i].prev_hash);
-        }
-    }else{
-        perror("No response received\n");
-    }*/
 }
 
 static void request_block_by_Index(uint64_t index){
-      sem_t *sem = sem_open("/sem_blockchain", 0);
+    sem_t *sem = sem_open("/sem_blockchain", 0);
     if(sem == SEM_FAILED){
         perror("Error: failed to open semaphore\n");
         return;
@@ -236,45 +204,16 @@ static void request_block_by_Index(uint64_t index){
     sem_wait(sem);
     if(index < (uint64_t)shm->blockchain.length){
         Block *b = &shm->blockchain.blocks[index];
-        printf("Block %lu:\n", b->index);
-        printf("  prev_hash:    %s\n", b->prev_hash);
-        printf("  merkle_root:  %s\n", b->merkle_root);
-        printf("  transactions: %s\n", b->transactions);
+        printf(" Block %lu:\n", b->index);
+        printf(" prev_hash:    %s\n", b->prev_hash);
+        printf(" merkle_root:  %s\n", b->merkle_root);
+        printf(" transactions: %s\n", b->transactions);
     } else {
         printf("Block %lu not found (blockchain length: %d)\n", index, shm->blockchain.length);
     }
     sem_post(sem);
     sem_close(sem);
-    /*int fd = open("node_0_cmd.fifo", O_WRONLY | O_NONBLOCK); //first node receive req for block by index
-    if(fd<0){
-        perror("Error: failed to open node\n");
-        return;
-    }
-    char cmd[64];
-    snprintf(cmd, sizeof(cmd), "request blockchain %lu", index);
-    write(fd, cmd, strlen(cmd));
-    close(fd);
-
-    mkfifo("parent.fifo", 0666); //parent fifo creation
-    int pfd = open("parent.fifo", O_RDONLY | O_NONBLOCK); //read response
-    if(pfd<0){
-        perror("Error: failed to open parent fifo\n");
-        return;
-    }
-    usleep(200000); // 200ms for response
-
-    Block b;
-    ssize_t bytesR = read(pfd, &b, sizeof(Block));
-    close(pfd);
-
-    if(bytesR == sizeof(Block)){
-        printf("Block %lu:\n", b.index);
-        printf("prev_hash:%s - ", b.prev_hash);
-        printf("merkle_root:%s - ", b.merkle_root);
-        printf("transactions:%s - ", b.transactions);
-    }else{
-        perror("Block not found\n");
-    }*/
+   
 }
 
 static void save_blockchain(const char *filename){ //read from shm and save on file
@@ -296,13 +235,13 @@ static void save_blockchain(const char *filename){ //read from shm and save on f
     }
 }
 
-static void run_cli(void){
+static void run_cli(void){ //interactive command loop: dispatches user input to system control functions
     char line[512];
     printf("System CLI, available commands:\n");
     printf("submit <transaction>\n");
     printf("request blockchain\n");
     printf("request block <index>\n");
-     printf("save blockchain <filename>\n");
+    printf("save blockchain <filename>\n");
     printf("pause\n");
     printf("resume\n");
     printf("stop\n");
@@ -398,7 +337,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
     memset(shm, 0, sizeof(SharedMemory));
-    // close(shm_fd);                              // chiudendo fq, i figli che nascono con fork non lo ereditano inutilmente
+    
 
     //sem
     sem_unlink("/sem_blockchain");
@@ -415,7 +354,7 @@ int main(int argc, char *argv[]){
 
     //msg queue
     FILE *file = fopen(MSGQUEUE_PATH, "w");
-    if(file) {fclose(file);} //crea file se non esiste
+    if(file) {fclose(file);} // create file if it doesn't exist
 
     key_t key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
     if(key == -1){
@@ -481,7 +420,7 @@ int main(int argc, char *argv[]){
         printf("Miner %d started with PID: %d\n", i, pid);
     }
 
-    //for for CLIENTS
+    //fork for CLIENTS
      for (int i = 0; i < num_clients; i++) {
         pid_t pid = fork();
         if (pid < 0) { 
@@ -498,7 +437,7 @@ int main(int argc, char *argv[]){
         printf("Client %d started with PID: %d\n", i, pid);
     }
 
-    usleep(500000); // aspetta 500ms che i figli si inizializzino
+    usleep(500000); // wait 500ms for children to initialize
     
     run_cli(); 
 

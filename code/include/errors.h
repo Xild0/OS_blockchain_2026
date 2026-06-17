@@ -1,7 +1,7 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
-// errori coerenti con blockchain.sh
+
 #define SUCCESS                 0
 #define INVALID_BLOCK           1
 #define CHAIN_MISMATCH          2
@@ -11,10 +11,7 @@
 #define FILE_NOT_FOUND          6
 #define EMPTY_BLOCKCHAIN        7
 
-// errori interni per operazioni di lettura e scrittura sui file
-/*
-  VANNO INSERITI ANCHE NEL FILE BASH 
-*/ 
+// internal error for w/r operations  
 #define BC_OK                  0
 #define BC_ERR_FILE_OPEN      -1
 #define BC_ERR_FILE_WRITE     -2

@@ -27,13 +27,12 @@ static const char *names[NUM_NAMES] = {
 };
     
 // SIGTERM handler
-// The client does not stop immediately: it only sets the flag and exits the loop safely
 static void handler_sigterm(int sig){
     (void)sig;
     got_stop = 1;
 }
 
-// Generates a random transaction that respects the regex: "Alice pays Bob 10 coins"
+// Generates a random transaction ("Alice pays Bob 10 coins")
 static void generate_transaction(char *transaction){
     int sender;
     int receiver;
@@ -47,7 +46,6 @@ static void generate_transaction(char *transaction){
         receiver = rand() % NUM_NAMES;
     }while(receiver == sender);
 
-    // Random amount between 1 and 99
     amount = (rand() % 99) + 1;
 
     // Builds the final transaction string
@@ -59,18 +57,15 @@ static void generate_transaction(char *transaction){
              amount);
 }
 
-// Main function of the client process
 int client_main(int id, int transaction_frequency){
 
     key_t key;
     int msqid;
 
-    // Inizializza sistema di log
     if(log_init("client", id) != 0){
         return 1;
     }
 
-    // Protect against invalid frequencies
     if(transaction_frequency <= 0){
         transaction_frequency = 1;
     }
@@ -103,7 +98,7 @@ int client_main(int id, int transaction_frequency){
     while(!got_stop){
 
         TxMessage msg;
-        memset(&msg, 0, sizeof(TxMessage));                     // azzero tutto l'array
+        memset(&msg, 0, sizeof(TxMessage));                    
 
         // Message type used by miners
         msg.mtype = MSG_TYPE_TRANSACTION;
