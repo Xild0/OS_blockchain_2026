@@ -8,7 +8,7 @@ Repository progetto di laboratorio di Sistemi Operativi: simulazione di un siste
 ### Build & Scripts
 La struttura dei file è stata organizzata per separare chiaramente gli header dai file sorgente e dagli script:
 
-- `build.sh`: script Bash fondamentale per la gestione del progetto. Dovrà supportare i comandi: 
+- `build.sh`: script Bash fondamentale per la gestione del progetto. Supporta i comandi: 
     - `./build.sh build` per compilare tutti i file e produrre gli eseguibili
     - `./build.sh clean` per rimuovere tutti i file compilati, gli eseguibili e ripristinare il sistema
     - `./build.sh run` per eseguire lo scenario del progetto
@@ -23,7 +23,6 @@ La struttura dei file è stata organizzata per separare chiaramente gli header d
 - `/include/`: cartella per i file header
 - `blockchain.h`: definisce la struttura del blocco della blockchain e dichiara tutte le funzioni relative alle gestione dei blocchi (conversione int_hax e viceversa, hashing SHA256, calcolo della Merkle tree e le operazioni sul file CSV. 
 - `errors.h`: definisce tutti gli errori usati nei file C. Gli stessi valori numerici vengono riportati come variabili bash nel file `blockchain.h`
-- `ipc.h`: dichiara l'Inter-Process Communication interface usata per lo scambio di messaggi tra processi
 - `log.h`: dichiara l'interfaccia di registrazione. Ogni processo registra tutti gli eventi rilevanti in un file dedicato denominato `nome_processo-PID.log`
 
 ### Sources (`code/source/`)
@@ -33,7 +32,6 @@ La struttura dei file è stata organizzata per separare chiaramente gli header d
 - `client.c`: implementa il processo dei client
 - `miner.c`: implementa il processo dei miner
 - `node.c`: implementa il processo dei node
-- `ipc.c`: implementa la comunicazione IPC
 - `log.c`: implementa le funzioni dichiarate in `log.h`
 
 ---
@@ -71,3 +69,22 @@ Una volta finito di modificare o scrivere parti del codice, salvare tutto su git
 ### 4. Inviare le modifiche a GitHub (Push)
 
 `git push`
+
+---
+
+## Roadmap:
+1. Implementare comandi CLI mancanti: 
+    * `request blockchain [--index <index> | --hash <hash>]`
+    * `request block --hash <block_hash>`
+    
+2. `Build.sh` con i tre comandi: 
+    * `/.build.sh build`: compila il codice e produce il file eseguibile 
+    * `/.build.sh clean`: rimuove qualunque file compilato, eseguibile e ripristina il sistema 
+    * `/.build.sh run`: esegue "uno scenario" del progetto
+    
+3. `blockchain.sh --hash` non decodifica l'hex, verificare con specifiche
+
+4. controllare codice di uscita `--verify` 
+
+5. cambiare comportamento file di log: segnalare la cartella nel report e cambiare formato con quello della specifica
+
