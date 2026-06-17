@@ -31,16 +31,19 @@ static void sem_unlock(sem_t *sem){
     sem_post(sem);
 }
 
+// sets flag when a miner signals a new block is ready
 static void handler_sigusr1(int sig){
     (void)sig;
     got_new_block = 1;
 }
 
+// sets flag to trigger graceful shutdown
 static void handler_sigterm(int sig) {
     (void)sig;
     got_stop = 1;
 }
 
+// checks index continuity, prev_hash and merkle_root against the current chain
 static int validate_block(const Block* b, const Blockchain* blockchain){
     if(blockchain->length == 0){
         return BC_OK;
@@ -49,7 +52,7 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     const Block *prev = &blockchain->blocks[blockchain->length-1];
 
     if(b->index != prev->index+1){
-        log_write("Wrong index! Atteso %lu, ricevuto %lu. Interruzione con codice: %s", prev->index + 1, b->index, error_to_string(BC_ERR_INVALID_BLOCK));
+        log_write("Wrong index! Expected %lu, received %lu. Error: %s", prev->index + 1, b->index, error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
 
@@ -67,7 +70,7 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     sha256_hex(prev_hex, strlen(prev_hex), computed_hash);
     computed_hash[SHA256_HEX_LEN] = '\0';
     if(strcmp(b->prev_hash, computed_hash)!= 0){
-        log_write("ERROR: prev hash do not correspond! Interruzione con codice: %s", error_to_string(BC_ERR_INVALID_BLOCK));
+        log_write("ERROR: prev_hash mismatch. Error: %s", error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
 
@@ -78,13 +81,14 @@ static int validate_block(const Block* b, const Blockchain* blockchain){
     calcola_merkle_root(tx_copy, computed_merkel);
 
     if(strcmp(b->merkle_root, computed_merkel)!=0){
-        log_write("ERROR: merkel root do not correspond! Interruzione con codice: %s", error_to_string(BC_ERR_INVALID_BLOCK));
+        log_write("ERROR: merkle_root mismatch. Error: %s", error_to_string(BC_ERR_INVALID_BLOCK));
         return BC_ERR_INVALID_BLOCK;
     }
     return BC_OK;
 
 }
 
+// validates and appends a block, then notifies miners and peer nodes
 static void handle_new_block(const Block* b){
     sem_lock(sem_blockchain);
 
@@ -134,10 +138,11 @@ static void handle_new_block(const Block* b){
         close(fd);
         log_write("Block send to peer");
     }
-    
-    
+
+
 }
 
+// reads a command from the parent FIFO and replies with the requested blockchain data
 static void handle_parent_command(int command_fifo){
     char command[256];
     ssize_t s = read(command_fifo,command, sizeof(command)-1);
@@ -149,13 +154,13 @@ static void handle_parent_command(int command_fifo){
     int pfd = open("parent.fifo", O_WRONLY | O_NONBLOCK);
     if(pfd<0){return;}
 
-     // manda l'intera blockchain
+    // send the full blockchain
     if(strcmp(command, "request blockchain") == 0){
         sem_lock(sem_blockchain);
         write(pfd, &shm->blockchain, sizeof(Blockchain));
         sem_unlock(sem_blockchain);
 
-        //manda un singolo blocco per index
+        // send a single block by index
     }else if(strncmp(command, "request blockchain", 19)==0){
         uint64_t index = (uint64_t)atoll(command + 19);
         sem_lock(sem_blockchain);
@@ -169,6 +174,7 @@ static void handle_parent_command(int command_fifo){
 
 }
 
+// entry point for a node process: maps shared memory, opens FIFOs and runs the event loop
 int node_main(int id, int n_nodes, int shm_fd){
     if(log_init("node", id) != 0){
         return 1;
@@ -194,25 +200,24 @@ int node_main(int id, int n_nodes, int shm_fd){
     signal(SIGUSR1, handler_sigusr1);
     signal(SIGTERM, handler_sigterm);
 
-    // crea le FIFO
+    // create FIFOs for peer blocks and parent commands
     char peer_fifo[64], command_fifo[64];
     snprintf(peer_fifo, sizeof(peer_fifo), "node_%d_block.fifo", node_id);
     snprintf(command_fifo,  sizeof(command_fifo),  "node_%d_cmd.fifo",  node_id);
     mkfifo(peer_fifo, 0666);
     mkfifo(command_fifo,  0666);
 
-    // apre le FIFO in lettura non bloccante + trick write per evitare EOF
+    // open FIFOs non-blocking; keep a write-end open to prevent EOF on read-end
     int peer_fd = open(peer_fifo, O_RDONLY | O_NONBLOCK);
     int peer_wr = open(peer_fifo, O_WRONLY | O_NONBLOCK);
     int cmd_fd  = open(command_fifo,  O_RDONLY | O_NONBLOCK);
     int cmd_wr  = open(command_fifo,  O_WRONLY | O_NONBLOCK);
 
-    log_write("Nodo avviato");
+    log_write("Node started");
 
-    // Main loop 
     while (!got_stop) {
 
-     
+        // 1. block mined locally
         if (got_new_block) {
             got_new_block = 0;
 
@@ -223,21 +228,21 @@ int node_main(int id, int n_nodes, int shm_fd){
             handle_new_block(&b);
         }
 
-        // 2. blocco da un peer via FIFO
+        // 2. block received from a peer via FIFO
         Block peer_block;
         ssize_t n = read(peer_fd, &peer_block, sizeof(Block));
         if (n == sizeof(Block)) {
-            log_write("Blocco ricevuto da peer");
+            log_write("Block received from peer");
             handle_new_block(&peer_block);
         }
 
-        // 3. comando dal parent via FIFO
+        // 3. command from parent via FIFO
         handle_parent_command(cmd_fd);
 
-        usleep(50000); // 50ms per non consumare CPU
+        usleep(50000); // 50ms to avoid busy-waiting
     }
 
-    log_write("Nodo in chiusura");
+    log_write("Node shutting down");
     close(peer_fd);
     close(peer_wr);
     close(cmd_fd);
@@ -250,4 +255,3 @@ int node_main(int id, int n_nodes, int shm_fd){
 
 
 }
-

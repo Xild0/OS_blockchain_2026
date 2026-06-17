@@ -7,14 +7,8 @@
 #define SHA256_HEX_SIZE (64 + 1)
 #define SHA256_BYTES_SIZE 32
 
-/*
- * Compute the SHA-256 checksum of a memory region given a pointer and
- * the size of that memory region.
- * The output is a hexadecimal string of 65 characters.
- * The last character will be the null-character.
- */
-void sha256_hex(const void *src, size_t n_bytes, char *dst_hex65);
-
+//Compute the SHA-256 checksum of a memory region given a pointer and the size of that memory region
+void sha256_hex(const void *src, size_t n_bytes, char *dst_hex65); 
 void sha256_bytes(const void *src, size_t n_bytes, void *dst_bytes32);
 
 typedef struct sha256 {
@@ -24,7 +18,7 @@ typedef struct sha256 {
     uint8_t buffer_counter;
 } sha256;
 
-/* Functions to compute streaming SHA-256 checksums. */
+//Functions to compute streaming SHA-256 checksums
 void sha256_init(struct sha256 *sha);
 void sha256_append(struct sha256 *sha, const void *data, size_t n_bytes);
 void sha256_finalize_hex(struct sha256 *sha, char *dst_hex65);

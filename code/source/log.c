@@ -17,16 +17,15 @@ int log_init(const char *process_type, int id){
     proc_id_global = id;
     snprintf(proc_type_global, sizeof(proc_type_global), "%s", process_type);
 
-    // creazione cartella "logs" se non esiste. 0777 indica i permessi POSIX standard
+    // creation of log directory if it doesn't exist. 0777 indicates the standard POSIX permissions
     mkdir("logs", 0777);                        
 
-    // meglio esagerare sulla dimensione per evitare troncamenti
     char filename[256];         
 
-    // nome: process_type_ID-PID.log (es: client_0-7777.log)
+    // name: process_type_ID-PID.log
     snprintf(filename, sizeof(filename), "logs/%s_%d-%d.log", process_type, id, (int)getpid());
 
-    // apertura dei file di log
+    // open log file (w mode)
     logfile_ptr = fopen(filename, "w");
     if (logfile_ptr == NULL){
         perror("Errore apertura file di log globale");
@@ -38,20 +37,19 @@ int log_init(const char *process_type, int id){
 }
 
 void log_write(const char *format, ...){
-    // se init fallito o non chiamato
+  
     if(logfile_ptr == NULL) return; 
 
-    // scrittura prefisso con timestamp, nome processo e ID
+    //prefix stamp: [timestamp] process_type ID [id]:
     fprintf(logfile_ptr, "[%ld] %s ID [%d]:", (long)time(NULL), proc_type_global, proc_id_global);
 
-    // gestione argomenti variabili tipo printf
     va_list args;
     va_start(args, format);
     vfprintf(logfile_ptr, format, args);
     va_end(args);
 
-    fprintf(logfile_ptr, "\n");                 // va a capo
-    fflush(logfile_ptr);                        // forza lo svuotamento del buffer
+    fprintf(logfile_ptr, "\n");                
+    fflush(logfile_ptr);                        
 }
 
 void log_close(void){

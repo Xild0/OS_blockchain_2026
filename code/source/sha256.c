@@ -1,6 +1,7 @@
 #include "../include/sha256.h"
 
-// Rotate right
+// SHA-256 round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
+// rotate right
 static inline uint32_t rotr(uint32_t x, int n){
     return (x >> n) | (x << (32 - n));
 }
@@ -131,6 +132,7 @@ void sha256_append(struct sha256 *sha, const void *src, size_t n_bytes){
     }
 }
 
+// pads the message to a multiple of 512 bits and appends the original bit length
 void sha256_finalize(struct sha256 *sha){
     int i;
     uint64_t n_bits = sha->n_bits;
@@ -173,6 +175,7 @@ void sha256_finalize_bytes(struct sha256 *sha, void *dst_bytes32){
     }
 }
 
+// convenience wrappers: init + append + finalize in one call
 void sha256_hex(const void *src, size_t n_bytes, char *dst_hex65){
     struct sha256 sha;
     sha256_init(&sha);
