@@ -18,7 +18,7 @@ parametro="$2"
 # HASH
 if [ "$comando" == "--hash" ]; then
     if [ "$#" -lt 2 ]; then
-        echo "Errore: nessuna stringa da convertire."
+        echo "Errore: nessuna stringa da convertire"
         exit $INVALID_ARGUMENT
     elif [ -z "$2" ]; then 
         hash_result=$(echo -n "" | sha256sum | awk '{print $1}')
@@ -39,7 +39,7 @@ elif [ "$comando" == "--merkle" ]; then
     # echo "DEBUG: string='$tx_string'" >&2
 
     if [ "$#" -lt 2 ]; then
-        echo "Errore: nessuna stringa da convertire."
+        echo "Errore: nessuna stringa da convertire"
         exit $INVALID_ARGUMENT
 
     # caso stringa vuota
@@ -107,20 +107,20 @@ elif [ "$comando" == "--verify" ]; then
 
     # controllo dell'argomento
     if [ -z "$csv_file" ]; then
-        echo "Errore: specificare file CSV."
+        echo "Errore: specificare file CSV"
         exit $INVALID_ARGUMENT
     fi
 
     # controllo che il file esista
     if [ ! -f "$csv_file" ]; then
-        echo "Errore: file CSV non trovato."
+        echo "Errore: file CSV non trovato"
         exit $FILE_NOT_FOUND
     fi
 
     # controllo blockchain
     block_count=$(awk '!/^index/' "$csv_file" | wc -l)
     if [ "$block_count" -eq 0 ]; then
-        echo "Errore: la blockchain è vuota."
+        echo "Errore: blockchain vuota"
         exit $EMPTY_BLOCKCHAIN
     fi
 
@@ -140,7 +140,7 @@ elif [ "$comando" == "--verify" ]; then
 
         # il primo blocco deve avere indice 0
         if [ "$prev_index_dec" -eq -1 ] && [ "$idx_dec" -ne 0 ]; then
-            echo "Errore BLOCK_NOT_FOUND: il blocco genesi manca."
+            echo "Errore BLOCK_NOT_FOUND: blocco genesi mancante"
             is_valid=0
             break
         fi
@@ -154,7 +154,7 @@ elif [ "$comando" == "--verify" ]; then
                 break
             fi
             if [ "$p_hash" != "$prev_hash" ]; then
-                echo "Errore CHAIN_MISMATCH: prev_hash non corretto al blocco $idx_dec"
+                echo "Errore CHAIN_MISMATCH: prev_hash non corretto blocco $idx_dec"
                 is_valid=0
                 break
             fi
@@ -163,7 +163,7 @@ elif [ "$comando" == "--verify" ]; then
         txs_clean="${txs%\"}"
         txs_clean="${txs_clean#\"}"
         if [ -z "$txs_clean" ]; then
-            echo "Errore INVALID_TRANSACTION: nessuna transazione al blocco $idx_dec"
+            echo "Errore INVALID_TRANSACTION: nessuna transazione blocco $idx_dec"
             is_valid=0
             break
         fi
@@ -171,7 +171,7 @@ elif [ "$comando" == "--verify" ]; then
         # verifico merkle root
         computed_merkle=$(./blockchain.sh --merkle "$txs_clean")
         if [ "$computed_merkle" != "$merkle" ]; then
-            echo "Errore INVALID_BLOCK: merkle root non valida al blocco $idx_dec"
+            echo "Errore INVALID_BLOCK: merkle root non valida blocco $idx_dec"
             is_valid=0
             break
         fi
@@ -184,7 +184,7 @@ elif [ "$comando" == "--verify" ]; then
     done < "$csv_file"
 
     if [ "$is_valid" -eq 1 ]; then
-        echo "Integrità della Blockchain verificata con successo."
+        echo "Blockchain verificata"
         exit $SUCCESS
     else
         exit $INVALID_BLOCK

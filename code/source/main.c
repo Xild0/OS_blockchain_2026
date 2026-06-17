@@ -16,9 +16,11 @@
 #include <fcntl.h>
 #include <semaphore.h>
 #include <time.h>
+#include <stdbool.h>
 #include "../include/blockchain.h"
 #include "../include/miner.h"
 #include "../include/client.h"
+#include "../include/errors.h"
 #include "../include/log.h"
 
 // dichiarazioni
@@ -226,6 +228,76 @@ static void request_blockchain(void){
     }*/
 }
 
+static void request_blockchain_by_Index(uint64_t index){
+    printf("REQUEST_BLOCKCHAIN_BY_INDEX\n");
+    sem_t *sem = sem_open("/sem_blockchain", 0);
+    if(sem == SEM_FAILED){
+        perror("Error: failed to open sempahore\n");
+        return;
+    }
+
+    sem_wait(sem); 
+    if(index >= shm->blockchain.length){
+        printf("La blockchain non è ancora arrivata a quel blocco (lunghezza attuale: %d)\n", shm->blockchain.length);
+        sem_post(sem);
+        sem_close(sem);
+        return;
+    }
+    else if((shm->blockchain.length - index) == 0){
+        signed long int diff = shm->blockchain.length - index;
+        printf("Blockchain length from index: %ld\n", diff);
+        printf("  Block %lu:\n", shm->blockchain.blocks[index].index);
+        printf("    prev_hash:    %s\n", shm->blockchain.blocks[index].prev_hash);
+        printf("    merkle_root:  %s\n", shm->blockchain.blocks[index].merkle_root);
+        printf("    transactions: %s\n", shm->blockchain.blocks[index].transactions);
+        sem_post(sem);
+        sem_close(sem);
+        return;
+    } else {
+        signed long int diff = shm->blockchain.length - index;
+        printf("Blockchain lenght from index: %ld\n", diff);
+        for(int i = index; i < shm->blockchain.length; i++){
+            printf("  Block %lu:\n", shm->blockchain.blocks[i].index);
+            printf("    prev_hash:    %s\n", shm->blockchain.blocks[i].prev_hash);
+            printf("    merkle_root:  %s\n", shm->blockchain.blocks[i].merkle_root);
+            printf("    transactions: %s\n", shm->blockchain.blocks[i].transactions);
+        }
+        sem_post(sem);
+        sem_close(sem);
+
+    }        
+}
+
+static void request_blockchain_by_Hash(char *hash){
+    printf("REQUEST_BLOCKCHAIN_BY_HASH\n");
+    sem_t *sem = sem_open("/sem_blockchain", 0);
+    if(sem == SEM_FAILED){
+        perror("Error: failed to open semaphore\n");
+        return;
+    }
+
+    sem_wait(sem);
+    bool found = false;
+    uint64_t index_start = 0;
+    for (int i = 0; i < shm->blockchain.length; ++i)
+    {
+        if(strcmp(shm->blockchain.blocks[i].prev_hash, hash) == 0){
+            found = true;
+            index_start = shm->blockchain.blocks[i].index;
+        }
+    }
+    if(!found){
+        printf("Blockchain request failed:\n");
+        printf("Block %s not found (blockchain length: %d)\n", hash, shm->blockchain.length);
+        sem_post(sem);
+        sem_close(sem);
+    } else {
+        sem_post(sem);
+        sem_close(sem);
+        request_blockchain_by_Index(index_start);
+    }
+}
+
 static void request_block_by_Index(uint64_t index){
       sem_t *sem = sem_open("/sem_blockchain", 0);
     if(sem == SEM_FAILED){
@@ -277,6 +349,34 @@ static void request_block_by_Index(uint64_t index){
     }*/
 }
 
+static void request_block_by_Hash(char *hash){
+    sem_t *sem = sem_open("/sem_blockchain", 0);
+    if(sem == SEM_FAILED){
+        perror("Error: failed to open semaphore\n");
+        return;
+    }
+
+    sem_wait(sem);
+    bool found = false;
+    for (int i = 0; i < shm->blockchain.length; ++i)
+    {
+        if(strcmp(shm->blockchain.blocks[i].prev_hash, hash) == 0){
+            printf("Block %lu:\n", shm->blockchain.blocks[i].index);
+            printf("  prev_hash:    %s\n", shm->blockchain.blocks[i].prev_hash);
+            printf("  merkle_root:  %s\n", shm->blockchain.blocks[i].merkle_root);
+            printf("  transactions: %s\n", shm->blockchain.blocks[i].transactions);
+            found = true;
+        }
+    }
+    if(!found){
+        printf("Block %s not found (blockchain length: %d)\n", hash, shm->blockchain.length);
+    }
+
+    sem_post(sem);
+    sem_close(sem);
+    return;
+}
+
 static void save_blockchain(const char *filename){ //read from shm and save on file
     sem_t* sem = sem_open("/sem_blockchain", 0);
     if(sem== SEM_FAILED){
@@ -301,8 +401,11 @@ static void run_cli(void){
     printf("System CLI, available commands:\n");
     printf("submit <transaction>\n");
     printf("request blockchain\n");
-    printf("request block <index>\n");
-     printf("save blockchain <filename>\n");
+    printf("request blockchain --index <index>\n");
+    printf("request blockchain --hash <block_hash>\n");
+    printf("request block --index <index>\n");
+    printf("request block --hash <block_hash>\n");
+    printf("save blockchain <filename>\n");
     printf("pause\n");
     printf("resume\n");
     printf("stop\n");
@@ -320,21 +423,33 @@ static void run_cli(void){
             stop_all();
             cleanup();
             break;
-        }else if(strcmp(line, "pause")==0){pause_all();
+        } else if(strcmp(line, "pause")==0){pause_all();
         } else if(strcmp(line, "resume")==0){resume_all();
-        } else if (strcmp(line, "request blockchain")==0){request_blockchain();
-        } else if (strncmp(line, "request block ", 14)==0){
-            uint64_t idx = (uint64_t)atoll(line + 14); 
+        } else if(strcmp(line, "request blockchain")==0){request_blockchain();
+        } else if(strncmp(line, "request blockchain --index ", 27) == 0){
+            uint64_t idx = (uint64_t)atoll(line + 27);
+            request_blockchain_by_Index(idx);
+        } else if(strncmp(line, "request blockchain --hash ", 26) == 0 ){
+            char hex[65];
+            strncpy(hex, line + 26, 64);
+            hex[64] = '\0';
+            request_blockchain_by_Hash(hex);
+        } else if (strncmp(line, "request block --index ", 22)==0){
+            uint64_t idx = (uint64_t)atoll(line + 22); 
             request_block_by_Index(idx);
+        } else if (strncmp(line, "request block --hash ", 21) == 0){
+            char hex[65];
+            strncpy(hex, line + 21, 64);
+            hex[64]='\0';
+            request_block_by_Hash(hex);
         } else if(strncmp(line, "save blockchain ", 16) == 0) {
             save_blockchain(line + 16);
-        }
-        else if (strncmp(line, "submit ", 7) == 0) {
-    submit_transaction(line + 7);
-    }else{
+        } else if (strncmp(line, "submit ", 7) == 0) {
+            submit_transaction(line + 7);
+        }else {
         printf("Unknown command\n");
+        }
     }
-}
 }
 
 int main(int argc, char *argv[]){
