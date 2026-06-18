@@ -1,2 +1,15 @@
-# Ignora tutti i file di log generati all'interno della cartella logs
+# Eseguibile compilato
+code/blockchain
+
+# File oggetto compilatore
+*.o
+
+# Log
 code/logs/
+
+# Risorse lasciate da esecuzioni interrotte
+code/*.fifo
+code/parent.fifo
+
+# Cartella di configurazione VSCode
+.vscode/

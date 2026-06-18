@@ -10,20 +10,17 @@
 #include "../include/log.h"
 
 static FILE *logfile_ptr = NULL; 
-static char proc_type_global[32];
-static int proc_id_global = -1;
+static char proc_type[32];
+static int proc_id = -1;
 
 int log_init(const char *process_type, int id){
-    proc_id_global = id;
-    snprintf(proc_type_global, sizeof(proc_type_global), "%s", process_type);
-
-    // creation of log directory if it doesn't exist. 0777 indicates the standard POSIX permissions
+    proc_id = id;
+    snprintf(proc_type, sizeof(proc_type), "%s", process_type);
     mkdir("logs", 0777);                        
-
     char filename[256];         
 
-    // name: process_type_ID-PID.log
-    snprintf(filename, sizeof(filename), "logs/%s_%d-%d.log", process_type, id, (int)getpid());
+    // format: process_type-PID.log
+    snprintf(filename, sizeof(filename), "logs/%s-%d.log", process_type, (int)getpid());
 
     // open log file (w mode)
     logfile_ptr = fopen(filename, "w");
@@ -31,7 +28,6 @@ int log_init(const char *process_type, int id){
         perror("Errore apertura file di log globale");
         return -1;
     }
-
     log_write("%s avviato correttamente", process_type);
     return 0;
 }
@@ -41,7 +37,7 @@ void log_write(const char *format, ...){
     if(logfile_ptr == NULL) return; 
 
     //prefix stamp: [timestamp] process_type ID [id]:
-    fprintf(logfile_ptr, "[%ld] %s ID [%d]:", (long)time(NULL), proc_type_global, proc_id_global);
+    fprintf(logfile_ptr, "[%ld] %s [%d]:", (long)time(NULL), proc_type, proc_id);
 
     va_list args;
     va_start(args, format);
@@ -54,7 +50,7 @@ void log_write(const char *format, ...){
 
 void log_close(void){
     if(logfile_ptr != NULL){
-        log_write("%s chiuso", proc_type_global);
+        log_write("%s chiuso", proc_type);
         fclose(logfile_ptr);
         logfile_ptr = NULL;
     }
