@@ -223,6 +223,7 @@ int node_main(int id, int n_nodes, int shm_fd){
 
             sem_lock(sem_block);
             Block b = shm->mined_last;
+            shm->block_pending = 0;
             sem_unlock(sem_block);
 
             handle_new_block(&b);

@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <time.h>
@@ -25,8 +24,10 @@ static sig_atomic_t got_confirmed = 0;
 static int num_nodes = 0;
 static int difficulty = 1;
 
-// Shared memory pointer (read-only for miner)
+// Shared memory pointer
 static SharedMemory *shm = NULL;
+
+static sem_t *sem_block = NULL;
 
 // Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
@@ -243,37 +244,27 @@ static void handle_confirmed_block(const Block *b){
     waiting_confirmation = 0;
 }
 
-// Sends the mined block to all nodes
+// Sends the mined block to all nodes via shared memory + SIGUSR1
 static void broadcast_block(const Block *b){
 
-    int i;
-
-    for(i = 0; i < num_nodes; i++){
-
-        char fifo_path[64];
-
-        int fd;
-
-        sprintf(fifo_path,
-                "node_%d_block.fifo",
-                i);
-
-        fd = open(fifo_path,
-                  O_WRONLY | O_NONBLOCK);
-
-        if(fd < 0){
-            log_write("WARNING: cannot open node fifo");
-            continue;
-        }
-
-        if(write(fd, b, sizeof(Block)) < 0){
-            log_write("WARNING: write to node fifo failed");
-        }
-
-        close(fd);
+    // wait until no other block is pending to avoid overwriting
+    while(shm->block_pending){
+        if(got_stop) return;
+        usleep(10000);
     }
 
-    log_write("Block sent to nodes");
+    sem_wait(sem_block);
+    shm->mined_last = *b;
+    shm->block_pending = 1;
+    sem_post(sem_block);
+
+    for(int i = 0; i < shm->num_nodes; i++){
+        if(shm->node_pids[i] > 0){
+            kill(shm->node_pids[i], SIGUSR1);
+        }
+    }
+
+    log_write("Block written to shm and SIGUSR1 sent to nodes");
 }
 
 // Builds a new block and broadcasts it
@@ -337,15 +328,21 @@ int miner_main(int id,
     }
 
     // Open shared memory (already created by parent)
-    shm_fd = shm_open("/blockchain_shm", O_RDONLY, 0);
+    shm_fd = shm_open("/blockchain_shm", O_RDWR, 0);
     if(shm_fd < 0){
         log_write("ERROR: shm_open failed");
         return 1;
     }
     shm = (SharedMemory *)mmap(NULL, sizeof(SharedMemory),
-                               PROT_READ, MAP_SHARED, shm_fd, 0);
+                               PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     if(shm == MAP_FAILED){
         log_write("ERROR: mmap failed");
+        return 1;
+    }
+
+    sem_block = sem_open("/sem_block", 0);
+    if(sem_block == SEM_FAILED){
+        log_write("ERROR: sem_open sem_block failed");
         return 1;
     }
     
@@ -443,7 +440,7 @@ int miner_main(int id,
 
     log_write("Miner shutting down");
 
-
+    sem_close(sem_block);
     munmap(shm, sizeof(SharedMemory));
     close(shm_fd);
     log_close();

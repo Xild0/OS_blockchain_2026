@@ -50,6 +50,7 @@ typedef struct SharedMemory{
 	Block mined_last;
 	Block confirmed;
 	int ready_block;
+	int block_pending;
 	pid_t miner_pids[MAX_MINERS];
 	int num_miners;
 	pid_t node_pids[MAX_NODES];
