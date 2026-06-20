@@ -127,6 +127,7 @@ elif [ "$comando" == "--verify" ]; then
     prev_index_dec=-1
     prev_hash=""
     is_valid=1
+    exit_code=$SUCCESS
 
     while IFS=',' read -r idx ts p_hash merkle nonce txs; do
 
@@ -142,6 +143,7 @@ elif [ "$comando" == "--verify" ]; then
         if [ "$prev_index_dec" -eq -1 ] && [ "$idx_dec" -ne 0 ]; then
             echo "Errore BLOCK_NOT_FOUND: blocco genesi mancante"
             is_valid=0
+            exit_code=$BLOCK_NOT_FOUND
             break
         fi
 
@@ -151,11 +153,13 @@ elif [ "$comando" == "--verify" ]; then
             if [ "$idx_dec" -ne "$expected" ]; then
                 echo "Errore INVALID_BLOCK: indice non valido (atteso $expected, trovato $idx_dec)"
                 is_valid=0
+                exit_code=$INVALID_BLOCK
                 break
             fi
             if [ "$p_hash" != "$prev_hash" ]; then
                 echo "Errore CHAIN_MISMATCH: prev_hash non corretto blocco $idx_dec"
                 is_valid=0
+                exit_code=$CHAIN_MISMATCH
                 break
             fi
         fi
@@ -165,6 +169,7 @@ elif [ "$comando" == "--verify" ]; then
         if [ -z "$txs_clean" ]; then
             echo "Errore INVALID_TRANSACTION: nessuna transazione blocco $idx_dec"
             is_valid=0
+            exit_code=$INVALID_TRANSACTION
             break
         fi
 
@@ -173,6 +178,7 @@ elif [ "$comando" == "--verify" ]; then
         if [ "$computed_merkle" != "$merkle" ]; then
             echo "Errore INVALID_BLOCK: merkle root non valida blocco $idx_dec"
             is_valid=0
+            exit_code=$INVALID_BLOCK
             break
         fi
 
@@ -187,7 +193,7 @@ elif [ "$comando" == "--verify" ]; then
         echo "Blockchain verificata"
         exit $SUCCESS
     else
-        exit $INVALID_BLOCK
+        exit $exit_code
     fi
 
 else

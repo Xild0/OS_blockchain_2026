@@ -40,12 +40,12 @@ elif [ "$comando" == "clean" ]; then
 
     echo "[clean] Sistema pulito"
 
-elif [ "$comando" == "run" ]; then
-    num_nodi="$2"
-    num_miner="$3"
-    num_client="$4"
-    tx_frequency="$5"
-    difficulty="$6"
+elif [ "$comando" == "run" ]; then                  # se non si inseriscono valori, ne partono di default
+    num_nodi="${2:-2}"                              # default: 2
+    num_miner="${3:-2}"                             # default: 2
+    num_client="${4:-3}"                            # default: 3
+    tx_frequency="${5:-1}"                          # default: 1
+    difficulty="${6:-12}"                           # default: 12
 
     if [[ "$num_nodi" -lt 1 || "$num_nodi" -gt 16 ]]; then
         echo "Numero nodi non valido (min 1, max 16)"
