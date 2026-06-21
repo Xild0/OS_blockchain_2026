@@ -25,7 +25,7 @@ static const char *names[NUM_NAMES] = {
     "Francesco",
     "Giacomo"
 };
-    
+
 // SIGTERM handler
 static void handler_sigterm(int sig){
     (void)sig;
@@ -49,16 +49,11 @@ static void generate_transaction(char *transaction){
     amount = (rand() % 99) + 1;
 
     // Builds the final transaction string
-    snprintf(transaction,
-             MAX_TX_LEN,
-             "%s pays %s %d coins",
-             names[sender],
-             names[receiver],
-             amount);
+    snprintf(transaction, MAX_TX_LEN, "%s pays %s %d coins",
+             names[sender], names[receiver], amount);
 }
 
 int client_main(int id, int transaction_frequency){
-
     key_t key;
     int msqid;
 
@@ -78,17 +73,15 @@ int client_main(int id, int transaction_frequency){
 
     // Generate System V IPC key
     key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
-
     if(key == -1){
-        log_write("ERROR: ftok failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
+        log_write("ERROR: ftok failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
         return 1;
     }
 
     // Connect to the existing message queue
     msqid = msgget(key, 0666);
-
     if(msqid == -1){
-        log_write("ERROR: msgget failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
+        log_write("ERROR: msgget failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
         return 1;
     }
 
@@ -96,9 +89,8 @@ int client_main(int id, int transaction_frequency){
 
     // Generate and send transactions until SIGTERM arrives
     while(!got_stop){
-
         TxMessage msg;
-        memset(&msg, 0, sizeof(TxMessage));                    
+        memset(&msg, 0, sizeof(TxMessage));
 
         // Message type used by miners
         msg.mtype = MSG_TYPE_TRANSACTION;
@@ -107,11 +99,7 @@ int client_main(int id, int transaction_frequency){
         generate_transaction(msg.content);
 
         // Send the message without blocking
-        if(msgsnd(msqid,
-                  &msg,
-                  sizeof(msg.content),
-                  IPC_NOWAIT) == -1){
-
+        if(msgsnd(msqid, &msg, sizeof(msg.content), IPC_NOWAIT) == -1){
             log_write("ERROR: transaction not sent");
         }
         else{
@@ -124,8 +112,5 @@ int client_main(int id, int transaction_frequency){
 
     log_write("Client shutting down");
     log_close();
-
     return 0;
 }
-
-

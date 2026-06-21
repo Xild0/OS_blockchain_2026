@@ -6,6 +6,8 @@
 #include <fcntl.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <sys/mman.h>
+#include <semaphore.h>
 #include <time.h>
 #include <errno.h>
 #include "../include/blockchain.h"
@@ -16,22 +18,21 @@
 
 // Flag used to stop the miner correctly
 static sig_atomic_t got_stop = 0;
-
 // Flag set by SIGUSR2 when a block is confirmed by a node
 static sig_atomic_t got_confirmed = 0;
 
-// Miner information
-static int num_nodes = 0;
+// Mining difficulty
 static int difficulty = 1;
 
 // Shared memory pointer
 static SharedMemory *shm = NULL;
-
+// Semaphore protecting the shared block slot
 static sem_t *sem_block = NULL;
+// Semaphore protecting the shared blockchain
+static sem_t *sem_blockchain = NULL;
 
 // Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
-
 // Number of transactions inside the pool
 static int tx_count = 0;
 
@@ -49,51 +50,22 @@ static void handler_sigterm(int sig){
     got_stop = 1;
 }
 
-
 // SIGUSR2 handler: node confirmed a block
 static void handler_sigusr2(int sig){
     (void)sig;
     got_confirmed = 1;
 }
 
-// Computes the hash of an entire block. The fields are concatenated in hexadecimal form
-static void compute_block_hash(const Block *b, char *hash_out){
-
-    char buffer[8192];
-
-    char idx_hex[17];
-    char ts_hex[17];
-    char nonce_hex[17];
-
-    int_to_hex(b->index, idx_hex);
-    int_to_hex(b->timestamp, ts_hex);
-    int_to_hex(b->nonce, nonce_hex);
-
-    sprintf(buffer,
-            "%s%s%s%s%s%s",
-            idx_hex,
-            ts_hex,
-            b->prev_hash,
-            b->merkle_root,
-            nonce_hex,
-            b->transactions);
-
-    sha256_hex(buffer, strlen(buffer), hash_out);
-
-    hash_out[SHA256_HEX_LEN] = '\0';
-}
-
 // Adds a transaction inside the local pool
 static void add_transaction_to_pool(const char *tx){
-
     int new_len;
 
     // Compute future length to avoid overflow
     if(tx_count == 0){
-        new_len = strlen(tx);
+        new_len = (int)strlen(tx);
     }
     else{
-        new_len = strlen(tx_pool) + 2 + strlen(tx);
+        new_len = (int)strlen(tx_pool) + 2 + (int)strlen(tx);
     }
 
     if(new_len >= MAX_TX_LEN){
@@ -107,32 +79,26 @@ static void add_transaction_to_pool(const char *tx){
     }
 
     strcat(tx_pool, tx);
-
     tx_count++;
 }
 
 // Checks if a transaction is already inside a block
-static int is_transaction_in_block(const char *tx,
-                                   const char *block_txs){
-
+static int is_transaction_in_block(const char *tx, const char *block_txs){
     char copy[MAX_TX_LEN];
-
     char *start;
     char *sep;
 
-    strcpy(copy, block_txs);
+    strncpy(copy, block_txs, MAX_TX_LEN - 1);
+    copy[MAX_TX_LEN - 1] = '\0';
 
     start = copy;
 
     // Split transactions using "::"
     while((sep = strstr(start, "::")) != NULL){
-
         *sep = '\0';
-
         if(strcmp(start, tx) == 0){
             return 1;
         }
-
         start = sep + 2;
     }
 
@@ -146,55 +112,105 @@ static int is_transaction_in_block(const char *tx,
 
 // Removes already mined transactions from the pool
 static void remove_mined_transactions(const Block *confirmed){
-
     char new_pool[MAX_TX_LEN] = "";
-
     char copy[MAX_TX_LEN];
-
     char *start;
     char *sep;
-
     int new_count = 0;
 
-    strcpy(copy, tx_pool);
+    strncpy(copy, tx_pool, MAX_TX_LEN - 1);
+    copy[MAX_TX_LEN - 1] = '\0';
 
     start = copy;
 
     while((sep = strstr(start, "::")) != NULL){
-
         *sep = '\0';
-
         // Keep only transactions not already confirmed
-        if(!is_transaction_in_block(start,
-                                    confirmed->transactions)){
-
+        if(!is_transaction_in_block(start, confirmed->transactions)){
             if(new_count > 0){
                 strcat(new_pool, "::");
             }
-
             strcat(new_pool, start);
-
             new_count++;
         }
-
         start = sep + 2;
     }
 
     // Check the last transaction
     if(strlen(start) > 0 && !is_transaction_in_block(start, confirmed->transactions)){
-
         if(new_count > 0){
             strcat(new_pool, "::");
         }
-
         strcat(new_pool, start);
-
         new_count++;
     }
 
     // Replace old pool
     strcpy(tx_pool, new_pool);
+    tx_count = new_count;
+}
 
+// retries sem_wait on EINTR for the blockchain semaphore
+static int lock_blockchain(void){
+    while(sem_wait(sem_blockchain) == -1){
+        if(errno == EINTR) {
+            continue;
+        }
+        return -1;
+    }
+    return 0;
+}
+// true if tx already appears in any block of the shared chain
+static int tx_in_chain(const char *tx){
+    for(int i = 0; i < shm->blockchain.length; i++){
+        if(is_transaction_in_block(tx, shm->blockchain.blocks[i].transactions)){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Removes from the pool every transaction already committed to the chain.
+// This prevents re-mining already-confirmed transactions even if a SIGUSR2
+// confirmation was missed (signals do not queue and shm->confirmed is a single
+// slot), while still never dropping a transaction that has not been included yet.
+static void prune_pool_against_chain(void){
+    if(tx_count == 0){
+        return;
+    }
+
+    char new_pool[MAX_TX_LEN] = "";
+    char copy[MAX_TX_LEN];
+    char *start;
+    char *sep;
+    int new_count = 0;
+
+    strncpy(copy, tx_pool, MAX_TX_LEN - 1);
+    copy[MAX_TX_LEN - 1] = '\0';
+    start = copy;
+
+    if (lock_blockchain() != 0){
+        log_write("ERROR: lock_blockchain failed, skipping prune");
+        return;
+    }
+
+    while((sep = strstr(start, "::")) != NULL){
+        *sep = '\0';
+        if(!tx_in_chain(start)){
+            if(new_count > 0){ strcat(new_pool, "::"); }
+            strcat(new_pool, start);
+            new_count++;
+        }
+        start = sep + 2;
+    }
+    if(strlen(start) > 0 && !tx_in_chain(start)){
+        if(new_count > 0){ strcat(new_pool, "::"); }
+        strcat(new_pool, start);
+        new_count++;
+    }
+    sem_post(sem_blockchain);
+
+    strcpy(tx_pool, new_pool);
     tx_count = new_count;
 }
 
@@ -202,37 +218,43 @@ static void remove_mined_transactions(const Block *confirmed){
 static void drain_message_queue(int msqid){
     TxMessage msg;
     ssize_t res;
+
     while(1){
         res = msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT);
+
         if(res == -1){
-            // if there are no messages we exit the loop
-            if(errno == ENOMSG) break;
-
-            // if it was interrupted by a signal, ignore and retry
-            if(errno == EINTR) continue;
-
-            // for other errors, log and break
+            // If there are no messages, exit the loop
+            if(errno == ENOMSG){
+                break;
+            }
+            // If it was interrupted by a signal, ignore and retry
+            if(errno == EINTR){
+                continue;
+            }
+            // For other errors, log and break
             log_write("Fatal error in msgrcv");
             break;
         }
+
+        if(!is_valid_transaction(msg.content)){
+            log_write("Invalid transaction rejected: %s", msg.content);
+            continue;
+        }
+
         add_transaction_to_pool(msg.content);
         log_write("%s", msg.content);
-    } 
-
+    }
 }
 
 // Handles a confirmed block received from a node
 static void handle_confirmed_block(const Block *b){
-
     char new_prev_hash[SHA256_BUFFER_LEN];
 
     log_write("Confirmed block received from node");
 
     // Update local blockchain state
     compute_block_hash(b, new_prev_hash);
-
     strcpy(prev_hash, new_prev_hash);
-
     next_index = b->index + 1;
 
     // Remove already mined transactions
@@ -240,54 +262,65 @@ static void handle_confirmed_block(const Block *b){
 
     // Reset nonce and confirmation state
     current_nonce = 0;
-
     waiting_confirmation = 0;
 }
 
 // Sends the mined block to all nodes via shared memory + SIGUSR1
 static void broadcast_block(const Block *b){
+    /*
+     * Race-condition fix:
+     * Multiple miners can mine almost at the same time.
+     * They all try to write their block in shm->mined_last.
+     *
+     * The shared slot must not be overwritten while block_pending == 1,
+     * because that means a node has not processed the previous mined block yet.
+     */
+    while(!got_stop){
+        if(sem_wait(sem_block) == -1){
+            if(errno == EINTR){
+                continue;
+            }
+            log_write("ERROR: sem_wait sem_block failed");
+            return;
+        }
 
-    // wait until no other block is pending to avoid overwriting
-    while(shm->block_pending){
-        if(got_stop) return;
+        if(!shm->block_pending){
+            shm->mined_last = *b;
+            shm->block_pending = 1;
+            sem_post(sem_block);
+
+            for(int i = 0; i < shm->num_nodes; i++){
+                if(shm->node_pids[i] > 0){
+                    kill(shm->node_pids[i], SIGUSR1);
+                }
+            }
+
+            log_write("Block written to shm and SIGUSR1 sent to nodes");
+            return;
+        }
+
+        sem_post(sem_block);
+        // Slot occupied: release the semaphore and retry after a short pause
         usleep(10000);
     }
-
-    sem_wait(sem_block);
-    shm->mined_last = *b;
-    shm->block_pending = 1;
-    sem_post(sem_block);
-
-    for(int i = 0; i < shm->num_nodes; i++){
-        if(shm->node_pids[i] > 0){
-            kill(shm->node_pids[i], SIGUSR1);
-        }
-    }
-
-    log_write("Block written to shm and SIGUSR1 sent to nodes");
 }
 
 // Builds a new block and broadcasts it
 static void build_and_broadcast_block(void){
-
     Block new_block;
-    memset(&new_block, 0, sizeof(Block)); // set to zero all parameters of the structure
+    memset(&new_block, 0, sizeof(Block));
 
     new_block.index = next_index;
-
     new_block.timestamp = (uint64_t)time(NULL);
-
     strcpy(new_block.prev_hash, prev_hash);
-
     strcpy(new_block.transactions, tx_pool);
-
-    new_block.transactions_len =
-            (uint32_t)strlen(new_block.transactions);
+    new_block.transactions_len = (uint32_t)strlen(new_block.transactions);
 
     // Compute Merkle root
-    calcola_merkle_root(new_block.transactions,
-                        new_block.merkle_root);
-
+    if (compute_merkle_root(new_block.transactions, new_block.merkle_root) != BC_OK){
+        log_write("ERROR: merkle computation failed, block not mined");
+        return;
+    }
     new_block.merkle_root[HASH_LENGTH] = '\0';
 
     new_block.nonce = current_nonce;
@@ -296,29 +329,25 @@ static void build_and_broadcast_block(void){
 
     broadcast_block(&new_block);
 
-    // Clear local pool
-    tx_pool[0] = '\0';
-
-    tx_count = 0;
+    // Do NOT clear the local pool here. A concurrent miner may win this height
+    // and our candidate block could be rejected. The pool is updated later in
+    // handle_confirmed_block(), which removes only the transactions actually
+    // included in the confirmed block, so transactions are not lost in a race.
 
     // Wait for confirmation before mining again
     waiting_confirmation = 1;
 }
 
 // Main function of the miner process
-int miner_main(int id,
-               int n_nodes,
-               int diff){
+int miner_main(int id, int n_nodes, int diff){
+    (void)n_nodes;
+    key_t key;
+    int msqid;
+    int shm_fd;
+
     if(log_init("miner", id) != 0){
         return 1;
     }
-    char logname[64];
-
-    key_t key;
-
-    int msqid;
-    int shm_fd;
-    num_nodes = n_nodes;
 
     if(diff <= 0){
         difficulty = 1;
@@ -327,32 +356,48 @@ int miner_main(int id,
         difficulty = diff;
     }
 
-    // Open shared memory (already created by parent)
+    // Open shared memory, already created by parent
     shm_fd = shm_open("/blockchain_shm", O_RDWR, 0);
     if(shm_fd < 0){
         log_write("ERROR: shm_open failed");
+        log_close();
         return 1;
     }
-    shm = (SharedMemory *)mmap(NULL, sizeof(SharedMemory),
-                               PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    shm = (SharedMemory *)mmap(NULL, sizeof(SharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
     if(shm == MAP_FAILED){
         log_write("ERROR: mmap failed");
+        close(shm_fd);
+        log_close();
         return 1;
     }
 
     sem_block = sem_open("/sem_block", 0);
     if(sem_block == SEM_FAILED){
         log_write("ERROR: sem_open sem_block failed");
+        munmap(shm, sizeof(SharedMemory));
+        close(shm_fd);
+        log_close();
         return 1;
     }
-    
-    if (shm->blockchain.length > 0){
-        Block last_block = shm->blockchain.blocks[shm->blockchain.length -1]; // last block of shm 
-        next_index = last_block.index + 1;                          
-        compute_block_hash(&last_block, prev_hash);  //calculate prev_hash from last valid block 
-    } else {
 
-        memset(prev_hash, '0', HASH_LENGTH);                                
+    sem_blockchain = sem_open("/sem_blockchain", 0);
+    if(sem_blockchain == SEM_FAILED){
+        log_write("ERROR: sem_open sem_blockchain failed");
+        sem_close(sem_block);
+        munmap(shm, sizeof(SharedMemory));
+        close(shm_fd);
+        log_close();
+        return 1;
+    }
+
+    if(shm->blockchain.length > 0){
+        Block last_block = shm->blockchain.blocks[shm->blockchain.length - 1];
+        next_index = last_block.index + 1;
+        compute_block_hash(&last_block, prev_hash);
+    }
+    else{
+        memset(prev_hash, '0', HASH_LENGTH);
         prev_hash[HASH_LENGTH] = '\0';
         next_index = 0;
     }
@@ -360,24 +405,31 @@ int miner_main(int id,
     // Different random seed for each miner
     srand(time(NULL) ^ getpid());
 
-    // Register SIGTERM handler
+    // Register signal handlers
     signal(SIGTERM, handler_sigterm);
     signal(SIGUSR2, handler_sigusr2);
 
     // Generate System V IPC key
-    key = ftok(MSGQUEUE_PATH,
-               MSGQUEUE_PROJ_ID);
-
+    key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
     if(key == -1){
-        log_write("ERROR: ftok failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
+        log_write("ERROR: ftok failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
+        sem_close(sem_block);
+        sem_close(sem_blockchain);
+        munmap(shm, sizeof(SharedMemory));
+        close(shm_fd);
+        log_close();
         return 1;
     }
 
     // Connect to the existing message queue
     msqid = msgget(key, 0666);
-
     if(msqid == -1){
-        log_write("ERROR: msgget failed con codice %s", error_to_string(BC_ERR_FILE_OPEN));
+        log_write("ERROR: msgget failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
+        sem_close(sem_block);
+        sem_close(sem_blockchain);
+        munmap(shm, sizeof(SharedMemory));
+        close(shm_fd);
+        log_close();
         return 1;
     }
 
@@ -385,7 +437,6 @@ int miner_main(int id,
 
     // Main loop
     while(!got_stop){
-
         if(got_confirmed){
             got_confirmed = 0;
             // Read the confirmed block from shared memory
@@ -393,9 +444,6 @@ int miner_main(int id,
             handle_confirmed_block(&confirmed);
         }
 
-        
-        Block confirmed;
-        ssize_t n;
         int sleep_seconds;
 
         // Read all pending transactions
@@ -403,7 +451,6 @@ int miner_main(int id,
 
         // Simulate mining work
         sleep_seconds = 1 + (rand() % 5);
-
         sleep(sleep_seconds);
 
         if(got_stop){
@@ -419,19 +466,20 @@ int miner_main(int id,
 
         // Read new transactions again after sleeping
         drain_message_queue(msqid);
+
         current_nonce++;
 
         if(waiting_confirmation == 0){
+            // drop any transaction already committed to the chain before mining
+            prune_pool_against_chain();
+
             // Probability = 1 / difficulty
             if((rand() % difficulty) == 0){
-
                 // Do not mine empty blocks
                 if(tx_count > 0){
-
                     build_and_broadcast_block();
                 }
                 else{
-
                     log_write("Lottery won but no transactions to mine");
                 }
             }
@@ -439,8 +487,8 @@ int miner_main(int id,
     }
 
     log_write("Miner shutting down");
-
     sem_close(sem_block);
+    sem_close(sem_blockchain);
     munmap(shm, sizeof(SharedMemory));
     close(shm_fd);
     log_close();

@@ -1,81 +1,92 @@
 #!/bin/bash
+#
+# Build / run helper for the blockchain project.
+#
+# Usage:
+#   ./build.sh build
+#   ./build.sh run <num_nodes> <num_miners> <num_clients> [tx_frequency] [difficulty] [initial_state.csv]
+#   ./build.sh clean
 
-comando="$1"
-#echo "Script avviato"
+CC=gcc
+CFLAGS="-Wall -Wextra -I include"
+LDFLAGS="-lrt -lpthread"
+SRC="source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c"
+OUT="blockchain"
 
+is_positive_int() {
+    [[ "$1" =~ ^[1-9][0-9]*$ ]]
+}
 
+case "$1" in
+    build)
+        echo "Compiling..."
+        $CC $CFLAGS $SRC -o $OUT $LDFLAGS
+        if [ $? -eq 0 ]; then
+            echo "Build successful: ./$OUT"
+        else
+            echo "Build failed"
+            exit 1
+        fi
+        ;;
 
-if [ "$comando" == "build" ]; then
-    echo "[build] Compilo blockchain"
-    gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
+    run)
+        shift
+        num_nodes="$1"
+        num_miners="$2"
+        num_clients="$3"
+        tx_frequency="$4"
+        difficulty="$5"
+        initial_state="$6"
 
-    if [ $? -eq 0 ]; then
-        echo "Compilato blockchain"
-    else
-        echo "Errore di compilazione"
+        if [ -z "$num_nodes" ] || [ -z "$num_miners" ] || [ -z "$num_clients" ]; then
+            echo "Usage: ./build.sh run <num_nodes> <num_miners> <num_clients> [tx_frequency] [difficulty] [initial_state.csv]"
+            exit 1
+        fi
+
+        for arg in "$num_nodes" "$num_miners" "$num_clients"; do
+            if ! is_positive_int "$arg"; then
+                echo "Error: num_nodes, num_miners and num_clients must be positive integers"
+                exit 1
+            fi
+        done
+
+        if [ -n "$tx_frequency" ] && ! is_positive_int "$tx_frequency"; then
+            echo "Error: tx_frequency must be a positive integer"
+            exit 1
+        fi
+
+        if [ -n "$difficulty" ] && ! is_positive_int "$difficulty"; then
+            echo "Error: difficulty must be a positive integer"
+            exit 1
+        fi
+
+        if [ -n "$initial_state" ] && [ ! -f "$initial_state" ]; then
+            echo "Error: initial state file not found: $initial_state"
+            exit 1
+        fi
+
+        if [ ! -x "./$OUT" ]; then
+            echo "Executable not found, building first..."
+            "$0" build || exit 1
+        fi
+
+        # Pass every provided argument through to the program.
+        ./$OUT "$num_nodes" "$num_miners" "$num_clients" $tx_frequency $difficulty $initial_state
+        ;;
+
+    clean)
+        echo "Cleaning up..."
+        rm -f "$OUT"
+        rm -f logs/*.log
+        rm -f node_*_block.fifo node_*_cmd.fifo parent.fifo
+        echo "Done"
+        ;;
+
+    *)
+        echo "Usage: ./build.sh {build|run|clean}"
+        echo "  build                                  compile the project"
+        echo "  run <nodes> <miners> <clients> [freq] [difficulty] [initial_state.csv]"
+        echo "  clean                                  remove binary, logs and FIFOs"
         exit 1
-    fi
-
-elif [ "$comando" == "clean" ]; then
-    echo "[clean] Rimuovo eseguibile e log"
-    rm -f "blockchain"
-    rm -f logs/*.log
-
-    echo "[clean] Rimuovo FIFO residue"
-    rm -f node_*.fifo
-    rm -f parent.fifo
-
-    echo "[clean] Rimuovo shared memory e semafori"
-    rm -f "/dev/shm/blockchain_shm"
-    rm -f "/dev/shm/sem.sem_blockchain" 
-    rm -f "/dev/shm/sem.sem_block"
-
-    echo "[clean] Rimuovo coda messaggi SysV residua (utente corrente)"
-    for id in $(ipcs -q | awk -v u="$(whoami)" '$3==u {print $2}'); do
-        ipcrm -q "$id" 2>/dev/null
-    done
-
-    echo "[clean] Rimuovo MSGQUEUE"
-    rm -f "/tmp/blockchain_queue"
-
-    echo "[clean] Sistema pulito"
-
-elif [ "$comando" == "run" ]; then                  # se non si inseriscono valori, ne partono di default
-    num_nodi="${2:-2}"                              # default: 2
-    num_miner="${3:-2}"                             # default: 2
-    num_client="${4:-3}"                            # default: 3
-    tx_frequency="${5:-1}"                          # default: 1
-    difficulty="${6:-12}"                           # default: 12
-
-    if [[ "$num_nodi" -lt 1 || "$num_nodi" -gt 16 ]]; then
-        echo "Numero nodi non valido (min 1, max 16)"
-        exit 1
-    fi
-    if [[ "$num_miner" -lt 1 || "$num_miner" -gt 16 ]]; then
-        echo "Numero miner non valido (min 1, max 16)"
-        exit 1
-    fi
-    if [[ "$num_client" -lt 1 || "$num_client" -gt 16 ]]; then
-        echo "Numero client non valido (min 1, max 16)"
-        exit 1
-    fi
-    if [[ "$tx_frequency" -lt 1 ]]; then
-        echo "Frequenza transazioni: valore minimo 1"
-        exit 1
-    fi
-    if [[ "$difficulty" -lt 1 ]]; then
-        echo "Difficolta': valore minimo 1"
-        exit 1
-    fi
-
-    echo "[run] Avvio blockchain $num_nodi $num_miner $num_client $tx_frequency $difficulty"
-    ./blockchain "$num_nodi" "$num_miner" "$num_client" "$tx_frequency" "$difficulty"
-
-else
-    echo "Comandi disponibili: ./build.sh {build | clean | run}"
-    echo "./build.sh build"
-    echo "./build.sh clean"
-    echo "./build.sh run <num_nodi> <num_miner> <num_client> <tx_frequency> <difficulty>"
-    exit 1
-fi
-
+        ;;
+esac
