@@ -1,6 +1,6 @@
 // test run:
-// gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
-// ./blockchain 2 2 3 1 12
+// $ gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
+// $ ./blockchain 2 2 3 1 12
 // 1 -> tx_frequency, 12 -> difficulty
 
 #include <stdio.h>

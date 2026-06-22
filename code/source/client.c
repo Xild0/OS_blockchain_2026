@@ -16,7 +16,7 @@
 // Flag used to stop the client correctly
 static sig_atomic_t got_stop = 0;
 
-// Names used to generate random transactions
+
 static const char *names[NUM_NAMES] = {
     "Alice",
     "Bob",
@@ -26,7 +26,7 @@ static const char *names[NUM_NAMES] = {
     "Giacomo"
 };
 
-// SIGTERM handler
+
 static void handler_sigterm(int sig){
     (void)sig;
     got_stop = 1;
@@ -38,7 +38,7 @@ static void generate_transaction(char *transaction){
     int receiver;
     int amount;
 
-    // Random sender
+
     sender = rand() % NUM_NAMES;
 
     // Random receiver different from sender
@@ -48,9 +48,8 @@ static void generate_transaction(char *transaction){
 
     amount = (rand() % 99) + 1;
 
-    // Builds the final transaction string
-    snprintf(transaction, MAX_TX_LEN, "%s pays %s %d coins",
-             names[sender], names[receiver], amount);
+   
+    snprintf(transaction, MAX_TX_LEN, "%s pays %s %d coins", names[sender], names[receiver], amount);
 }
 
 int client_main(int id, int transaction_frequency){
@@ -78,7 +77,7 @@ int client_main(int id, int transaction_frequency){
         return 1;
     }
 
-    // Connect to the existing message queue
+    
     msqid = msgget(key, 0666);
     if(msqid == -1){
         log_write("ERROR: msgget failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
@@ -94,8 +93,6 @@ int client_main(int id, int transaction_frequency){
 
         // Message type used by miners
         msg.mtype = MSG_TYPE_TRANSACTION;
-
-        // Fill the message with a valid transaction
         generate_transaction(msg.content);
 
         // Send the message without blocking

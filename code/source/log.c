@@ -10,7 +10,7 @@
 #include <errno.h>
 #include "../include/log.h"
 
-static FILE *logfile_ptr = NULL;
+static FILE *logfile_ptr = NULL; 
 static char proc_type[32];
 static int proc_id = -1;
 
@@ -27,7 +27,6 @@ int log_init(const char *process_type, int id){
     // format: process_type-PID.log
     snprintf(filename, sizeof(filename), "logs/%s-%d.log", process_type, (int)getpid());
 
-    // open log file (w mode)
     logfile_ptr = fopen(filename, "w");
     if (logfile_ptr == NULL){
         perror("Error opening log file");
@@ -49,8 +48,8 @@ void log_write(const char *format, ...){
     vfprintf(logfile_ptr, format, args);
     va_end(args);
 
-    fprintf(logfile_ptr, "\n");
-    fflush(logfile_ptr);
+    fprintf(logfile_ptr, "\n"); 
+    fflush(logfile_ptr); 
 }
 
 void log_close(void){
@@ -73,7 +72,7 @@ void log_cleanup(void){
             continue;
         }
         snprintf(filepath, sizeof(filepath), "logs/%s", entry->d_name);
-        remove(filepath);
+        remove(filepath); 
     }
 
     closedir(dir);

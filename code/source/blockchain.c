@@ -225,7 +225,7 @@ int is_valid_transaction(const char *tx){
 }
 
 // checks that every transaction in a "::"-separated list matches the regex
-static int check_tx_format(const char *transactions){
+ int check_tx_format(const char *transactions){
     char copy[MAX_TX_LEN];
     strncpy(copy, transactions, MAX_TX_LEN - 1);
     copy[MAX_TX_LEN - 1] = '\0';

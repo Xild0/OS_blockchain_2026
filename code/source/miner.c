@@ -21,27 +21,20 @@ static sig_atomic_t got_stop = 0;
 // Flag set by SIGUSR2 when a block is confirmed by a node
 static sig_atomic_t got_confirmed = 0;
 
-// Mining difficulty
 static int difficulty = 1;
 
-// Shared memory pointer
 static SharedMemory *shm = NULL;
-// Semaphore protecting the shared block slot
 static sem_t *sem_block = NULL;
-// Semaphore protecting the shared blockchain
 static sem_t *sem_blockchain = NULL;
 
 // Pool of pending transactions separated by "::"
 static char tx_pool[MAX_TX_LEN] = "";
-// Number of transactions inside the pool
-static int tx_count = 0;
+static int tx_count = 0; //num transaction inside pool
 
 // Current blockchain state known by the miner
 static char prev_hash[HASH_LENGTH + 1];
 static uint64_t next_index = 0;
 static uint64_t current_nonce = 0;
-
-// Used to avoid mining again before confirmation
 static int waiting_confirmation = 0;
 
 // SIGTERM handler
@@ -58,14 +51,14 @@ static void handler_sigusr2(int sig){
 
 // Adds a transaction inside the local pool
 static void add_transaction_to_pool(const char *tx){
-    int new_len;
+    size_t new_len;
 
     // Compute future length to avoid overflow
     if(tx_count == 0){
-        new_len = (int)strlen(tx);
+        new_len = strlen(tx);
     }
     else{
-        new_len = (int)strlen(tx_pool) + 2 + (int)strlen(tx);
+        new_len = strlen(tx_pool) + 2 + strlen(tx);
     }
 
     if(new_len >= MAX_TX_LEN){
@@ -88,8 +81,9 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
     char *start;
     char *sep;
 
-    strncpy(copy, block_txs, MAX_TX_LEN - 1);
-    copy[MAX_TX_LEN - 1] = '\0';
+     strcpy(copy, block_txs);
+   // strncpy(copy, block_txs, MAX_TX_LEN - 1);
+    //copy[MAX_TX_LEN - 1] = '\0';
 
     start = copy;
 
@@ -118,8 +112,9 @@ static void remove_mined_transactions(const Block *confirmed){
     char *sep;
     int new_count = 0;
 
-    strncpy(copy, tx_pool, MAX_TX_LEN - 1);
-    copy[MAX_TX_LEN - 1] = '\0';
+    strcpy(copy, tx_pool); 
+    //strncpy(copy, tx_pool, MAX_TX_LEN - 1);
+    //copy[MAX_TX_LEN - 1] = '\0';
 
     start = copy;
 
@@ -150,16 +145,7 @@ static void remove_mined_transactions(const Block *confirmed){
     tx_count = new_count;
 }
 
-// retries sem_wait on EINTR for the blockchain semaphore
-static int lock_blockchain(void){
-    while(sem_wait(sem_blockchain) == -1){
-        if(errno == EINTR) {
-            continue;
-        }
-        return -1;
-    }
-    return 0;
-}
+
 // true if tx already appears in any block of the shared chain
 static int tx_in_chain(const char *tx){
     for(int i = 0; i < shm->blockchain.length; i++){
@@ -170,11 +156,8 @@ static int tx_in_chain(const char *tx){
     return 0;
 }
 
-// Removes from the pool every transaction already committed to the chain.
-// This prevents re-mining already-confirmed transactions even if a SIGUSR2
-// confirmation was missed (signals do not queue and shm->confirmed is a single
-// slot), while still never dropping a transaction that has not been included yet.
-static void prune_pool_against_chain(void){
+
+static void prune_pool_against_chain(void){ // removes from the local pool any transaction already included in the shared blockchain
     if(tx_count == 0){
         return;
     }
@@ -185,14 +168,16 @@ static void prune_pool_against_chain(void){
     char *sep;
     int new_count = 0;
 
-    strncpy(copy, tx_pool, MAX_TX_LEN - 1);
-    copy[MAX_TX_LEN - 1] = '\0';
+    //strncpy(copy, tx_pool, MAX_TX_LEN - 1);
+    //copy[MAX_TX_LEN - 1] = '\0';
+    strcpy(copy, tx_pool);
     start = copy;
 
-    if (lock_blockchain() != 0){
-        log_write("ERROR: lock_blockchain failed, skipping prune");
-        return;
-    }
+   while (sem_wait(sem_blockchain) == -1){
+    if (errno == EINTR) continue;
+    log_write("ERROR: sem_wait failed, skipping prune");
+    return;
+   }
 
     while((sep = strstr(start, "::")) != NULL){
         *sep = '\0';
@@ -231,7 +216,6 @@ static void drain_message_queue(int msqid){
             if(errno == EINTR){
                 continue;
             }
-            // For other errors, log and break
             log_write("Fatal error in msgrcv");
             break;
         }
@@ -257,24 +241,14 @@ static void handle_confirmed_block(const Block *b){
     strcpy(prev_hash, new_prev_hash);
     next_index = b->index + 1;
 
-    // Remove already mined transactions
     remove_mined_transactions(b);
 
-    // Reset nonce and confirmation state
     current_nonce = 0;
     waiting_confirmation = 0;
 }
 
 // Sends the mined block to all nodes via shared memory + SIGUSR1
 static void broadcast_block(const Block *b){
-    /*
-     * Race-condition fix:
-     * Multiple miners can mine almost at the same time.
-     * They all try to write their block in shm->mined_last.
-     *
-     * The shared slot must not be overwritten while block_pending == 1,
-     * because that means a node has not processed the previous mined block yet.
-     */
     while(!got_stop){
         if(sem_wait(sem_block) == -1){
             if(errno == EINTR){
@@ -308,7 +282,7 @@ static void broadcast_block(const Block *b){
 // Builds a new block and broadcasts it
 static void build_and_broadcast_block(void){
     Block new_block;
-    memset(&new_block, 0, sizeof(Block));
+    memset(&new_block, 0, sizeof(Block)); 
 
     new_block.index = next_index;
     new_block.timestamp = (uint64_t)time(NULL);
@@ -322,25 +296,14 @@ static void build_and_broadcast_block(void){
         return;
     }
     new_block.merkle_root[HASH_LENGTH] = '\0';
-
     new_block.nonce = current_nonce;
 
     log_write("Mining successful");
-
     broadcast_block(&new_block);
-
-    // Do NOT clear the local pool here. A concurrent miner may win this height
-    // and our candidate block could be rejected. The pool is updated later in
-    // handle_confirmed_block(), which removes only the transactions actually
-    // included in the confirmed block, so transactions are not lost in a race.
-
-    // Wait for confirmation before mining again
     waiting_confirmation = 1;
 }
 
-// Main function of the miner process
-int miner_main(int id, int n_nodes, int diff){
-    (void)n_nodes;
+int miner_main(int id, int diff){
     key_t key;
     int msqid;
     int shm_fd;
@@ -435,11 +398,9 @@ int miner_main(int id, int n_nodes, int diff){
 
     log_write("Miner started");
 
-    // Main loop
     while(!got_stop){
         if(got_confirmed){
             got_confirmed = 0;
-            // Read the confirmed block from shared memory
             Block confirmed = shm->confirmed;
             handle_confirmed_block(&confirmed);
         }
@@ -475,7 +436,6 @@ int miner_main(int id, int n_nodes, int diff){
 
             // Probability = 1 / difficulty
             if((rand() % difficulty) == 0){
-                // Do not mine empty blocks
                 if(tx_count > 0){
                     build_and_broadcast_block();
                 }
