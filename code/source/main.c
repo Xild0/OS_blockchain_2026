@@ -27,11 +27,11 @@ int node_main(int id, int n_nodes, int shm_fd);
 int miner_main(int id, int difficulty);
 int client_main(int id, int tx_frequency);
 
-int node(int id, int num, int shm_fd);
+// int node(int id, int num, int shm_fd);                   // funzione morta, si può togliere
 
 static pid_t node_pids[MAX_NODES];  
 static pid_t miner_pids[MAX_MINERS];
-static pid_t client_pids[16];
+static pid_t client_pids[MAX_CLIENTS];
 
 static int num_nodes   = 0; 
 static int num_miners  = 0;
@@ -210,7 +210,7 @@ static void request_blockchain_by_Index(uint64_t index){
     }
 
     sem_wait(sem); 
-    if(index >= shm->blockchain.length){
+    if(index >= (uint64_t)shm->blockchain.length){
         printf("La blockchain non è ancora arrivata a quel blocco (lunghezza attuale: %d)\n", shm->blockchain.length);
         sem_post(sem);
         sem_close(sem);
@@ -443,7 +443,7 @@ int main(int argc, char *argv[]){
         return 1;
     }
 
-    if (num_nodes > MAX_NODES || num_miners > MAX_MINERS) {
+    if (num_nodes > MAX_NODES || num_miners > MAX_MINERS || num_clients > MAX_CLIENTS) {
         fprintf(stderr, "Error: too many nodes or miners (max %d nodes, %d miners)\n", MAX_NODES, MAX_MINERS);
         return 1;
     }
