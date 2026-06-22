@@ -22,12 +22,7 @@
 #include "../include/client.h"
 #include "../include/errors.h"
 #include "../include/log.h"
-
-int node_main(int id, int n_nodes, int shm_fd);
-int miner_main(int id, int difficulty);
-int client_main(int id, int tx_frequency);
-
-// int node(int id, int num, int shm_fd);                   // funzione morta, si può togliere
+#include "../include/node.h"
 
 static pid_t node_pids[MAX_NODES];  
 static pid_t miner_pids[MAX_MINERS];
@@ -495,13 +490,19 @@ int main(int argc, char *argv[]){
     }
 
     if(init_csv != NULL){ 
-         int rc = blockchain_load(&shm->blockchain, init_csv); //return code 
+        int rc = blockchain_load(&shm->blockchain, init_csv); //return code 
         if (rc != BC_OK) {
             fprintf(stderr, "Error loading: %s (rc=%d)\n", init_csv, rc);
             cleanup();
             return 1;
-    }
-     printf("Blockchain created from %s with: %d blocks\n", init_csv, shm->blockchain.length);
+        }
+        rc=blockchain_validate(&shm->blockchain);
+        if(rc != BC_OK){
+            fprintf(stderr, "Error: invalid initial state %s (rc=%d)\n", init_csv, rc);
+            cleanup();
+            return 1;
+        }
+        printf("Blockchain created from %s with: %d blocks\n", init_csv, shm->blockchain.length);
     }
 
     //parent FIFO

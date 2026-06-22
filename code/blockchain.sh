@@ -25,6 +25,24 @@ hex_to_ascii() {
     printf '%b' "$(printf '%s' "$hex" | sed 's/../\\x&/g')"
 }
 
+# verify format single transaction 
+is_valid_tx(){
+    [[ "$1" =~ ^[A-Za-z0-9]+\ pays\ [A-Za-z0-9]+\ [1-9][0-9]*\ coins$ ]]
+}
+
+# verify transactions list of <transaction1>::<transacrion2>::<transactionN>
+check_tx_list(){
+    local resto="$1"
+    local parte
+    while [[ "$resto" == *::* ]]; do
+        parte="${resto%%::*}"
+        is_valid_tx "$parte" || return 1
+        resto="${resto#*::}"
+    done
+    is_valid_tx "$resto" || return 1
+    return 0   
+}
+
 
 # HASH
 if [ "$comando" == "--hash" ]; then
@@ -181,16 +199,25 @@ elif [ "$comando" == "--verify" ]; then
         txs_clean="${txs%\"}"
         txs_clean="${txs_clean#\"}"
         if [ -z "$txs_clean" ]; then
-            echo "Errore INVALID_TRANSACTION: no transactions to block $idx_dec"
+            echo "Error INVALID_TRANSACTION: no transactions to block $idx_dec"
             is_valid=0
             exit_code=$INVALID_TRANSACTION
             break
         fi
 
+        if [ "$idx_dec" -ne 0 ]; then
+            if ! check_tx_list "$txs_clean"; then
+                echo "Error INVALID_TRANSACTION: invalid transaction format block $idx_dec"
+                is_valid=0
+                exit_code=INVALID_TRANSACTION
+                break
+            fi
+        fi
+
         # verify merkle root with transactions in clean (txs_clean)
         computed_merkle=$(./blockchain.sh --merkle "$txs_clean")
         if [ "$computed_merkle" != "$merkle" ]; then
-            echo "Errore INVALID_BLOCK: invalid merkle_root to block $idx_dec"
+            echo "Error INVALID_BLOCK: invalid merkle_root to block $idx_dec"
             is_valid=0
             exit_code=$INVALID_BLOCK
             break

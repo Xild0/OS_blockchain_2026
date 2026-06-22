@@ -11,7 +11,7 @@ if [ "$comando" == "build" ]; then
     gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
  
     if [ $? -eq 0 ]; then
-        echo "Compile blockchain"
+        echo "Compiled blockchain"
     else
         echo "Error during compilation"
         exit 1
