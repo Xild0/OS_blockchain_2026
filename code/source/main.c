@@ -24,7 +24,7 @@
 #include "../include/log.h"
 
 int node_main(int id, int n_nodes, int shm_fd);
-int miner_main(int id, int n_nodes, int difficulty);
+int miner_main(int id, int difficulty);
 int client_main(int id, int tx_frequency);
 
 int node(int id, int num, int shm_fd);
@@ -165,7 +165,7 @@ static void resume_all(void){ //sends SIGCONT to all child processes to make the
 static void submit_transaction(const char *tx){
     if(!is_valid_transaction(tx)){
         printf("Error INVALID_TRANSACTION: invalid transaction format\n");
-        return
+        return;
     }
 
     TxMessage msg;

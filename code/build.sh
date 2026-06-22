@@ -4,6 +4,8 @@
 #   ./build.sh run <num_nodes> <num_miners> <num_clients> [tx_frequency] [difficulty] [initial_state.csv]
 #   ./build.sh clean
 
+comando="$1"
+
 if [ "$comando" == "build" ]; then
     echo "[build] Compile blockchain"
     gcc source/main.c source/blockchain.c source/client.c source/miner.c source/node.c source/log.c source/sha256.c -I include -o blockchain -lrt -lpthread
