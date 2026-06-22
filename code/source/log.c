@@ -24,7 +24,6 @@ int log_init(const char *process_type, int id){
     }
 
     char filename[256];
-    // format: process_type-PID.log
     snprintf(filename, sizeof(filename), "logs/%s-%d.log", process_type, (int)getpid());
 
     logfile_ptr = fopen(filename, "w");
@@ -40,7 +39,6 @@ int log_init(const char *process_type, int id){
 void log_write(const char *format, ...){
     if(logfile_ptr == NULL) return;
 
-    //prefix stamp: [timestamp] process_type [id]:
     fprintf(logfile_ptr, "[%ld] %s [%d]:", (long)time(NULL), proc_type, proc_id);
 
     va_list args;

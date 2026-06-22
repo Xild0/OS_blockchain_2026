@@ -20,6 +20,7 @@
 #define BC_ERR_NULL_ARG -6
 #define BC_ERR_INVALID_BLOCK -7
 #define BC_ERR_NOMEM -8
+#define BC_ERR_INVALID_TRANSACTION -9
 
 static inline const char *error_to_string(int error_code){
     switch (error_code){
@@ -32,6 +33,7 @@ static inline const char *error_to_string(int error_code){
         case BC_ERR_NULL_ARG:       return "Error: NULL pointer argument (BC_ERR_NULL_ARG)";
         case BC_ERR_INVALID_BLOCK:  return "Error: invalid block / validation failed (BC_ERR_INVALID_BLOCK)";
         case BC_ERR_NOMEM:          return "Error: memory allocation failed (BC_ERR_NOMEM)";
+        case BC_ERR_INVALID_TRANSACTION: return "Error: invalid transaction (BC_ERR_INVALID_TRANSACTION)";
         default:                    return "Error: unknown error code";
     }
 }

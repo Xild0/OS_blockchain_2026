@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
@@ -12,7 +13,7 @@
 #include "../include/errors.h"
 
 void int_to_hex(uint64_t value, char *hex){
-    snprintf(hex, 17, "%016lx", value); //%016lx : padding with zeros to 16 chars
+    snprintf(hex, 17, "%016" PRIx64, value);
 }
 
 uint64_t hex_to_int(const char *hex){
@@ -45,7 +46,6 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     char *ptr = transactions;
     char *start = ptr;
 
-    // count transactions separated by '::'
     while(*ptr != '\0'){
         if(ptr[0] == ':' && ptr[1] == ':'){
             count++;
@@ -62,30 +62,27 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     if (array_transactions == NULL) return BC_ERR_NOMEM;
     ptr = transactions;
 
-    // split the concatenated string on '::' and store each token
     while(*ptr != '\0'){
         if(ptr[0] == ':' && ptr[1] == ':'){
-            uint64_t diff = ptr - start;   // length of current token
+            uint64_t diff = ptr - start;   
             array_transactions[tx_count] = malloc(diff + 1);
             if (array_transactions[tx_count] == NULL) return BC_ERR_NOMEM;
             strncpy(array_transactions[tx_count], start, diff);
             array_transactions[tx_count][diff] = '\0';
             tx_count++;
-            ptr += 2;                      // skip '::' separator
+            ptr += 2;                     
             start = ptr;
         } else{
             ptr++;
         }
     }
 
-    // copy the last token (no trailing '::')
     uint64_t diff = ptr - start;
     array_transactions[tx_count] = malloc(diff+1);
     strncpy(array_transactions[tx_count], start, diff);
     array_transactions[tx_count][diff] = '\0';
     tx_count++;
 
-    // hash each transaction
     char **array_transactions_sha256 = malloc(count * sizeof(char*));
     if (array_transactions_sha256 == NULL) return BC_ERR_NOMEM;
     for (int i = 0; i < count; ++i){
@@ -98,7 +95,6 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     for (int i = 0; i < count; ++i) free(array_transactions[i]);
     free(array_transactions);
 
-    // single tx: pair with the empty-string hash
     if (count == 1){
         char tmp[CONC_BUFFER_LEN];
         char tmp_sha256[SHA256_BUFFER_LEN];
@@ -117,7 +113,6 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     }
 
     // iteratively pair and hash until one root remains.
-    // pair adjacent hashes and re-hash them; if count is odd, pad the last one with sha256("")
     while(count > 1){
         int new_count = 0;
         char **stringhe_concatenate = malloc(count * sizeof(char*));
@@ -259,7 +254,6 @@ int blockchain_validate(const Blockchain *bc){
     for (int i = 0; i < bc->length; i++) {
         const Block *b = &bc->blocks[i];
 
-        // merkle root check for every block (including genesis)
         strncpy(tx_copy, b->transactions, MAX_TX_LEN - 1);
         tx_copy[MAX_TX_LEN - 1] = '\0';
         int rc = compute_merkle_root(tx_copy, computed_merkle);
@@ -272,18 +266,15 @@ int blockchain_validate(const Blockchain *bc){
         }
 
         if (i == 0) {
-            // genesis: free-form payload, no index/prev/tx-format checks beyond index 0
             continue;
         }
 
         const Block *prev = &bc->blocks[i - 1];
 
-        // index continuity
         if (b->index != prev->index + 1) {
             return BC_ERR_INVALID_BLOCK;
         }
 
-        // prev_hash must equal the hash of the previous block
         rc = compute_block_hash(prev, prev_hash_calc);
         if (rc != BC_OK) {
             return rc;
@@ -293,9 +284,8 @@ int blockchain_validate(const Blockchain *bc){
             return BC_ERR_INVALID_BLOCK;
         }
 
-        // transaction format for non-genesis blocks
         if (!check_tx_format(b->transactions)) {
-            return BC_ERR_INVALID_BLOCK;
+            return BC_ERR_INVALID_TRANSACTION;
         }
     }
 
@@ -362,7 +352,6 @@ static int line_to_block(char *line, Block *b) {
     strncpy(b->merkle_root, fields[3], HASH_LENGTH);
     b->merkle_root[HASH_LENGTH] = '\0';
 
-    // strip surrounding quotes from transactions field
     char *tx = fields[5];
     if (tx[0] == '"') tx++;
     size_t len = strlen(tx);
@@ -384,7 +373,6 @@ int blockchain_load(Blockchain *bc, const char *filename) {
 
     char line[LINE_MAX_LEN];
 
-    // skip CSV header
     int hr = read_line(fd, line, sizeof(line));
     if (hr == READ_LINE_ERROR || hr == READ_LINE_EOF) {
         close(fd);
@@ -487,7 +475,6 @@ int blockchain_save(const Blockchain *bc, const char *filename) {
 int blockchain_append(const Block *b, const char *filename) {
     if (!b || !filename) return BC_ERR_NULL_ARG;
 
-    // write header only if file didn't exist yet
     int new_file = (access(filename, F_OK) != 0);
 
     int fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);

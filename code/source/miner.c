@@ -52,8 +52,6 @@ static void handler_sigusr2(int sig){
 // Adds a transaction inside the local pool
 static void add_transaction_to_pool(const char *tx){
     size_t new_len;
-
-    // Compute future length to avoid overflow
     if(tx_count == 0){
         new_len = strlen(tx);
     }
@@ -66,7 +64,6 @@ static void add_transaction_to_pool(const char *tx){
         return;
     }
 
-    // Add separator if needed
     if(tx_count > 0){
         strcat(tx_pool, "::");
     }
@@ -81,13 +78,9 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
     char *start;
     char *sep;
 
-     strcpy(copy, block_txs);
-   // strncpy(copy, block_txs, MAX_TX_LEN - 1);
-    //copy[MAX_TX_LEN - 1] = '\0';
-
+    strcpy(copy, block_txs);
     start = copy;
 
-    // Split transactions using "::"
     while((sep = strstr(start, "::")) != NULL){
         *sep = '\0';
         if(strcmp(start, tx) == 0){
@@ -96,7 +89,6 @@ static int is_transaction_in_block(const char *tx, const char *block_txs){
         start = sep + 2;
     }
 
-    // Check the last transaction
     if(strcmp(start, tx) == 0){
         return 1;
     }
@@ -113,14 +105,10 @@ static void remove_mined_transactions(const Block *confirmed){
     int new_count = 0;
 
     strcpy(copy, tx_pool); 
-    //strncpy(copy, tx_pool, MAX_TX_LEN - 1);
-    //copy[MAX_TX_LEN - 1] = '\0';
-
     start = copy;
 
     while((sep = strstr(start, "::")) != NULL){
         *sep = '\0';
-        // Keep only transactions not already confirmed
         if(!is_transaction_in_block(start, confirmed->transactions)){
             if(new_count > 0){
                 strcat(new_pool, "::");
@@ -131,7 +119,6 @@ static void remove_mined_transactions(const Block *confirmed){
         start = sep + 2;
     }
 
-    // Check the last transaction
     if(strlen(start) > 0 && !is_transaction_in_block(start, confirmed->transactions)){
         if(new_count > 0){
             strcat(new_pool, "::");
@@ -140,7 +127,6 @@ static void remove_mined_transactions(const Block *confirmed){
         new_count++;
     }
 
-    // Replace old pool
     strcpy(tx_pool, new_pool);
     tx_count = new_count;
 }
@@ -168,8 +154,6 @@ static void prune_pool_against_chain(void){ // removes from the local pool any t
     char *sep;
     int new_count = 0;
 
-    //strncpy(copy, tx_pool, MAX_TX_LEN - 1);
-    //copy[MAX_TX_LEN - 1] = '\0';
     strcpy(copy, tx_pool);
     start = copy;
 
@@ -208,11 +192,10 @@ static void drain_message_queue(int msqid){
         res = msgrcv(msqid, &msg, sizeof(msg.content), MSG_TYPE_TRANSACTION, IPC_NOWAIT);
 
         if(res == -1){
-            // If there are no messages, exit the loop
             if(errno == ENOMSG){
                 break;
             }
-            // If it was interrupted by a signal, ignore and retry
+    
             if(errno == EINTR){
                 continue;
             }
@@ -236,7 +219,6 @@ static void handle_confirmed_block(const Block *b){
 
     log_write("Confirmed block received from node");
 
-    // Update local blockchain state
     compute_block_hash(b, new_prev_hash);
     strcpy(prev_hash, new_prev_hash);
     next_index = b->index + 1;
@@ -265,7 +247,9 @@ static void broadcast_block(const Block *b){
 
             for(int i = 0; i < shm->num_nodes; i++){
                 if(shm->node_pids[i] > 0){
-                    kill(shm->node_pids[i], SIGUSR1);
+                    if (kill(shm->node_pids[i], SIGUSR1) == -1 && errno == ESRCH) {
+                        log_write("WARNING: node %d appears to have crashed", i);
+                    }
                 }
             }
 
@@ -274,7 +258,6 @@ static void broadcast_block(const Block *b){
         }
 
         sem_post(sem_block);
-        // Slot occupied: release the semaphore and retry after a short pause
         usleep(10000);
     }
 }
@@ -290,7 +273,6 @@ static void build_and_broadcast_block(void){
     strcpy(new_block.transactions, tx_pool);
     new_block.transactions_len = (uint32_t)strlen(new_block.transactions);
 
-    // Compute Merkle root
     if (compute_merkle_root(new_block.transactions, new_block.merkle_root) != BC_OK){
         log_write("ERROR: merkle computation failed, block not mined");
         return;
@@ -319,7 +301,6 @@ int miner_main(int id, int diff){
         difficulty = diff;
     }
 
-    // Open shared memory, already created by parent
     shm_fd = shm_open("/blockchain_shm", O_RDWR, 0);
     if(shm_fd < 0){
         log_write("ERROR: shm_open failed");
@@ -365,14 +346,10 @@ int miner_main(int id, int diff){
         next_index = 0;
     }
 
-    // Different random seed for each miner
     srand(time(NULL) ^ getpid());
-
-    // Register signal handlers
     signal(SIGTERM, handler_sigterm);
     signal(SIGUSR2, handler_sigusr2);
 
-    // Generate System V IPC key
     key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
     if(key == -1){
         log_write("ERROR: ftok failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
@@ -384,7 +361,6 @@ int miner_main(int id, int diff){
         return 1;
     }
 
-    // Connect to the existing message queue
     msqid = msgget(key, 0666);
     if(msqid == -1){
         log_write("ERROR: msgget failed with code %s", error_to_string(BC_ERR_FILE_OPEN));
@@ -407,10 +383,7 @@ int miner_main(int id, int diff){
 
         int sleep_seconds;
 
-        // Read all pending transactions
         drain_message_queue(msqid);
-
-        // Simulate mining work
         sleep_seconds = 1 + (rand() % 5);
         sleep(sleep_seconds);
 
@@ -418,23 +391,19 @@ int miner_main(int id, int diff){
             break;
         }
 
-        // Check confirmation again after sleep
         if(got_confirmed){
             got_confirmed = 0;
             Block confirmed = shm->confirmed;
             handle_confirmed_block(&confirmed);
         }
 
-        // Read new transactions again after sleeping
         drain_message_queue(msqid);
 
         current_nonce++;
 
         if(waiting_confirmation == 0){
-            // drop any transaction already committed to the chain before mining
             prune_pool_against_chain();
 
-            // Probability = 1 / difficulty
             if((rand() % difficulty) == 0){
                 if(tx_count > 0){
                     build_and_broadcast_block();

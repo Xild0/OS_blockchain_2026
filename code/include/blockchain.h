@@ -20,7 +20,7 @@
 #define CONC_LEN 128
 #define CONC_BUFFER_LEN 130
 
-#define CSV_HEADER "index, timestamp, prev_hash, merkle_root, nonce, transactions\n"
+#define CSV_HEADER "index,timestamp,prev_hash,merkle_root,nonce,transactions\n"
 
 #define MSGQUEUE_PATH "/tmp/blockchain_queue"
 #define MSGQUEUE_PROJ_ID 'B'            // project identifier - unique key for the message queue

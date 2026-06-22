@@ -61,7 +61,6 @@ static int parse_positive_int(const char *s, int *out){
 }
 
 // parses a non-negative uint64_t used by the CLI request commands.
-// returns 0 on success, -1 on invalid input
 static int parse_uint64(const char *s, uint64_t *out){
     char *end = NULL;
     unsigned long long v;
@@ -101,7 +100,6 @@ static int is_hex_64(const char *s){
 }
 
 // sends a signal to a child process.
-// if the process is already gone, marks its PID as -1 instead of failing hard.
 static void signal_process(pid_t *pid, int sig){
     if (pid == NULL || *pid <= 0) {
         return;
@@ -117,7 +115,6 @@ static void signal_process(pid_t *pid, int sig){
 }
 
 // waits for one child process, retrying if interrupted by a signal.
-// if the process was already reaped or does not exist, it simply returns.
 static void wait_process(pid_t pid){
     if (pid <= 0) {
         return;
@@ -148,7 +145,6 @@ static void strip_surrounding_quotes(char *s){
 }
 
 static void cleanup(){
-    // deallocates resources of sem, shm, msgqueue and fifo after the stop call
     sem_unlink("/sem_blockchain");
     sem_unlink("/sem_block");
 
@@ -174,8 +170,6 @@ static void cleanup(){
 }
 
 static void stop_all(void){
-    // If the system is paused, SIGTERM would not be handled until resumed.
-    // Therefore, first resume every child, then terminate it.
     for (int i = 0; i < num_nodes; ++i) {
         signal_process(&node_pids[i], SIGCONT);
     }
@@ -208,7 +202,6 @@ static void stop_all(void){
 }
 
 static void pause_all(void){
-    // sends SIGSTOP to all child processes to pause them
     for(int i = 0; i < num_nodes; i++){
         signal_process(&node_pids[i], SIGSTOP);
     }
@@ -223,7 +216,6 @@ static void pause_all(void){
 }
 
 static void resume_all(void){
-    // sends SIGCONT to all child processes to resume them
     for(int i = 0; i < num_nodes; i++){
         signal_process(&node_pids[i], SIGCONT);
     }
@@ -453,7 +445,6 @@ static void request_block_by_Hash(char *hash){
 }
 
 static void save_blockchain(const char *filename){
-    // read from shm and save on file
     sem_t* sem = sem_open("/sem_blockchain", 0);
 
     if(sem == SEM_FAILED){
@@ -480,7 +471,6 @@ static void save_blockchain(const char *filename){
 }
 
 static void run_cli(void){
-    // interactive command loop: dispatches user input to system control functions
     char line[512];
 
     printf("System CLI, available commands:\n");
@@ -579,7 +569,7 @@ static void run_cli(void){
 }
 
 int main(int argc, char *argv[]){
-    // unbuffered stdout so child processes do not inherit and re-print buffered text after fork()
+    fork();
     setvbuf(stdout, NULL, _IONBF, 0);
 
     log_cleanup();
@@ -620,7 +610,6 @@ int main(int argc, char *argv[]){
         return INVALID_ARGUMENT;
     }
 
-    // shm
     shm_unlink("/blockchain_shm"); // cleanup in case of previous run
     shm_fd = shm_open("/blockchain_shm", O_CREAT | O_RDWR, 0666);
     if(shm_fd < 0){
@@ -643,7 +632,6 @@ int main(int argc, char *argv[]){
 
     memset(shm, 0, sizeof(SharedMemory));
 
-    // sem
     sem_unlink("/sem_blockchain");
     sem_unlink("/sem_block");
 
@@ -659,11 +647,10 @@ int main(int argc, char *argv[]){
     sem_close(sem_blockchain);
     sem_close(sem_block);
 
-    // msg queue
     FILE *file = fopen(MSGQUEUE_PATH, "w");
     if(file) {
         fclose(file);
-    } // create file if it doesn't exist
+    } 
 
     key_t key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
     if(key == -1){
@@ -739,7 +726,7 @@ int main(int argc, char *argv[]){
 
         if (pid == 0) {
             close(shm_fd);
-            exit(miner_main(i, num_nodes, difficulty));
+            exit(miner_main(i, difficulty));
         }
 
         miner_pids[i] = pid;
@@ -767,7 +754,7 @@ int main(int argc, char *argv[]){
         printf("Client %d started with PID: %d\n", i, pid);
     }
 
-    usleep(500000); // wait 500ms for children to initialize
+    usleep(500000);
     run_cli();
 
     return 0;

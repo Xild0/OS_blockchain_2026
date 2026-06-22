@@ -9,6 +9,7 @@
 #include <sys/mman.h>
 #include <semaphore.h>
 #include <time.h>
+#include "../include/node.h"
 #include "../include/blockchain.h"
 #include "../include/sha256.h"
 #include "../include/log.h"
@@ -87,7 +88,6 @@ static int validate_block(const Block *b, const Blockchain *blockchain) {
         return BC_ERR_INVALID_BLOCK;
     }
 
-    // prev_hash must equal the hash of the previous block 
     char computed_hash[SHA256_BUFFER_LEN];
     rc = compute_block_hash(prev, computed_hash);
     if (rc != BC_OK) {
@@ -103,8 +103,9 @@ static int validate_block(const Block *b, const Blockchain *blockchain) {
 
     if (b->index != 0) {
         if (!check_tx_format(b->transactions)) {
-            log_write("ERROR: invalid transaction format. Error: %s", error_to_string(BC_ERR_INVALID_BLOCK));
-            return BC_ERR_INVALID_BLOCK;
+            log_write("ERROR: invalid transaction format. Error: %s",
+                    error_to_string(BC_ERR_INVALID_TRANSACTION));
+            return BC_ERR_INVALID_TRANSACTION;
         }
     }
 
@@ -132,7 +133,6 @@ static void handle_new_block(const Block *b) {
         return;
     }
 
-    // guard against overflowing the fixed-size block array
     if (linked_list->length >= MAX_BLOCKS) {
         log_write("ERROR: blockchain is full");
         sem_post(sem_blockchain);
@@ -153,10 +153,12 @@ static void handle_new_block(const Block *b) {
     sem_post(sem_block);
 
     for (int i = 0; i < shm->num_miners; i++) {
-        if (shm->miner_pids[i] > 0) {
-            kill(shm->miner_pids[i], SIGUSR2);
+    if (shm->miner_pids[i] > 0) {
+        if (kill(shm->miner_pids[i], SIGUSR2) == -1 && errno == ESRCH) {
+            log_write("WARNING: miner %d appears to have crashed", i);
         }
     }
+}
     log_write("Signal SIGUSR2 sent to miners");
 
     for (int i = 0; i < num_nodes; i++) {
@@ -246,7 +248,6 @@ int node_main(int id, int n_nodes, int shm_fd) {
             }
         }
 
-        // block mined locally
         if (got_new_block) {
             got_new_block = 0;
 
@@ -262,7 +263,6 @@ int node_main(int id, int n_nodes, int shm_fd) {
             handle_new_block(&b);  
         }
 
-        // block received from a peer via FIFO
         if (peer_fd >= 0) {
             Block peer_block;
             ssize_t n = read(peer_fd, &peer_block, sizeof(Block));
@@ -271,8 +271,6 @@ int node_main(int id, int n_nodes, int shm_fd) {
                 handle_new_block(&peer_block);
             }
         }
-
-        // 50ms to avoid busy-waiting
         usleep(50000);
     }
 
