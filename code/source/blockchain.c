@@ -62,7 +62,7 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     if (array_transactions == NULL) return BC_ERR_NOMEM;
     ptr = transactions;
 
-    while(*ptr != '\0'){
+    while(*ptr != '\0'){ // split the concatenated string on '::' and store each token
         if(ptr[0] == ':' && ptr[1] == ':'){
             uint64_t diff = ptr - start;   
             array_transactions[tx_count] = malloc(diff + 1);
@@ -83,6 +83,7 @@ int compute_merkle_root(char transactions[MAX_TX_LEN], char *merkle_root){
     array_transactions[tx_count][diff] = '\0';
     tx_count++;
 
+     // hash each transaction
     char **array_transactions_sha256 = malloc(count * sizeof(char*));
     if (array_transactions_sha256 == NULL) return BC_ERR_NOMEM;
     for (int i = 0; i < count; ++i){
@@ -260,14 +261,10 @@ int blockchain_validate(const Blockchain *bc){
         if (rc != BC_OK) {
             return rc;
         }
-
         if (strcmp(b->merkle_root, computed_merkle) != 0) {
             return BC_ERR_INVALID_BLOCK;
         }
-
-        if (i == 0) {
-            continue;
-        }
+        if (i == 0) { continue;}
 
         const Block *prev = &bc->blocks[i - 1];
 
@@ -279,11 +276,9 @@ int blockchain_validate(const Blockchain *bc){
         if (rc != BC_OK) {
             return rc;
         }
-
         if (strcmp(b->prev_hash, prev_hash_calc) != 0) {
             return BC_ERR_INVALID_BLOCK;
         }
-
         if (!check_tx_format(b->transactions)) {
             return BC_ERR_INVALID_TRANSACTION;
         }
@@ -373,6 +368,7 @@ int blockchain_load(Blockchain *bc, const char *filename) {
 
     char line[LINE_MAX_LEN];
 
+// skip CSV header
     int hr = read_line(fd, line, sizeof(line));
     if (hr == READ_LINE_ERROR || hr == READ_LINE_EOF) {
         close(fd);

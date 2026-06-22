@@ -41,6 +41,7 @@ static void generate_transaction(char *transaction){
 
     sender = rand() % NUM_NAMES;
 
+// Random receiver different from sender
     do{
         receiver = rand() % NUM_NAMES;
     }while(receiver == sender);
@@ -66,7 +67,7 @@ int client_main(int id, int transaction_frequency){
     srand(time(NULL) ^ getpid());
 
     signal(SIGTERM, handler_sigterm);
-
+// Generate System V IPC key
     key = ftok(MSGQUEUE_PATH, MSGQUEUE_PROJ_ID);
     if(key == -1){
         log_write("ERROR: ftok failed with code %s", error_to_string(BC_ERR_FILE_OPEN));

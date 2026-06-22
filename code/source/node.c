@@ -15,12 +15,14 @@
 #include "../include/log.h"
 #include "../include/errors.h"
 
+
 static sig_atomic_t got_new_block = 0;
 static sig_atomic_t got_stop = 0;
 
 static SharedMemory *shm = NULL;
 static sem_t *sem_blockchain = NULL;
 static sem_t *sem_block = NULL;
+static Blockchain local_chain; //local blockchain for node copy
 
 static int node_id = -1;
 static int num_nodes = 0;
@@ -111,37 +113,40 @@ static int validate_block(const Block *b, const Blockchain *blockchain) {
 
     return BC_OK;
 }
-
-// validates and appends a block, then notifies miners and peer nodes
-static void handle_new_block(const Block *b) {
-    if (sem_lock(sem_blockchain) != 0) {
+static void handle_new_block(const Block *b){
+    if (local_chain.length > 0 && local_chain.blocks[local_chain.length - 1].index >= b->index ){
+        log_write("Block already in local chain, rejected");
+        return;
+    }
+    if(sem_lock(sem_blockchain) != 0){
         log_write("ERROR: sem_lock(sem_blockchain) failed");
         return;
     }
 
-    Blockchain *linked_list = &shm->blockchain;
-
-    if (linked_list->length > 0 &&
-        linked_list->blocks[linked_list->length - 1].index >= b->index) {
-        log_write("Block is already in the blockchain, rejected");
+    Blockchain *shared = &shm->blockchain; 
+    if(shared->length > 0 && shared->blocks[shared->length - 1].index >= b->index){
+        while (local_chain.length < shared->length) {
+            local_chain.blocks[local_chain.length] = shared->blocks[local_chain.length];
+            local_chain.length++;
+        }
+        log_write("Local blockchain updated from shared memory");
         sem_post(sem_blockchain);
         return;
     }
-
-    if (validate_block(b, linked_list) != BC_OK) {
+    if(validate_block(b, shared) != BC_OK){
         sem_post(sem_blockchain);
         return;
     }
-
-    if (linked_list->length >= MAX_BLOCKS) {
-        log_write("ERROR: blockchain is full");
+    if(shared->length >= MAX_BLOCKS){
+        log_write("ERROR: blockchain full");
         sem_post(sem_blockchain);
         return;
     }
-
-    linked_list->blocks[linked_list->length] = *b;
-    linked_list->length++;
-    log_write("Block added to the blockchain");
+    shared->blocks[shared->length] = *b;
+    shared->length++;
+    local_chain.blocks[local_chain.length] = *b;
+    local_chain.length++;
+    log_write("Block added to local chain and shared blockchain");
 
     sem_post(sem_blockchain);
 
@@ -153,33 +158,26 @@ static void handle_new_block(const Block *b) {
     sem_post(sem_block);
 
     for (int i = 0; i < shm->num_miners; i++) {
-    if (shm->miner_pids[i] > 0) {
-        if (kill(shm->miner_pids[i], SIGUSR2) == -1 && errno == ESRCH) {
-            log_write("WARNING: miner %d appears to have crashed", i);
+        if (shm->miner_pids[i] > 0) {
+            kill(shm->miner_pids[i], SIGUSR2);
         }
     }
-}
     log_write("Signal SIGUSR2 sent to miners");
 
     for (int i = 0; i < num_nodes; i++) {
-        if (i == node_id) {
-            continue;
-        }
-
+        if (i == node_id) continue;
         char fifo_path[64];
         snprintf(fifo_path, sizeof(fifo_path), "node_%d_block.fifo", i);
-
         int fd = open(fifo_path, O_WRONLY | O_NONBLOCK);
         if (fd < 0) {
             log_write("Cannot open peer FIFO");
             continue;
         }
-
         ssize_t written = write(fd, b, sizeof(Block));
-        if (written != (ssize_t)sizeof(Block)) {
+        if (written != (ssize_t)sizeof(Block)){
             log_write("ERROR: failed to send full block to peer");
         } else {
-            log_write("Block sent to peer");
+            log_write("Block sent to peer node %d", i);
         }
         close_if_valid(fd);
     }
@@ -202,6 +200,8 @@ int node_main(int id, int n_nodes, int shm_fd) {
         return 1;
     }
     close_if_valid(shm_fd);
+
+    local_chain = shm->blockchain; //init local blockchain
 
     sem_blockchain = sem_open("/sem_blockchain", 0);
     sem_block = sem_open("/sem_block", 0);
