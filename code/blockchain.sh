@@ -209,7 +209,7 @@ elif [ "$comando" == "--verify" ]; then
             if ! check_tx_list "$txs_clean"; then
                 echo "Error INVALID_TRANSACTION: invalid transaction format block $idx_dec"
                 is_valid=0
-                exit_code=INVALID_TRANSACTION
+                exit_code=$INVALID_TRANSACTION
                 break
             fi
         fi
@@ -239,7 +239,7 @@ elif [ "$comando" == "--verify" ]; then
     fi
 
 else
-    echo "Available commands: ./Blockchain.sh {--hash|--merkle|--verify} <argomento>"
+    echo "Available commands: ./blockchain.sh {--hash|--merkle|--verify} <argomento>"
     echo "./blockchain.sh --hash <block_hex>"
     echo "./blockchain.sh --merkle <list of::various::transactions:Alice pays Bob 10 coins"
     echo "./blockchain.sh --verify <file.csv>"

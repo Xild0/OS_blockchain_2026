@@ -20,6 +20,7 @@ if [ "$comando" == "build" ]; then
 elif [ "$comando" == "clean" ]; then
     echo "[clean] Removing exec and log"
     rm -f "blockchain"
+    rm -f "source/blockchain.o"
     rm -f logs/*.log
  
     echo "[clean] Removing FIFO"

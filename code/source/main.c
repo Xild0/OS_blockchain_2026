@@ -439,7 +439,7 @@ int main(int argc, char *argv[]){
     }
 
     if (num_nodes > MAX_NODES || num_miners > MAX_MINERS || num_clients > MAX_CLIENTS) {
-        fprintf(stderr, "Error: too many nodes or miners (max %d nodes, %d miners)\n", MAX_NODES, MAX_MINERS);
+        fprintf(stderr, "Error: too many nodes, miners or clients (max %d nodes, %d miners, %d clients)\n", MAX_NODES, MAX_MINERS, MAX_CLIENTS);
         return 1;
     }
 
